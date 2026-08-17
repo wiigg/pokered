@@ -7,7 +7,7 @@ quality-of-life improvements.
 
 ## Roadmap
 
-- [ ] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
+- [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
 - [ ] Add Professor Oak as a postgame superboss.
 - [ ] Make all 151 Pokémon obtainable on one cartridge, replacing trade evolutions with levels or stones.
 - [ ] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.

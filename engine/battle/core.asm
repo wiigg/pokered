@@ -2287,6 +2287,8 @@ UseBagItem:
 
 .returnAfterCapturingMon
 	call GBPalNormal
+	ld a, TRUE
+	ld [wBattleWasCaptured], a
 	xor a
 	ld [wCapturedMonSpecies], a
 	ld a, $2

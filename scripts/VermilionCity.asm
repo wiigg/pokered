@@ -52,7 +52,12 @@ VermilionCityDefaultScript:
 	ldh [hTextID], a
 	call DisplayTextID
 	CheckEvent EVENT_SS_ANNE_LEFT
-	jr nz, .ship_departed
+	jr z, .check_ticket
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	ret nz
+	jr .ship_departed
+.check_ticket
 	ld b, S_S_TICKET
 	predef GetQuantityOfItemInBag
 	ld a, b
@@ -187,7 +192,14 @@ VermilionCitySailor1Text:
 	ld [wVermilionCityCurScript], a
 	jr .end
 .ship_departed
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr nz, .dock_open
 	ld hl, .ShipSetSailText
+	call PrintText
+	jr .end
+.dock_open
+	ld hl, .DockOpenText
 	call PrintText
 .end
 	jp TextScriptEnd
@@ -215,6 +227,10 @@ VermilionCitySailor1Text:
 
 .ShipSetSailText:
 	text_far _VermilionCitySailor1ShipSetSailText
+	text_end
+
+.DockOpenText:
+	text_far _VermilionCitySailor1DockOpenText
 	text_end
 
 VermilionCityGambler2Text:

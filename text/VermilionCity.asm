@@ -57,6 +57,14 @@ _VermilionCitySailor1ShipSetSailText::
 	text "The ship set sail."
 	done
 
+_VermilionCitySailor1DockOpenText::
+	text "The ship set sail."
+
+	para "CHAMPION, you may"
+	line "visit the old"
+	cont "dock."
+	done
+
 _VermilionCityGambler2Text::
 	text "I'm putting up a"
 	line "building on this"

@@ -1029,7 +1029,8 @@ wSpriteIndex:: db
 ; movement byte 2 of current sprite
 wCurSpriteMovement2:: db
 
-	ds 2
+wBattleWasCaptured:: db
+wBattleWasEscaped:: db
 
 ; sprite offset of sprite being controlled by NPC movement script
 wNPCMovementScriptSpriteOffset:: db
@@ -1968,7 +1969,7 @@ wRoute21CurScript:: db
 wSafariZoneGateCurScript:: db
 wRockTunnelB1FCurScript:: db
 wRockTunnel1FCurScript:: db
-	ds 1
+wVermilionDockCurScript:: db
 wRoute11CurScript:: db
 wRoute12CurScript:: db
 wRoute15CurScript:: db

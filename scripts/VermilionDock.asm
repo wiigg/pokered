@@ -1,5 +1,49 @@
 VermilionDock_Script:
+	call VermilionDockLoadMap
 	call EnableAutoTextBoxDrawing
+	ld hl, VermilionDock_ScriptPointers
+	ld a, [wVermilionDockCurScript]
+	jp CallFunctionInTable
+
+VermilionDock_ScriptPointers:
+	def_script_pointers
+	dw_const VermilionDockDefaultScript,       SCRIPT_VERMILIONDOCK_DEFAULT
+	dw_const VermilionDockMewPostBattleScript, SCRIPT_VERMILIONDOCK_MEW_POST_BATTLE
+
+VermilionDockLoadMap:
+	ld hl, wCurrentMapScriptFlags
+	bit BIT_CUR_MAP_LOADED_1, [hl]
+	res BIT_CUR_MAP_LOADED_1, [hl]
+	ret z
+	CheckEvent EVENT_SS_ANNE_LEFT
+	ret z
+	ld a, 1
+	ld [wNumberOfWarps], a
+
+; Restore the empty harbor because the original departure sequence only clears
+; the half of the ship visible while the player is being walked off the map.
+	ld a, $d ; water block
+	hlowcoord 5, 1, VERMILION_DOCK_WIDTH
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hl], a
+	hlowcoord 5, 2, VERMILION_DOCK_WIDTH
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hl], a
+
+	CheckEvent EVENT_MOVED_VERMILION_DOCK_TRUCK
+	jr z, .redraw
+	hlowcoord 10, 0, VERMILION_DOCK_WIDTH
+	ld a, $c ; pavement block
+	ld [hli], a
+	ld [hl], $3 ; truck block, shifted right
+.redraw
+	farjp RedrawMapView
+
+VermilionDockDefaultScript:
 	CheckEventHL EVENT_STARTED_WALKING_OUT_OF_DOCK
 	jr nz, .walking_out_of_dock
 	CheckEventReuseHL EVENT_GOT_HM01
@@ -34,6 +78,34 @@ VermilionDock_Script:
 	ret nz
 	ld [wJoyIgnore], a
 	SetEventReuseHL EVENT_WALKED_OUT_OF_DOCK
+	ret
+
+VermilionDockMewPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, VermilionDockResetScripts
+	ld a, [wBattleWasEscaped]
+	and a
+	jr nz, VermilionDockResetScripts
+	ld a, [wBattleResult]
+	and a
+	jr z, .defeated
+	ld a, [wBattleWasCaptured]
+	and a
+	jr z, VermilionDockResetScripts
+	SetEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	jr VermilionDockResetScripts
+.defeated
+	SetEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	ld hl, VermilionDockMewVanishedText
+	call PrintText
+	; fall through
+
+VermilionDockResetScripts:
+	xor a
+	ld [wJoyIgnore], a
+	ld [wVermilionDockCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 VermilionDockSSAnneLeavesScript:
@@ -208,10 +280,85 @@ VermilionDock_EraseSSAnne:
 	call DelayFrames
 	ret
 
+VermilionDockTruckText:
+	text_asm
+	CheckEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	jr nz, .only_tyre_tracks
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .not_champion
+	CheckEvent EVENT_MOVED_VERMILION_DOCK_TRUCK
+	jr nz, .start_battle
+	ld a, [wStatusFlags1]
+	bit BIT_STRENGTH_ACTIVE, a
+	jr z, .needs_strength
+	call VermilionDockMoveTruck
+	ld hl, .TruckMovedText
+	call PrintText
+.start_battle
+	ld hl, .MewAppearedText
+	call PrintText
+	ld a, MEW
+	call PlayCry
+	call WaitForSoundToFinish
+	ld a, MEW
+	ld [wCurOpponent], a
+	ld a, 30
+	ld [wCurEnemyLevel], a
+	ld a, SCRIPT_VERMILIONDOCK_MEW_POST_BATTLE
+	ld [wVermilionDockCurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+.not_champion
+	ld hl, .NotChampionText
+	jr .print_text
+.needs_strength
+	ld hl, .NeedsStrengthText
+	jr .print_text
+.only_tyre_tracks
+	ld hl, .OnlyTyreTracksText
+.print_text
+	call PrintText
+	jp TextScriptEnd
+
+.NotChampionText:
+	text_far _VermilionDockTruckNotChampionText
+	text_end
+
+.NeedsStrengthText:
+	text_far _VermilionDockTruckNeedsStrengthText
+	text_end
+
+.TruckMovedText:
+	text_far _VermilionDockTruckMovedText
+	text_end
+
+.MewAppearedText:
+	text_far _VermilionDockMewAppearedText
+	text_end
+
+.OnlyTyreTracksText:
+	text_far _VermilionDockOnlyTyreTracksText
+	text_end
+
+VermilionDockMewVanishedText:
+	text_far _VermilionDockMewVanishedText
+	text_end
+
+VermilionDockMoveTruck:
+	SetEvent EVENT_MOVED_VERMILION_DOCK_TRUCK
+	ld a, SFX_PUSH_BOULDER
+	call PlaySound
+	ld b, 4
+	predef PredefShakeScreenHorizontally
+	hlowcoord 10, 0, VERMILION_DOCK_WIDTH
+	ld a, $c ; pavement block
+	ld [hl], a
+	ld a, $3 ; truck block
+	ld [wNewTileBlockID], a
+	lb bc, 0, 11
+	predef_jump ReplaceTileBlock
+
 VermilionDock_TextPointers:
 	def_text_pointers
-	dw_const VermilionDockUnusedText, TEXT_VERMILIONDOCK_UNUSED
-
-VermilionDockUnusedText:
-	text_far _VermilionDockUnusedText
-	text_end
+	dw_const VermilionDockTruckText, TEXT_VERMILIONDOCK_TRUCK
