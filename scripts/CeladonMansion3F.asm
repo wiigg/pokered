@@ -54,7 +54,22 @@ CeladonMansion3FGameDesignerText:
 	jp TextScriptEnd
 
 CeladonMansion3FGameProgramPCText:
+	text_asm
+	ld hl, .OriginalText
+	ld a, [wNumHoFTeams]
+	and a
+	jr z, .print
+	ld hl, .Pokemon2Text
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.OriginalText:
 	text_far _CeladonMansion3FGameProgramPCText
+	text_end
+
+.Pokemon2Text:
+	text_far _CeladonMansion3FPokemon2Text
 	text_end
 
 CeladonMansion3FPlayingGamePCText:

@@ -61,6 +61,7 @@ CinnabarIsland_TextPointers:
 	dw_const CinnabarIslandPokemonLabSignText, TEXT_CINNABARISLAND_POKEMONLAB_SIGN
 	dw_const CinnabarIslandGymSignText,        TEXT_CINNABARISLAND_GYM_SIGN
 	dw_const CinnabarIslandDoorIsLockedText,   TEXT_CINNABARISLAND_DOOR_IS_LOCKED
+	dw_const CinnabarIslandSquareWavesText,    TEXT_CINNABARISLAND_SQUARE_WAVES
 
 CinnabarIslandDoorIsLockedText:
 	text_far _CinnabarIslandDoorIsLockedText
@@ -84,4 +85,17 @@ CinnabarIslandPokemonLabSignText:
 
 CinnabarIslandGymSignText:
 	text_far _CinnabarIslandGymSignText
+	text_end
+
+CinnabarIslandSquareWavesText:
+	text_asm
+	ld a, SFX_59
+	call PlaySoundWaitForCurrent
+	call WaitForSoundToFinish
+	ld hl, .Text
+	call PrintText
+	jp TextScriptEnd
+
+.Text:
+	text_far _CinnabarIslandSquareWavesText
 	text_end

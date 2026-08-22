@@ -35,3 +35,10 @@ _CinnabarIslandGymSignText::
 	para "The Hot-Headed"
 	line "Quiz Master!"
 	done
+
+_CinnabarIslandSquareWavesText::
+	text "The waves break in"
+	line "square patterns"
+
+	para "...NO. 000?"
+	done

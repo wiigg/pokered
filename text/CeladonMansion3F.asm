@@ -49,6 +49,14 @@ _CeladonMansion3FGameProgramPCText::
 	cont "out the game!"
 	done
 
+_CeladonMansion3FPokemon2Text::
+	text "#MON 2"
+	line "CLOCK TEST"
+
+	para "MORNING..."
+	line "NIGHT..."
+	done
+
 _CeladonMansion3FPlayingGamePCText::
 	text "Someone's playing"
 	line "a game instead of"
