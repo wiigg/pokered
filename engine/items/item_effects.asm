@@ -2811,6 +2811,10 @@ SendNewMonToBox:
 	ld [de], a
 	dec b
 	jr nz, .movePPLoop
+	ld a, [wBoxCount]
+	cp MONS_PER_BOX
+	ret nz
+	ld [wAutoBoxRolloverPending], a
 	ret
 
 ; checks if the tile in front of the player is a shore or water tile

@@ -513,5 +513,13 @@ _MoveMon::
 	ld b, $1
 	call CalcStats
 .done
+	ld a, [wMoveMonType]
+	cp PARTY_TO_BOX
+	jr nz, .success
+	ld a, [wBoxCount]
+	cp MONS_PER_BOX
+	jr nz, .success
+	ld [wAutoBoxRolloverPending], a
+.success
 	and a
 	ret

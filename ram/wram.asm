@@ -1044,7 +1044,7 @@ wNPCMovementScriptSpriteOffset:: db
 
 wScriptedNPCWalkCounter:: db
 
-	ds 1
+wAutoBoxRolloverPending:: db
 
 ; always 0 since full CGB support was not implemented
 wOnCGB:: db

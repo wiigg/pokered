@@ -64,6 +64,12 @@ OverworldLoopLessDelay::
 	ld a, [wCurOpponent]
 	and a
 	jp nz, .newBattle
+	ld a, [wAutoBoxRolloverPending]
+	and a
+	jr z, .skipAutoBoxRollover
+	farcall ProcessAutoBoxRollover
+	jp c, OverworldLoop
+.skipAutoBoxRollover
 	ld a, [wStatusFlags5]
 	bit BIT_SCRIPTED_MOVEMENT_STATE, a
 	jr z, .notSimulating

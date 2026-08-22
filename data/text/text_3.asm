@@ -32,6 +32,18 @@ _ChooseABoxText::
 	line "<PKMN> BOX.@"
 	text_end
 
+_AutoBoxRolloverText::
+	text "BOX @"
+	text_ram wBoxNumString
+	text " is full!"
+
+	para "BOX @"
+	text_ram wStringBuffer
+	text " selected."
+
+	para "Game saved."
+	done
+
 _EvolvedText::
 	text_ram wStringBuffer
 	text " evolved"

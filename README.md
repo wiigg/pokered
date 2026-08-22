@@ -38,6 +38,7 @@ an original location that an unmodified game can load safely.
 - [x] Add a small “Red+” package:
   - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
+  - [x] Automatically select and save the next available PC box when the current one fills.
   - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
   - [x] Show an animated EXP bar in battle.
   - [x] Fix Focus Energy and make Ghost super effective against Psychic.

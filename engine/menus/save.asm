@@ -1,4 +1,6 @@
 TryLoadSaveFile:
+	xor a
+	ld [wAutoBoxRolloverPending], a
 	call ClearScreen
 	call LoadFontTilePatterns
 	call LoadTextBoxTilePatterns
@@ -101,6 +103,7 @@ LoadCurrentBoxData:
 	ld de, wBoxDataStart
 	ld bc, wBoxDataEnd - wBoxDataStart
 	call CopyData
+	call MarkAutoBoxRolloverIfFull
 	and a
 	jp GoodCheckSum
 
@@ -292,7 +295,17 @@ SaveGameData::
 	ld [wSaveFileStatus], a
 	call SaveMainData
 	call SaveCurrentBoxData
-	jp SavePartyAndDexData
+	call SavePartyAndDexData
+	jp MarkAutoBoxRolloverIfFull
+
+MarkAutoBoxRolloverIfFull:
+	ld a, [wBoxCount]
+	cp MONS_PER_BOX
+	jr nz, .done
+	ld [wAutoBoxRolloverPending], a
+.done
+	xor a
+	ret
 
 CalcCheckSum:
 ;Check Sum (result[1 byte] is complemented)
@@ -327,7 +340,6 @@ CalcIndividualBoxCheckSums:
 	ret
 
 GetBoxSRAMLocation:
-; in: a = box num
 ; out: b = box SRAM bank, hl = pointer to start of box
 	ld hl, BoxSRAMPointerTable
 	ld a, [wCurrentBoxNum]
@@ -374,17 +386,8 @@ ChangeBox::
 	res BIT_DOUBLE_SPACED_MENU, [hl]
 	bit B_PAD_B, a
 	ret nz
-	call GetBoxSRAMLocation
-	ld e, l
-	ld d, h
-	ld hl, wBoxDataStart
-	call CopyBoxToOrFromSRAM ; copy old box from WRAM to SRAM
 	ld a, [wCurrentMenuItem]
-	set BIT_HAS_CHANGED_BOXES, a
-	ld [wCurrentBoxNum], a
-	call GetBoxSRAMLocation
-	ld de, wBoxDataStart
-	call CopyBoxToOrFromSRAM ; copy new box from SRAM to WRAM
+	call SwitchCurrentBox
 	ld hl, wCurMapTextPtr
 	ld de, wChangeBoxSavedMapTextPointer
 	ld a, [hli]
@@ -401,8 +404,154 @@ ChangeBox::
 	call WaitForSoundToFinish
 	ret
 
+SwitchCurrentBox:
+; Store the current WRAM box in its SRAM slot, then load box a into WRAM.
+	push af
+	call GetBoxSRAMLocation
+	ld e, l
+	ld d, h
+	ld hl, wBoxDataStart
+	call CopyBoxToOrFromSRAM
+	pop af
+	set BIT_HAS_CHANGED_BOXES, a
+	ld [wCurrentBoxNum], a
+	call GetBoxSRAMLocation
+	ld de, wBoxDataStart
+	jp CopyBoxToOrFromSRAM
+
+ProcessAutoBoxRollover::
+	ld a, [wAutoBoxRolloverPending]
+	and a
+	ret z
+	ld a, [wBoxCount]
+	cp MONS_PER_BOX
+	jp nz, .clearPending
+	ld a, [wIsInBattle]
+	and a
+	ret nz
+	ld a, [wLinkState]
+	and a
+	ret nz
+	ld a, [wStatusFlags4]
+	bit BIT_LINK_CONNECTED, a
+	ret nz
+	ld a, [wCurMap]
+	cp BILLS_SECRET_GARDEN
+	ret z
+	ld a, [wJoyIgnore]
+	and a
+	ret nz
+	call IsPlayerCharacterBeingControlledByGame
+	ret nz
+	ld a, [wStatusFlags5]
+	bit BIT_DISABLE_JOYPAD, a
+	ret nz
+	ld a, [wMiscFlags]
+	bit BIT_SEEN_BY_TRAINER, a
+	ret nz
+	ld a, [wCurOpponent]
+	and a
+	ret nz
+	ld a, [wStatusFlags3]
+	bit BIT_WARP_FROM_CUR_SCRIPT, a
+	ret nz
+	ld a, [wStatusFlags6]
+	and (1 << BIT_FLY_OR_DUNGEON_WARP) | (1 << BIT_FLY_WARP) | (1 << BIT_DUNGEON_WARP)
+	ret nz
+	ld a, [wSaveFileStatus]
+	dec a ; status 1 means there is no valid save to overwrite
+	jr z, .safeToSave
+	call CheckPreviousSaveFile
+	jr nz, .clearPending
+.safeToSave
+	ld hl, wCurrentBoxNum
+	bit BIT_HAS_CHANGED_BOXES, [hl]
+	call z, EmptyAllSRAMBoxes
+	call GetMonCountsForAllBoxes
+	call FindNextBoxWithSpace
+	jr c, .clearPending
+	push af
+	; Keep the old box number across the save for the notification text.
+	ld a, [wCurrentBoxNum]
+	and BOX_NUM_MASK
+	inc a
+	ld [wAutoBoxRolloverPending], a
+	pop af
+	call SwitchCurrentBox
+	call SaveGameData
+	ld hl, wBoxNumString
+	ld a, [wAutoBoxRolloverPending]
+	dec a
+	call WriteBoxNumber
+	ld hl, wStringBuffer
+	ld a, [wCurrentBoxNum]
+	and BOX_NUM_MASK
+	call WriteBoxNumber
+	xor a
+	ld [wAutoBoxRolloverPending], a
+	ld a, SFX_SAVE
+	call PlaySoundWaitForCurrent
+	call WaitForSoundToFinish
+	call EnableAutoTextBoxDrawing
+	tx_pre AutoBoxRolloverText
+	scf
+	ret
+.clearPending
+	xor a
+	ld [wAutoBoxRolloverPending], a
+	ret
+
+FindNextBoxWithSpace:
+; Return a zero-based box number, or carry if all other boxes are full.
+	ld a, [wCurrentBoxNum]
+	and BOX_NUM_MASK
+	ld c, a
+	ld b, NUM_BOXES - 1
+.loop
+	inc c
+	ld a, c
+	cp NUM_BOXES
+	jr c, .inRange
+	ld c, 0
+.inRange
+	ld hl, wBoxMonCounts
+	ld e, c
+	ld d, 0
+	add hl, de
+	ld a, [hl]
+	cp MONS_PER_BOX
+	jr c, .found
+	dec b
+	jr nz, .loop
+	scf
+	ret
+.found
+	ld a, c
+	and a
+	ret
+
+WriteBoxNumber:
+; Write zero-based box number a to hl as a terminated decimal string.
+	cp 9
+	jr c, .singleDigit
+	sub 9
+	ld [hl], '1'
+	inc hl
+	add '0'
+	jr .done
+.singleDigit
+	add '1'
+.done
+	ld [hli], a
+	ld [hl], '@'
+	ret
+
 WhenYouChangeBoxText:
 	text_far _WhenYouChangeBoxText
+	text_end
+
+AutoBoxRolloverText::
+	text_far _AutoBoxRolloverText
 	text_end
 
 CopyBoxToOrFromSRAM:

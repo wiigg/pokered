@@ -1,5 +1,7 @@
 InitPlayerData:
 InitPlayerData2:
+	xor a
+	ld [wAutoBoxRolloverPending], a
 
 	call Random
 	ldh a, [hRandomSub]
