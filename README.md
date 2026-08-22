@@ -26,7 +26,7 @@ IDs.
 - [ ] Add a small “Red+” package:
   - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
-  - [ ] Improve weak moves.
+  - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
   - [ ] Add optional fixes for Focus Energy and Ghost versus Psychic.
 
 To set up the repository, see [**INSTALL.md**](INSTALL.md).
