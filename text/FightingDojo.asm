@@ -27,11 +27,9 @@ _FightingDojoKarateMasterIWillGiveYouAPokemonText::
 	cont "your trophy!"
 
 	para "In return, I will"
-	line "give you a prized"
-	cont "fighting #MON!"
-
-	para "Choose whichever"
-	line "one you like!"
+	line "give you our two"
+	cont "prized fighting"
+	cont "#MON!"
 	done
 
 _FightingDojoKarateMasterStayAndTrainWithUsText::
@@ -124,7 +122,7 @@ _FightingDojoHitmonchanPokeBallText::
 	cont "HITMONCHAN?"
 	done
 
-_FightingDojoBetterNotGetGreedyText::
-	text "Better not get"
-	line "greedy..."
+_FightingDojoAlreadyTookPokemonText::
+	text "You already took"
+	line "this #MON."
 	done

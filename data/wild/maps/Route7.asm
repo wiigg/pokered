@@ -9,7 +9,7 @@ IF DEF(_RED)
 	db 18, MANKEY
 	db 18, GROWLITHE
 	db 20, GROWLITHE
-	db 19, MANKEY
+	db 20, EEVEE
 	db 20, MANKEY
 ENDC
 IF DEF(_BLUE)
@@ -20,7 +20,7 @@ IF DEF(_BLUE)
 	db 18, MEOWTH
 	db 18, VULPIX
 	db 20, VULPIX
-	db 19, MEOWTH
+	db 20, EEVEE
 	db 20, MEOWTH
 ENDC
 	end_grass_wildmons

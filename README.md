@@ -2,14 +2,22 @@
 
 This is a disassembly of Pokémon Red and Blue.
 
-This fork is a Pokémon Red remix with restored secrets, tougher battles, and
-quality-of-life improvements.
+This fork is a faithful enhancement of the original Pokémon Red: restoring
+secrets and playground myths, strengthening battles, and adding thoughtful
+quality-of-life improvements. The goal is to expand the adventure without
+sanding away Gen I's strange, compact charm or turning it into a different
+game.
+
+Save compatibility is a core design constraint. Saves are intended to move in
+both directions between this fork and an unmodified Pokémon Red cartridge, so
+changes preserve the original save layout, Pokémon structures, and established
+IDs.
 
 ## Roadmap
 
 - [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
 - [x] Add Professor Oak as a postgame superboss.
-- [ ] Make all 151 Pokémon obtainable on one cartridge, replacing trade evolutions with levels or stones.
+- [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
 - [ ] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.
 - [ ] Upgrade Gym Leaders, rivals, and the Elite Four with fuller, smarter teams.
 - [ ] Add a small “Red+” package:

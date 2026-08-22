@@ -1,4 +1,5 @@
 MtMoonB2F_Script:
+	call MtMoonB2FRestoreUnclaimedFossils
 	call EnableAutoTextBoxDrawing
 	ld hl, MtMoon3TrainerHeaders
 	ld de, MtMoonB2F_ScriptPointers
@@ -17,6 +18,25 @@ MtMoonB2F_Script:
 	ld hl, wStatusFlags4
 	res BIT_NO_BATTLES, [hl]
 	ret
+
+MtMoonB2FRestoreUnclaimedFossils:
+	ld hl, wCurrentMapScriptFlags
+	bit BIT_CUR_MAP_LOADED_1, [hl]
+	res BIT_CUR_MAP_LOADED_1, [hl]
+	ret z
+	CheckEvent EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
+	ret z
+	CheckEvent EVENT_GOT_DOME_FOSSIL
+	jr nz, .check_helix_fossil
+	ld a, TOGGLE_MT_MOON_B2F_FOSSIL_1
+	ld [wToggleableObjectIndex], a
+	predef ShowObject
+.check_helix_fossil
+	CheckEvent EVENT_GOT_HELIX_FOSSIL
+	ret nz
+	ld a, TOGGLE_MT_MOON_B2F_FOSSIL_2
+	ld [wToggleableObjectIndex], a
+	predef_jump ShowObject
 
 MtMoonB2FFossilAreaCoords:
 	dbmapcoord 11,  5
@@ -129,31 +149,11 @@ MtMoon3FSuperNerdMoveUpMovementData:
 	db -1 ; end
 
 MtMoonB2FSuperNerdTakesOtherFossilScript:
+	; Preserve the original script state for transferred saves without removing the other fossil.
 	ld a, [wStatusFlags5]
 	bit BIT_SCRIPTED_NPC_MOVEMENT, a
 	ret nz
-	ld a, PAD_CTRL_PAD
-	ld [wJoyIgnore], a
-	ld a, $1
-	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
-	ld a, TEXT_MTMOONB2F_SUPER_NERD_THEN_THIS_IS_MINE
-	ldh [hTextID], a
-	call DisplayTextID
-	CheckEvent EVENT_GOT_DOME_FOSSIL
-	jr z, .got_dome_fossil
-	ld a, TOGGLE_MT_MOON_B2F_FOSSIL_2
-	jr .continue
-.got_dome_fossil
-	ld a, TOGGLE_MT_MOON_B2F_FOSSIL_1
-.continue
-	ld [wToggleableObjectIndex], a
-	predef HideObject
-	xor a
-	ld [wJoyIgnore], a
-	ld a, SCRIPT_MTMOONB2F_DEFAULT
-	ld [wMtMoonB2FCurScript], a
-	ld [wCurMapScript], a
-	ret
+	jp MtMoonB2FResetScripts
 
 MtMoonB2F_TextPointers:
 	def_text_pointers
@@ -186,7 +186,7 @@ MtMoonB2FSuperNerdText:
 	jr z, .beat_super_nerd
 	CheckEitherEventSet EVENT_GOT_DOME_FOSSIL, EVENT_GOT_HELIX_FOSSIL, 1
 	jr nz, .got_a_fossil
-	ld hl, MtMoonB2fSuperNerdEachTakeOneText
+	ld hl, MtMoonB2FSuperNerdTakeBothText
 	call PrintText
 	jr .done
 .beat_super_nerd
@@ -254,9 +254,6 @@ MtMoonB2FDomeFossilText:
 	ld [wToggleableObjectIndex], a
 	predef HideObject
 	SetEvent EVENT_GOT_DOME_FOSSIL
-	ld a, SCRIPT_MTMOONB2F_MOVE_SUPER_NERD
-	ld [wMtMoonB2FCurScript], a
-	ld [wCurMapScript], a
 .done
 	jp TextScriptEnd
 
@@ -282,9 +279,6 @@ MtMoonB2FHelixFossilText:
 	ld [wToggleableObjectIndex], a
 	predef HideObject
 	SetEvent EVENT_GOT_HELIX_FOSSIL
-	ld a, SCRIPT_MTMOONB2F_MOVE_SUPER_NERD
-	ld [wMtMoonB2FCurScript], a
-	ld [wCurMapScript], a
 .done
 	jp TextScriptEnd
 
@@ -320,8 +314,8 @@ MtMoonB2FSuperNerdOkIllShareText:
 	text_far _MtMoonB2FSuperNerdOkIllShareText
 	text_end
 
-MtMoonB2fSuperNerdEachTakeOneText:
-	text_far _MtMoonB2fSuperNerdEachTakeOneText
+MtMoonB2FSuperNerdTakeBothText:
+	text_far _MtMoonB2FSuperNerdTakeBothText
 	text_end
 
 MtMoonB2FSuperNerdTheresAPokemonLabText:
