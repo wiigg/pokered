@@ -36,4 +36,12 @@ _PokemonMansionB1FDiaryText::
 	para "We have failed to"
 	line "curb its vicious"
 	cont "tendencies..."
+
+	para "A torn page reads:"
+	line "EARLY SAMPLES can"
+	cont "copy any #MON."
+
+	para "But all return to"
+	line "the same blank"
+	cont "face..."
 	done
