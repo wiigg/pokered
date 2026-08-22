@@ -3,12 +3,12 @@ PokemonTower3FWildMons:
 	db 20, GASTLY
 	db 21, GASTLY
 	db 22, GASTLY
-	db 23, GASTLY
-	db 19, GASTLY
-	db 18, GASTLY
-	db 24, GASTLY
 	db 20, CUBONE
+	db 19, GASTLY
+	db 23, GASTLY
 	db 22, CUBONE
+	db 24, GASTLY
+	db 24, HAUNTER
 	db 25, HAUNTER
 	end_grass_wildmons
 

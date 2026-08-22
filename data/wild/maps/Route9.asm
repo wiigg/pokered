@@ -4,22 +4,22 @@ Route9WildMons:
 	db 16, SPEAROW
 	db 14, RATTATA
 IF DEF(_RED)
-	db 11, EKANS
-	db 13, SPEAROW
-	db 15, EKANS
-	db 17, RATTATA
+	db 14, EKANS
 	db 17, SPEAROW
-	db 13, EKANS
-	db 17, EKANS
+	db 16, EKANS
+	db 17, RATTATA
+	db 16, GEODUDE
+	db 16, MACHOP
+	db 17, ONIX
 ENDC
 IF DEF(_BLUE)
-	db 11, SANDSHREW
-	db 13, SPEAROW
-	db 15, SANDSHREW
-	db 17, RATTATA
+	db 14, SANDSHREW
 	db 17, SPEAROW
-	db 13, SANDSHREW
-	db 17, SANDSHREW
+	db 16, SANDSHREW
+	db 17, RATTATA
+	db 16, GEODUDE
+	db 16, MACHOP
+	db 17, ONIX
 ENDC
 	end_grass_wildmons
 
