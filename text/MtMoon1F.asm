@@ -172,6 +172,16 @@ _MtMoon1FClefairyText::
 	text "CLEFAIRY: Pii!"
 	done
 
+_MtMoon1FMoonfallRumbleText::
+	text "The cave gives a"
+	line "soft tremor!"
+
+	para "A faint CLEFAIRY"
+	line "cry echoes from"
+	cont "the old MOON STONE"
+	cont "hollow..."
+	done
+
 _MtMoon1FBewareZubatSign::
 	text "Beware! ZUBAT is"
 	line "a blood sucker!"

@@ -9,9 +9,43 @@ MtMoon1F_Script:
 
 MtMoon1F_ScriptPointers:
 	def_script_pointers
-	dw_const CheckFightingMapTrainers,              SCRIPT_MTMOON1F_DEFAULT
+	dw_const MtMoon1FDefaultScript,                 SCRIPT_MTMOON1F_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_MTMOON1F_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_MTMOON1F_END_BATTLE
+
+MtMoon1FDefaultScript:
+	call CheckFightingMapTrainers
+	ld a, [wCurMapScript]
+	and a
+	ret nz
+	CheckEvent EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	ret nz
+	CheckEvent EVENT_HEARD_MT_MOON_MOONFALL_RUMBLE
+	ret nz
+	CheckEvent EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
+	ret z
+	ld a, [wToggleableObjectFlags + (TOGGLE_MT_MOON_1F_ITEM_2 / 8)]
+	bit TOGGLE_MT_MOON_1F_ITEM_2 % 8, a
+	ret z
+
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	xor a
+	ldh [hJoyHeld], a
+	ld a, SFX_PUSH_BOULDER
+	call PlaySound
+	ld b, 3
+	predef PredefShakeScreenHorizontally
+	ld a, CLEFAIRY
+	call PlayCry
+	call WaitForSoundToFinish
+	ld a, TEXT_MTMOON1F_MOONFALL_RUMBLE
+	ldh [hTextID], a
+	call DisplayTextID
+	SetEvent EVENT_HEARD_MT_MOON_MOONFALL_RUMBLE
+	xor a
+	ld [wJoyIgnore], a
+	ret
 
 MtMoon1F_TextPointers:
 	def_text_pointers
@@ -32,6 +66,7 @@ MtMoon1F_TextPointers:
 	dw_const MtMoon1FClefairyText,      TEXT_MTMOON1F_CLEFAIRY2
 	dw_const MtMoon1FMoonfallSiteText,  TEXT_MTMOON1F_MOONFALL_SITE
 	dw_const MtMoon1FBewareZubatSign,   TEXT_MTMOON1F_BEWARE_ZUBAT_SIGN
+	dw_const MtMoon1FMoonfallRumbleText, TEXT_MTMOON1F_MOONFALL_RUMBLE
 
 MtMoon1TrainerHeaders:
 	def_trainers
@@ -341,4 +376,8 @@ MtMoon1FClefairyText:
 
 MtMoon1FBewareZubatSign:
 	text_far _MtMoon1FBewareZubatSign
+	text_end
+
+MtMoon1FMoonfallRumbleText:
+	text_far _MtMoon1FMoonfallRumbleText
 	text_end
