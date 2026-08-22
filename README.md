@@ -11,13 +11,15 @@ game.
 Save compatibility is a core design constraint. Saves are intended to move in
 both directions between this fork and an unmodified Pokémon Red cartridge, so
 changes preserve the original save layout, Pokémon structures, and established
-IDs.
+IDs. Saving inside Bill's Secret Garden is disabled until the player returns to
+an original location that an unmodified game can load safely.
 
 ## Roadmap
 
 - [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
 - [x] Make Lavender Town's [“white hand” rumour](scripts/LavenderTown.asm) real with a hidden Haunter encounter.
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).
+- [x] Make [Bill's Secret Garden](scripts/BillsSecretGarden.asm) real as a postgame Eevee-family secret, with a unique Surfing Pikachu and hints of discoveries still to come.
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.
 - [x] Add Professor Oak as a postgame superboss.

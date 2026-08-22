@@ -154,3 +154,20 @@ _Route25BillSignText::
 	text "SEA COTTAGE"
 	line "BILL lives here!"
 	done
+
+_Route25SecretGardenGateLockedText::
+	text "A small sensor is"
+	line "set in the fence."
+
+	para "Its light is off."
+	done
+
+_Route25SecretGardenGateOpenedText::
+	text "The sensor reads"
+	line "your PC data."
+
+	para "KRR-CHNK!"
+
+	para "A hidden gate"
+	line "slides open!"
+	done

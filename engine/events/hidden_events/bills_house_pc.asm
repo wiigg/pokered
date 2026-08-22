@@ -116,7 +116,56 @@ BillsHousePokemonList::
 	ld hl, wStatusFlags5
 	res BIT_NO_TEXT_DELAY, [hl]
 	call LoadScreenTilesFromBuffer2
+	call BillsHouseCheckSecretGardenAccess
 	jp TextScriptEnd
+
+BillsHouseCheckSecretGardenAccess:
+	CheckEvent EVENT_UNLOCKED_BILLS_SECRET_GARDEN
+	ret nz
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .championRequired
+	ld c, DEX_EEVEE - 1
+	call .ownsPokemon
+	jr z, .evolutionDataIncomplete
+	ld c, DEX_FLAREON - 1
+	call .ownsPokemon
+	jr z, .evolutionDataIncomplete
+	ld c, DEX_JOLTEON - 1
+	call .ownsPokemon
+	jr z, .evolutionDataIncomplete
+	ld c, DEX_VAPOREON - 1
+	call .ownsPokemon
+	jr z, .evolutionDataIncomplete
+
+	ld hl, BillsHouseSecretGardenAccessGrantedText
+	call PrintText
+	ld a, SFX_SWITCH
+	call PlaySound
+	call WaitForSoundToFinish
+	SetEvent EVENT_UNLOCKED_BILLS_SECRET_GARDEN
+	ld a, SFX_PUSH_BOULDER
+	call PlaySound
+	ld b, 2
+	predef PredefShakeScreenHorizontally
+	ld hl, BillsHouseSecretGardenOpenedText
+	jp PrintText
+
+.championRequired
+	ld hl, BillsHouseSecretGardenChampionRequiredText
+	jp PrintText
+
+.evolutionDataIncomplete
+	ld hl, BillsHouseSecretGardenDataIncompleteText
+	jp PrintText
+
+.ownsPokemon
+	ld hl, wPokedexOwned
+	ld b, FLAG_TEST
+	predef FlagActionPredef
+	ld a, c
+	and a
+	ret
 
 BillsHousePokemonListText1:
 	text_far _BillsHousePokemonListText1
@@ -131,4 +180,20 @@ BillsMonListText:
 
 BillsHousePokemonListText2:
 	text_far _BillsHousePokemonListText2
+	text_end
+
+BillsHouseSecretGardenChampionRequiredText:
+	text_far _BillsHouseSecretGardenChampionRequiredText
+	text_end
+
+BillsHouseSecretGardenDataIncompleteText:
+	text_far _BillsHouseSecretGardenDataIncompleteText
+	text_end
+
+BillsHouseSecretGardenAccessGrantedText:
+	text_far _BillsHouseSecretGardenAccessGrantedText
+	text_end
+
+BillsHouseSecretGardenOpenedText:
+	text_far _BillsHouseSecretGardenOpenedText
 	text_end

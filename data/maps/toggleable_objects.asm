@@ -418,6 +418,9 @@ ToggleableObjectStates:
 	toggle_object_state SEAFOAMISLANDSB4F_BOULDER2, OFF
 	toggle_object_state SEAFOAMISLANDSB4F_ARTICUNO, ON
 
+	toggleable_objects_for BILLS_SECRET_GARDEN
+	toggle_object_state BILLSSECRETGARDEN_PIKACHU, ON
+
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 
 	db -1, 1, ON ; end

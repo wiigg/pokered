@@ -11,7 +11,7 @@ WildDataPointers:
 	dw NothingWildMons         ; CINNABAR_ISLAND
 	dw NothingWildMons         ; INDIGO_PLATEAU
 	dw NothingWildMons         ; SAFFRON_CITY
-	dw NothingWildMons         ; unused
+	dw BillsSecretGardenWildMons ; BILLS_SECRET_GARDEN
 	dw Route1WildMons          ; ROUTE_1
 	dw Route2WildMons          ; ROUTE_2
 	dw Route3WildMons          ; ROUTE_3
@@ -263,6 +263,7 @@ WildDataPointers:
         ; level, species (ten times)
 
 INCLUDE "data/wild/maps/nothing.asm"
+INCLUDE "data/wild/maps/BillsSecretGarden.asm"
 INCLUDE "data/wild/maps/Route1.asm"
 INCLUDE "data/wild/maps/Route2.asm"
 INCLUDE "data/wild/maps/Route22.asm"

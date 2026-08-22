@@ -642,9 +642,22 @@ StartMenu_SaveReset::
 	ld a, [wStatusFlags4]
 	bit BIT_LINK_CONNECTED, a
 	jp nz, Init
+	ld a, [wCurMap]
+	cp BILLS_SECRET_GARDEN
+	jr nz, .save
+	ld hl, .cannotSaveInBillsGardenText
+	call PrintText
+	jr .close
+.save
 	predef SaveMenu
+.close
 	call LoadScreenTilesFromBuffer2
 	jp HoldTextDisplayOpen
+.cannotSaveInBillsGardenText
+	text "BILL's note:"
+	line "Leave the GARDEN"
+	cont "before saving."
+	prompt
 
 StartMenu_Option::
 	xor a

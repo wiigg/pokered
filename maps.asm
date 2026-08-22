@@ -77,6 +77,11 @@ INCLUDE "data/maps/headers/CinnabarIsland.asm"
 INCLUDE "data/maps/objects/CinnabarIsland.asm"
 CinnabarIsland_Blocks: INCBIN "maps/CinnabarIsland.blk"
 
+INCLUDE "data/maps/headers/BillsSecretGarden.asm"
+INCLUDE "scripts/BillsSecretGarden.asm"
+INCLUDE "data/maps/objects/BillsSecretGarden.asm"
+BillsSecretGarden_Blocks: INCBIN "maps/BillsSecretGarden.blk"
+
 INCLUDE "data/maps/headers/Route1.asm"
 INCLUDE "data/maps/objects/Route1.asm"
 Route1_Blocks: INCBIN "maps/Route1.blk"

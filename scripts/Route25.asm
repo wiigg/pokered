@@ -54,6 +54,7 @@ Route25_TextPointers:
 	dw_const Route25Hiker3Text,        TEXT_ROUTE25_HIKER3
 	dw_const PickUpItemText,           TEXT_ROUTE25_TM_SEISMIC_TOSS
 	dw_const Route25BillSignText,      TEXT_ROUTE25_BILL_SIGN
+	dw_const Route25SecretGardenGateText, TEXT_ROUTE25_SECRET_GARDEN_GATE
 
 Route25TrainerHeaders:
 	def_trainers
@@ -241,4 +242,33 @@ Route25Hiker3AfterBattleText:
 
 Route25BillSignText:
 	text_far _Route25BillSignText
+	text_end
+
+Route25SecretGardenGateText:
+	text_asm
+	CheckEvent EVENT_UNLOCKED_BILLS_SECRET_GARDEN
+	ld hl, .LockedText
+	jr z, .print
+	ld a, SFX_SWITCH
+	call PlaySound
+	ld hl, .OpenedText
+	call PrintText
+	ld a, BILLS_SECRET_GARDEN
+	ldh [hWarpDestinationMap], a
+	xor a ; destination warp 1 (stored as index 0)
+	ld [wDestinationWarpID], a
+	ld hl, wStatusFlags3
+	set BIT_FORCE_DESTINATION_WARP_POSITION, [hl]
+	set BIT_WARP_FROM_CUR_SCRIPT, [hl]
+	jp TextScriptEnd
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.LockedText:
+	text_far _Route25SecretGardenGateLockedText
+	text_end
+
+.OpenedText:
+	text_far _Route25SecretGardenGateOpenedText
 	text_end

@@ -207,10 +207,18 @@ BillsHouseBillSSTicketText:
 
 BillsHouseBillCheckOutMyRarePokemonText:
 	text_asm
-	ld hl, .Text
+	CheckEvent EVENT_UNLOCKED_BILLS_SECRET_GARDEN
+	ld hl, .CheckOutMyRarePokemonText
+	jr z, .print
+	ld hl, .FoundSecretGardenText
+.print
 	call PrintText
 	jp TextScriptEnd
 
-.Text:
+.CheckOutMyRarePokemonText:
 	text_far _BillsHouseBillCheckOutMyRarePokemonText
+	text_end
+
+.FoundSecretGardenText:
+	text_far _BillsHouseBillFoundSecretGardenText
 	text_end

@@ -82,7 +82,8 @@ DEF NUM_BADGES EQU const_value
 ; wStatusFlags3
 	const_def
 	const BIT_INIT_TRADE_CENTER_FACING ; 0
-	const_skip 2                       ; 1-2 ; unused
+	const BIT_FORCE_DESTINATION_WARP_POSITION ; 1
+	const_skip                         ; 2 ; unused
 	const BIT_WARP_FROM_CUR_SCRIPT     ; 3
 	const BIT_ON_DUNGEON_WARP          ; 4
 	const BIT_NO_NPC_FACE_PLAYER       ; 5

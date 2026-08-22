@@ -86,3 +86,49 @@ _BillsHouseBillCheckOutMyRarePokemonText::
 	cont "some of my rare"
 	cont "#MON on my PC!"
 	done
+
+_BillsHouseBillFoundSecretGardenText::
+	text "BILL: That sensor"
+	line "gate out back"
+	cont "guards my habitat!"
+
+	para "Keep it quiet,"
+	line "bud. Rare #MON"
+	cont "need peace too."
+	done
+
+_BillsHouseSecretGardenChampionRequiredText::
+	text "PRIVATE FILE:"
+	line "HABITAT 25"
+
+	para "ACCESS DENIED."
+	line "CHAMPION RANK"
+	cont "REQUIRED."
+	done
+
+_BillsHouseSecretGardenDataIncompleteText::
+	text "PRIVATE FILE:"
+	line "HABITAT 25"
+
+	para "EVOLUTION DATA..."
+	line "INCOMPLETE."
+	cont "FOUR FORMS NEEDED."
+	done
+
+_BillsHouseSecretGardenAccessGrantedText::
+	text "PRIVATE FILE:"
+	line "HABITAT 25"
+
+	para "EVOLUTION DATA..."
+	line "COMPLETE!"
+
+	para "ACCESS GRANTED."
+	prompt
+
+_BillsHouseSecretGardenOpenedText::
+	text "KRR-CHNK!"
+
+	para "Something clicked"
+	line "behind BILL's"
+	cont "cottage."
+	done

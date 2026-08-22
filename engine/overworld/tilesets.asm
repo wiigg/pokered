@@ -36,12 +36,18 @@ LoadTilesetHeader:
 	pop de
 	pop hl
 	jr c, .dungeon
+	ld a, [wStatusFlags3]
+	bit BIT_FORCE_DESTINATION_WARP_POSITION, a
+	jr nz, .dungeon
 	ld a, [wCurMapTileset]
 	ld b, a
 	ldh a, [hPreviousTileset]
 	cp b
 	jr z, .done
 .dungeon
+	ld a, [wStatusFlags3]
+	res BIT_FORCE_DESTINATION_WARP_POSITION, a
+	ld [wStatusFlags3], a
 	ld a, [wDestinationWarpID]
 	cp $ff
 	jr z, .done
