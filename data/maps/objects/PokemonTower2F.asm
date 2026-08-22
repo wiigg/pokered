@@ -10,6 +10,7 @@ PokemonTower2F_Object:
 	warp_event 18,  9, POKEMON_TOWER_1F, 3
 
 	def_bg_events
+	bg_event 13,  6, TEXT_POKEMONTOWER2F_RATICATE_GRAVE
 
 	def_object_events
 	object_event 14,  5, SPRITE_BLUE, STAY, NONE, TEXT_POKEMONTOWER2F_RIVAL

@@ -131,6 +131,7 @@ PokemonTower2F_TextPointers:
 	def_text_pointers
 	dw_const PokemonTower2FRivalText,     TEXT_POKEMONTOWER2F_RIVAL
 	dw_const PokemonTower2FChannelerText, TEXT_POKEMONTOWER2F_CHANNELER
+	dw_const PokemonTower2FRaticateGraveText, TEXT_POKEMONTOWER2F_RATICATE_GRAVE
 
 PokemonTower2FRivalText:
 	text_asm
@@ -191,4 +192,22 @@ PokemonTower2FRivalText:
 
 PokemonTower2FChannelerText:
 	text_far _PokemonTower2FChannelerText
+	text_end
+
+PokemonTower2FRaticateGraveText:
+	text_asm
+	CheckEvent EVENT_BEAT_POKEMON_TOWER_RIVAL
+	ld hl, .BeforeRivalText
+	jr z, .print_text
+	ld hl, .AfterRivalText
+.print_text
+	call PrintText
+	jp TextScriptEnd
+
+.BeforeRivalText:
+	text_far _PokemonTower2FRaticateGraveText
+	text_end
+
+.AfterRivalText:
+	text_far _PokemonTower2FRaticateGraveAfterRivalText
 	text_end

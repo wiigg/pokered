@@ -55,3 +55,17 @@ _PokemonTower2FChannelerText::
 	line "might be able to"
 	cont "unmask them."
 	done
+
+_PokemonTower2FRaticateGraveText::
+	text "A quiet #MON"
+	line "grave."
+	done
+
+_PokemonTower2FRaticateGraveAfterRivalText::
+	text "The stone has been"
+	line "freshly polished."
+
+	para "Under a scrawled"
+	line "name, two small"
+	cont "fangs are carved."
+	done
