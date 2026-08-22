@@ -40,7 +40,8 @@ ChampionMoveSetPointers:
 	dw ChampionSquirtleMoveSets
 	dw ChampionBulbasaurMoveSets
 	dw ChampionCharmanderMoveSets
-	assert_table_length 3
+	dw BlueViridianGymMoveSets
+	assert_table_length NUM_RIVAL3_TEAMS
 
 ChampionSquirtleMoveSets:
 	db SKY_ATTACK,    WING_ATTACK, AGILITY,       HYPER_BEAM   ; Pidgeot
@@ -71,3 +72,13 @@ ChampionCharmanderMoveSets:
 	db FIRE_BLAST,    SLASH,       EARTHQUAKE,    REFLECT      ; Charizard
 .end
 	assert .end - ChampionCharmanderMoveSets == PARTY_LENGTH * NUM_MOVES
+
+BlueViridianGymMoveSets:
+	db SKY_ATTACK,    WING_ATTACK, AGILITY,       HYPER_BEAM   ; Pidgeot
+	db PSYCHIC_M,     RECOVER,     REFLECT,       THUNDER_WAVE ; Alakazam
+	db EARTHQUAKE,    ROCK_SLIDE,  BODY_SLAM,     SUBMISSION   ; Rhydon
+	db HYDRO_PUMP,    BLIZZARD,    THUNDERBOLT,   HYPER_BEAM   ; Gyarados
+	db PSYCHIC_M,     MEGA_DRAIN,  SLEEP_POWDER,  EGG_BOMB     ; Exeggutor
+	db FIRE_BLAST,    BODY_SLAM,   DIG,           REFLECT      ; Arcanine
+.end
+	assert .end - BlueViridianGymMoveSets == PARTY_LENGTH * NUM_MOVES

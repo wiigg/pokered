@@ -178,14 +178,24 @@ IsObjectHidden:
 	ldh a, [hCurrentSpriteOffset]
 	swap a
 	ld b, a
-	ld hl, wToggleableObjectList
+	ld a, [wCurMap]
+	cp VIRIDIAN_GYM
+	jr nz, .loop
+	ld a, b
+	cp VIRIDIANGYM_BLUE
+	jr nz, .loop
+	call IsViridianGymBlueHidden
+	jr .done
 .loop
+	ld hl, wToggleableObjectList
+
+.toggleableObjectLoop
 	ld a, [hli]
 	cp -1
 	jr z, .notHidden ; not toggleable -> not hidden
 	cp b
 	ld a, [hli]
-	jr nz, .loop
+	jr nz, .toggleableObjectLoop
 	ld c, a
 	ld b, FLAG_TEST
 	ld hl, wToggleableObjectFlags
@@ -196,7 +206,32 @@ IsObjectHidden:
 .notHidden
 	xor a
 .hidden
+.done
 	ldh [hIsToggleableObjectOff], a
+	ret
+
+IsViridianGymBlueHidden:
+	ld a, [wNumHoFTeams]
+	and a
+	jr z, .hidden
+	ld a, [wYCoord]
+	cp 1
+	jr nz, .checkGiovanni
+	ld a, [wXCoord]
+	cp 2
+	jr z, .hidden
+.checkGiovanni
+	ld hl, wToggleableObjectFlags
+	ld c, TOGGLE_VIRIDIAN_GYM_GIOVANNI
+	ld b, FLAG_TEST
+	call ToggleableObjectFlagAction
+	ld a, c
+	and a
+	jr z, .hidden
+	xor a
+	ret
+.hidden
+	ld a, 1
 	ret
 
 ; adds toggleable object (items, leg. pokemon, etc.) to the map

@@ -30,6 +30,7 @@ ViridianGym_ScriptPointers:
 	dw_const EndTrainerBattle,                      SCRIPT_VIRIDIANGYM_END_BATTLE
 	dw_const ViridianGymGiovanniPostBattle,         SCRIPT_VIRIDIANGYM_GIOVANNI_POST_BATTLE
 	dw_const ViridianGymPlayerSpinningScript,       SCRIPT_VIRIDIANGYM_PLAYER_SPINNING
+	dw_const ViridianGymBluePostBattleScript,        SCRIPT_VIRIDIANGYM_BLUE_POST_BATTLE
 
 ViridianGymDefaultScript:
 	ld a, [wYCoord]
@@ -128,6 +129,21 @@ ViridianGymPlayerSpinningScript:
 .ViridianGymLoadSpinnerArrow
 	farjp LoadSpinnerArrowTiles
 
+ViridianGymBluePostBattleScript:
+	ld hl, wStatusFlags3
+	res BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, ViridianGymResetScripts
+	ld hl, wStatusFlags7
+	res BIT_NO_MAP_MUSIC, [hl]
+	call PlayDefaultMusic
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld hl, ViridianGymBlueAfterBattleText
+	call PrintText
+	jp ViridianGymResetScripts
+
 ViridianGymGiovanniPostBattle:
 	ld a, [wIsInBattle]
 	cp $ff
@@ -180,6 +196,7 @@ ViridianGym_TextPointers:
 	dw_const ViridianGymCooltrainerM3Text,          TEXT_VIRIDIANGYM_COOLTRAINER_M3
 	dw_const ViridianGymGymGuideText,               TEXT_VIRIDIANGYM_GYM_GUIDE
 	dw_const PickUpItemText,                        TEXT_VIRIDIANGYM_REVIVE
+	dw_const ViridianGymBlueText,                   TEXT_VIRIDIANGYM_BLUE
 	dw_const ViridianGymGiovanniEarthBadgeInfoText, TEXT_VIRIDIANGYM_GIOVANNI_EARTH_BADGE_INFO
 	dw_const ViridianGymGiovanniReceivedTM27Text,   TEXT_VIRIDIANGYM_GIOVANNI_RECEIVED_TM27
 	dw_const ViridianGymGiovanniTM27NoRoomText,     TEXT_VIRIDIANGYM_GIOVANNI_TM27_NO_ROOM
@@ -274,6 +291,71 @@ ViridianGymGiovanniTM27ExplanationText:
 
 ViridianGymGiovanniTM27NoRoomText:
 	text_far _ViridianGymGiovanniTM27NoRoomText
+	text_end
+
+ViridianGymBlueText:
+	text_asm
+	ld hl, .OfferText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined
+	ld hl, .AcceptedText
+	call PrintText
+	ld a, VIRIDIANGYM_BLUE
+	ld [wSpriteIndex], a
+	call GetSpritePosition1
+	ld hl, .DefeatedText
+	ld de, .VictoryText
+	call SaveEndBattleTextPointers
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	xor a
+	ld [wGymLeaderNo], a
+	ld a, OPP_RIVAL3
+	ld [wCurOpponent], a
+	ld a, RIVAL3_VIRIDIAN_GYM_TEAM
+	ld [wTrainerNo], a
+	ld a, PLAYER_DIR_UP
+	ld [wPlayerMovingDirection], a
+	ld a, SCRIPT_VIRIDIANGYM_BLUE_POST_BATTLE
+	ld [wViridianGymCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	jp TextScriptEnd
+.declined
+	ld hl, .DeclinedText
+	call PrintText
+	jp TextScriptEnd
+
+.OfferText:
+	text_far _ViridianGymBlueOfferText
+	text_end
+
+.AcceptedText:
+	text_far _ViridianGymBlueAcceptedText
+	text_end
+
+.DeclinedText:
+	text_far _ViridianGymBlueDeclinedText
+	text_end
+
+.DefeatedText:
+	text_far _ViridianGymBlueDefeatedText
+	text_end
+
+.VictoryText:
+	text_far _ViridianGymBlueVictoryText
+	text_end
+
+ViridianGymBlueAfterBattleText:
+	text_far _ViridianGymBlueAfterBattleText
 	text_end
 
 ViridianGymCooltrainerM1Text:

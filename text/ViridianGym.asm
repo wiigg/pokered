@@ -84,6 +84,50 @@ _ViridianGymGiovanniTM27NoRoomText::
 	line "space for this!"
 	done
 
+_ViridianGymBlueOfferText::
+	text "<RIVAL>: <PLAYER>!"
+	line "No point leaving a"
+	cont "good GYM empty."
+
+	para "I'm testing a new"
+	line "line-up here."
+
+	para "Want to see how"
+	line "your team fares?"
+	done
+
+_ViridianGymBlueAcceptedText::
+	text "<RIVAL>: Good!"
+	line "No excuses this"
+	cont "time!"
+	done
+
+_ViridianGymBlueDeclinedText::
+	text "<RIVAL>: Heh!"
+	line "Come back when"
+	cont "you're ready."
+	done
+
+_ViridianGymBlueDefeatedText::
+	text "Hah!"
+	line "Still sharp as"
+	cont "ever!"
+	prompt
+
+_ViridianGymBlueVictoryText::
+	text "Heh!"
+	line "Back to training!"
+	prompt
+
+_ViridianGymBlueAfterBattleText::
+	text "<RIVAL>: Not bad!"
+	line "This place suits"
+	cont "me, though."
+
+	para "Maybe I'll stick"
+	line "around."
+	prompt
+
 _ViridianGymCooltrainerM1BattleText::
 	text "Heh! You must be"
 	line "running out of"

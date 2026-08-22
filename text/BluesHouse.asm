@@ -36,6 +36,15 @@ _BluesHouseDaisyWalkingText::
 	cont "them a rest!"
 	done
 
+_BluesHouseDaisyViridianGymHintText::
+	text "<RIVAL> is often"
+	line "in VIRIDIAN CITY."
+
+	para "He says the old"
+	line "GYM is perfect"
+	cont "for training."
+	done
+
 _BluesHouseTownMapText::
 	text "It's a big map!"
 	line "This is useful!"

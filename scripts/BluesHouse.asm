@@ -49,7 +49,15 @@ BluesHouseDaisySittingText:
 	jr .done
 
 .got_town_map
+	ld a, [wNumHoFTeams]
+	and a
+	jr nz, .viridian_gym_hint
 	ld hl, BluesHouseDaisyUseMapText
+	call PrintText
+	jr .done
+
+.viridian_gym_hint
+	ld hl, BluesHouseDaisyViridianGymHintText
 	call PrintText
 	jr .done
 
@@ -81,7 +89,22 @@ BluesHouseDaisyUseMapText:
 	text_end
 
 BluesHouseDaisyWalkingText:
+	text_asm
+	ld hl, .Text
+	ld a, [wNumHoFTeams]
+	and a
+	jr z, .print
+	ld hl, BluesHouseDaisyViridianGymHintText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.Text:
 	text_far _BluesHouseDaisyWalkingText
+	text_end
+
+BluesHouseDaisyViridianGymHintText:
+	text_far _BluesHouseDaisyViridianGymHintText
 	text_end
 
 BluesHouseTownMapText:
