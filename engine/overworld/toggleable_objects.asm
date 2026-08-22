@@ -61,8 +61,74 @@ MarkTownVisitedAndLoadToggleableObjects::
 	inc de
 	jr .writeToggleableObjectsListLoop
 .done
+	call LoadWandererToggleableObject
 	ld a, -1
 	ld [de], a                 ; write sentinel
+	ret
+
+LoadWandererToggleableObject:
+	ld hl, WandererToggleableObjectStates
+	ld c, TOGGLE_MT_MOON_POKECENTER_WANDERER
+	ld a, [wCurMap]
+	ld b, a
+.findMap
+	ld a, c
+	cp NUM_TOGGLEABLE_OBJECTS
+	ret z
+	ld a, [hli]
+	cp b
+	jr z, .found
+	inc hl
+	inc hl
+	inc c
+	jr .findMap
+.found
+	ld a, [hli]
+	ld [de], a                 ; map-local object ID
+	inc de
+	ld a, c
+	ld [de], a                 ; global toggleable object index
+	inc de
+	call IsWandererHiddenByEvent
+	ld b, FLAG_RESET
+	jr z, .applyState
+	ld b, FLAG_SET
+.applyState
+	ld hl, wToggleableObjectFlags
+	jp ToggleableObjectFlagAction
+
+IsWandererHiddenByEvent:
+	CheckEvent EVENT_MET_WANDERER_CERULEAN_CAVE
+	ret nz
+	ld a, [wCurMap]
+	cp MT_MOON_POKECENTER
+	jr z, .mtMoon
+	cp VERMILION_DOCK
+	jr z, .vermilionDock
+	cp POKEMON_TOWER_1F
+	jr z, .pokemonTower
+	cp ROUTE_25
+	jr z, .route25
+	cp POKEMON_MANSION_B1F
+	jr z, .pokemonMansion
+	xor a                       ; Cerulean Cave before the reveal
+	ret
+.mtMoon
+	CheckEvent EVENT_MET_WANDERER_MT_MOON
+	ret
+.vermilionDock
+	CheckEvent EVENT_MET_WANDERER_VERMILION_DOCK
+	ret nz
+	CheckEvent EVENT_GOT_HM01
+	ret
+.pokemonTower
+	CheckEvent EVENT_MET_WANDERER_POKEMON_TOWER
+	ret
+.route25
+	CheckEvent EVENT_MET_WANDERER_ROUTE_25
+	ret
+.pokemonMansion
+	CheckEvent EVENT_MET_WANDERER_POKEMON_MANSION
 	ret
 
 InitializeToggleableObjectsFlags:

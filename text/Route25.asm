@@ -171,3 +171,12 @@ _Route25SecretGardenGateOpenedText::
 	para "A hidden gate"
 	line "slides open!"
 	done
+
+_WandererRoute25Text::
+	text "WANDERER: Some"
+	line "doors are never"
+	cont "drawn on maps."
+
+	para "Kindness opens"
+	line "more than locks."
+	done

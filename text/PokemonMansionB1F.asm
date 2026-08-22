@@ -45,3 +45,15 @@ _PokemonMansionB1FDiaryText::
 	line "the same blank"
 	cont "face..."
 	done
+
+_WandererMansionText::
+	text "WANDERER: Copies"
+	line "can tell us more"
+	cont "of their makers."
+
+	para "A creator may"
+	line "forget that life"
+	cont "chooses its path."
+
+	para "Read what remains."
+	done

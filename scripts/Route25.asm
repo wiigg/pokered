@@ -53,6 +53,7 @@ Route25_TextPointers:
 	dw_const Route25Hiker2Text,        TEXT_ROUTE25_HIKER2
 	dw_const Route25Hiker3Text,        TEXT_ROUTE25_HIKER3
 	dw_const PickUpItemText,           TEXT_ROUTE25_TM_SEISMIC_TOSS
+	dw_const Route25WandererText,      TEXT_ROUTE25_WANDERER
 	dw_const Route25BillSignText,      TEXT_ROUTE25_BILL_SIGN
 	dw_const Route25SecretGardenGateText, TEXT_ROUTE25_SECRET_GARDEN_GATE
 
@@ -131,6 +132,20 @@ Route25Hiker3Text:
 	ld hl, Route25TrainerHeader8
 	call TalkToTrainer
 	jp TextScriptEnd
+
+Route25WandererText:
+	text_asm
+	ld hl, .Text
+	call PrintText
+	SetEvent EVENT_MET_WANDERER_ROUTE_25
+	ld a, TOGGLE_ROUTE_25_WANDERER
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	jp TextScriptEnd
+
+.Text:
+	text_far _WandererRoute25Text
+	text_end
 
 Route25Youngster1BattleText:
 	text_far _Route25Youngster1BattleText

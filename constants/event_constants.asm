@@ -68,7 +68,7 @@
 	const_next $F0 - 2
 	const EVENT_POKEMON_TOWER_RIVAL_ON_LEFT
 	const EVENT_BEAT_POKEMON_TOWER_RIVAL
-	const_skip
+	const EVENT_MET_WANDERER_POKEMON_TOWER
 	const EVENT_BEAT_POKEMONTOWER_3_TRAINER_0
 	const EVENT_BEAT_POKEMONTOWER_3_TRAINER_1
 	const EVENT_BEAT_POKEMONTOWER_3_TRAINER_2
@@ -101,7 +101,7 @@
 
 ; Vermilion City events
 	const_next $150
-	const_skip
+	const EVENT_MET_WANDERER_VERMILION_DOCK
 	const EVENT_GOT_BIKE_VOUCHER
 	const_skip 4
 	const EVENT_SEEL_FAN_BOAST
@@ -244,7 +244,8 @@
 
 ; Route 4 events
 	const_next $3F0
-	const_skip 2
+	const EVENT_MET_WANDERER_MT_MOON
+	const_skip
 	const EVENT_BEAT_ROUTE_4_TRAINER_0
 	const_skip
 	const EVENT_BEAT_MAGIKARP_SALESMAN
@@ -510,6 +511,7 @@
 	const_skip
 	const EVENT_NUGGET_REWARD_AVAILABLE
 	const EVENT_GOT_BILLS_GARDEN_PIKACHU
+	const EVENT_MET_WANDERER_ROUTE_25
 
 ; Route 25 events
 	const_next $550
@@ -704,7 +706,7 @@
 
 ; Pokémon Mansion events
 	const_next $800
-	const_skip
+	const EVENT_MET_WANDERER_POKEMON_MANSION
 	const EVENT_BEAT_MANSION_2_TRAINER_0
 	const_skip 15
 	const EVENT_BEAT_MANSION_3_TRAINER_0
@@ -719,7 +721,7 @@
 
 ; Cerulean Cave events
 	const_next $8C0
-	const_skip
+	const EVENT_MET_WANDERER_CERULEAN_CAVE
 	const EVENT_BEAT_MEWTWO
 
 ; Indigo Plateau events

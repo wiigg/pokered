@@ -39,6 +39,7 @@ MtMoonPokecenter_TextPointers:
 	dw_const MtMoonPokecenterMagikarpSalesmanText, TEXT_MTMOONPOKECENTER_MAGIKARP_SALESMAN
 	dw_const MtMoonPokecenterClipboardText,        TEXT_MTMOONPOKECENTER_CLIPBOARD
 	dw_const MtMoonPokecenterLinkReceptionistText, TEXT_MTMOONPOKECENTER_LINK_RECEPTIONIST
+	dw_const MtMoonPokecenterWandererText,        TEXT_MTMOONPOKECENTER_WANDERER
 	dw_const MtMoonPokecenterMagikarpSalesmanRewardText, TEXT_MTMOONPOKECENTER_MAGIKARP_SALESMAN_REWARD
 
 MtMoonPokecenterNurseText:
@@ -164,6 +165,20 @@ MtMoonPokecenterClipboardText:
 
 MtMoonPokecenterLinkReceptionistText:
 	script_cable_club_receptionist
+
+MtMoonPokecenterWandererText:
+	text_asm
+	ld hl, .Text
+	call PrintText
+	SetEvent EVENT_MET_WANDERER_MT_MOON
+	ld a, TOGGLE_MT_MOON_POKECENTER_WANDERER
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	jp TextScriptEnd
+
+.Text:
+	text_far _MtMoonPokecenterWandererText
+	text_end
 
 MtMoonPokecenterMagikarpSalesmanRewardText:
 	text_asm

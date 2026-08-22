@@ -34,3 +34,15 @@ _VermilionDockMewVanishedText::
 	para "Only silence"
 	line "remains."
 	done
+
+_VermilionDockWandererText::
+	text "WANDERER: Some"
+	line "stories survive"
+	cont "because they ought"
+	cont "to be true."
+
+	para "When the ship is"
+	line "only a memory,"
+	cont "look beneath what"
+	cont "could never move."
+	done

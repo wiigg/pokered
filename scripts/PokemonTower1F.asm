@@ -8,6 +8,7 @@ PokemonTower1F_TextPointers:
 	dw_const PokemonTower1FBaldingGuyText,      TEXT_POKEMONTOWER1F_BALDING_GUY
 	dw_const PokemonTower1FGirlText,            TEXT_POKEMONTOWER1F_GIRL
 	dw_const PokemonTower1FChannelerText,       TEXT_POKEMONTOWER1F_CHANNELER
+	dw_const PokemonTower1FWandererText,        TEXT_POKEMONTOWER1F_WANDERER
 
 PokemonTower1FReceptionistText:
 	text_far _PokemonTower1FReceptionistText
@@ -27,4 +28,18 @@ PokemonTower1FGirlText:
 
 PokemonTower1FChannelerText:
 	text_far _PokemonTower1FChannelerText
+	text_end
+
+PokemonTower1FWandererText:
+	text_asm
+	ld hl, .Text
+	call PrintText
+	SetEvent EVENT_MET_WANDERER_POKEMON_TOWER
+	ld a, TOGGLE_POKEMON_TOWER_1F_WANDERER
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	jp TextScriptEnd
+
+.Text:
+	text_far _PokemonTower1FWandererText
 	text_end

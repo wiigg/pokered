@@ -29,3 +29,16 @@ _PokemonTower1FChannelerText::
 	line "There are spirits"
 	cont "up to mischief!"
 	done
+
+_PokemonTower1FWandererText::
+	text "WANDERER: Absence"
+	line "leaves its own"
+	cont "kind of mark."
+
+	para "Some memories"
+	line "have teeth."
+
+	para "And some shadows"
+	line "reach farther than"
+	cont "they should."
+	done

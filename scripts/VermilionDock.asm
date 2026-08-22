@@ -345,6 +345,20 @@ VermilionDockMewVanishedText:
 	text_far _VermilionDockMewVanishedText
 	text_end
 
+VermilionDockWandererText:
+	text_asm
+	ld hl, .Text
+	call PrintText
+	SetEvent EVENT_MET_WANDERER_VERMILION_DOCK
+	ld a, TOGGLE_VERMILION_DOCK_WANDERER
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	jp TextScriptEnd
+
+.Text:
+	text_far _VermilionDockWandererText
+	text_end
+
 VermilionDockMoveTruck:
 	SetEvent EVENT_MOVED_VERMILION_DOCK_TRUCK
 	ld a, SFX_PUSH_BOULDER
@@ -361,4 +375,5 @@ VermilionDockMoveTruck:
 
 VermilionDock_TextPointers:
 	def_text_pointers
+	dw_const VermilionDockWandererText, TEXT_VERMILIONDOCK_WANDERER
 	dw_const VermilionDockTruckText, TEXT_VERMILIONDOCK_TRUCK

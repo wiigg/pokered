@@ -90,3 +90,16 @@ _MtMoonPokecenterMagikarpSalesmanAfterChallengeText::
 _MtMoonPokecenterClipboardText::
 	text_start
 	done
+
+_MtMoonPokecenterWandererText::
+	text "WANDERER: KANTO"
+	line "keeps old stories."
+
+	para "When moonlight"
+	line "finds the stone,"
+	cont "listen closely."
+
+	para "Even a foolish"
+	line "bargain may become"
+	cont "something greater."
+	done
