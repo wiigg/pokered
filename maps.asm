@@ -80,7 +80,17 @@ CinnabarIsland_Blocks: INCBIN "maps/CinnabarIsland.blk"
 INCLUDE "data/maps/headers/BillsSecretGarden.asm"
 INCLUDE "scripts/BillsSecretGarden.asm"
 INCLUDE "data/maps/objects/BillsSecretGarden.asm"
-BillsSecretGarden_Blocks: INCBIN "maps/BillsSecretGarden.blk"
+BillsSecretGarden_Blocks:
+	; One continuous mountain ring, opening onto Bill's hidden passage.
+	db $2b, $57, $57, $57, $57, $57, $57, $57, $57, $2a
+	db $29, $0b, $0b, $01, $74, $01, $1d, $1f, $1e, $28
+	db $29, $0b, $0b, $01, $74, $01, $77, $77, $77, $28
+	db $29, $01, $01, $01, $74, $01, $01, $01, $01, $28
+	db $29, $74, $74, $01, $01, $01, $0b, $0b, $01, $28
+	db $29, $74, $74, $01, $01, $01, $0b, $0b, $01, $28
+	db $29, $01, $01, $01, $01, $01, $01, $01, $01, $28
+	db $29, $0b, $01, $01, $01, $01, $01, $01, $0b, $28
+	db $2c, $3f, $3f, $3b, $01, $3e, $3f, $3f, $3f, $2c
 
 INCLUDE "data/maps/headers/Route1.asm"
 INCLUDE "data/maps/objects/Route1.asm"

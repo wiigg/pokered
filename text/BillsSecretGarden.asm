@@ -38,10 +38,3 @@ _BillsSecretGardenNotebookText::
 	line "A PC THAT LINKS"
 	cont "TODAY TO TOMORROW."
 	done
-
-_BillsSecretGardenExitText::
-	text "A concealed door"
-	line "leads back out."
-
-	para "Leave the GARDEN?"
-	done

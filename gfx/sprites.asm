@@ -28,6 +28,19 @@ SnorlaxSprite::          INCBIN "gfx/sprites/snorlax.2bpp"
 OldAmberSprite::         INCBIN "gfx/sprites/old_amber.2bpp"
 GamblerAsleepSprite::    INCBIN "gfx/sprites/gambler_asleep.2bpp"
 
+; Inspired by Viridian School's notebook desk and chair tiles.
+GardenTableSprite::
+	db $1f, $1f, $2f, $31, $2f, $31, $2b, $35, $2f, $31, $21, $3f, $1f, $1f, $ff, $ff
+	db $f8, $f8, $f4, $8c, $f4, $8c, $d4, $ac, $f4, $8c, $84, $fc, $f8, $f8, $ff, $ff
+	db $80, $ff, $ff, $80, $ff, $ff, $60, $60, $60, $60, $60, $60, $60, $60, $00, $00
+	db $01, $ff, $ff, $01, $ff, $ff, $06, $06, $06, $06, $06, $06, $06, $06, $00, $00
+
+GardenChairSprite::
+	db $00, $00, $00, $00, $1f, $1f, $20, $20, $27, $20, $27, $20, $27, $20, $20, $20
+	db $00, $00, $00, $00, $fc, $f8, $04, $04, $e4, $04, $e4, $04, $e4, $04, $04, $04
+	db $3f, $20, $3f, $2f, $38, $2f, $3d, $2a, $3e, $39, $00, $00, $00, $00, $00, $00
+	db $fc, $04, $fc, $f4, $1c, $f4, $7c, $94, $fc, $1c, $00, $00, $00, $00, $00, $00
+
 
 SECTION "NPC Sprites 2", ROMX
 

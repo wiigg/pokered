@@ -1,6 +1,26 @@
 BillsSecretGarden_Script:
 	call BillsSecretGardenLoadMap
+	call BillsSecretGardenCheckExit
 	jp EnableAutoTextBoxDrawing
+
+BillsSecretGardenCheckExit:
+	ld a, [wYCoord]
+	cp 17
+	ret nz
+	ld a, [wXCoord]
+	cp 8
+	jr z, .leave
+	cp 9
+	ret nz
+.leave
+	ld a, ROUTE_25
+	ldh [hWarpDestinationMap], a
+	ld a, 1 ; destination-only return point (stored as index 1)
+	ld [wDestinationWarpID], a
+	ld hl, wStatusFlags3
+	set BIT_FORCE_DESTINATION_WARP_POSITION, [hl]
+	set BIT_WARP_FROM_CUR_SCRIPT, [hl]
+	ret
 
 BillsSecretGardenLoadMap:
 	ld hl, wCurrentMapScriptFlags
@@ -19,7 +39,7 @@ BillsSecretGarden_TextPointers:
 	def_text_pointers
 	dw_const BillsSecretGardenPikachuText, TEXT_BILLSSECRETGARDEN_PIKACHU
 	dw_const BillsSecretGardenNotebookText, TEXT_BILLSSECRETGARDEN_NOTEBOOK
-	dw_const BillsSecretGardenExitText, TEXT_BILLSSECRETGARDEN_EXIT
+	dw_const BillsSecretGardenChairText, TEXT_BILLSSECRETGARDEN_CHAIR
 
 BillsSecretGardenPikachuText:
 	text_asm
@@ -62,26 +82,10 @@ BillsSecretGardenNotebookText:
 	text_far _BillsSecretGardenNotebookText
 	text_end
 
-BillsSecretGardenExitText:
+BillsSecretGardenChairText:
 	text_asm
-	ld hl, .ExitText
-	call PrintText
-	call YesNoChoice
-	ld a, [wCurrentMenuItem]
-	and a
-	jp nz, TextScriptEnd
-	ld a, ROUTE_25
-	ldh [hWarpDestinationMap], a
-	xor a ; destination warp 1 (stored as index 0)
-	ld [wDestinationWarpID], a
-	ld hl, wStatusFlags3
-	set BIT_FORCE_DESTINATION_WARP_POSITION, [hl]
-	set BIT_WARP_FROM_CUR_SCRIPT, [hl]
+	call DisableWaitingAfterTextDisplay
 	jp TextScriptEnd
-
-.ExitText:
-	text_far _BillsSecretGardenExitText
-	text_end
 
 BillsSecretGardenCustomizePikachu:
 	ld a, [wAddedToParty]

@@ -33,3 +33,6 @@ Route25_Object:
 	object_event 22,  2, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE25_TM_SEISMIC_TOSS, TM_SEISMIC_TOSS
 
 	def_warps_to ROUTE_25
+
+	; destination-only return point in front of the secret entrance
+	warp_to 50, 4, ROUTE_25_WIDTH
