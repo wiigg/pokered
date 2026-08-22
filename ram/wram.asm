@@ -508,7 +508,14 @@ wLowHealthAlarmDisabled:: db
 
 wPlayerMonMinimized:: db
 
-	ds 13
+	ds 2
+
+; Reuse battle-only padding so the WRAM and save layouts do not move.
+wEXPBarPixelLength:: db
+wEXPBarBaseEXP:: ds 3
+wEXPBarCurEXP:: ds 3
+wEXPBarNeededEXP:: ds 3
+wEXPBarKeepFullFlag:: db
 
 UNION
 ; the amount of damage accumulated by the enemy while biding

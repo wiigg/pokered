@@ -237,6 +237,7 @@ SECTION "Battle Engine 8", ROMX
 
 INCLUDE "engine/battle/init_battle_variables.asm"
 INCLUDE "engine/battle/move_effects/paralyze.asm"
+INCLUDE "engine/battle/rival_moves.asm"
 
 
 SECTION "Hidden Events 2", ROMX
@@ -251,6 +252,7 @@ INCLUDE "engine/events/hidden_events/indigo_plateau_hq.asm"
 SECTION "Battle Engine 9", ROMX
 
 INCLUDE "engine/battle/experience.asm"
+INCLUDE "engine/gfx/exp_bar.asm"
 
 
 SECTION "Diploma", ROMX

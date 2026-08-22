@@ -21,12 +21,13 @@ IDs.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.
 - [ ] Upgrade major trainers with fuller, smarter teams:
   - [x] Upgrade all eight Gym Leaders.
-  - [ ] Strengthen rival battles.
+  - [x] Strengthen rival battles.
   - [ ] Rebuild the Elite Four and Champion.
 - [ ] Add a small “Red+” package:
   - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
   - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
+  - [x] Show an animated EXP bar in battle.
   - [ ] Add optional fixes for Focus Energy and Ghost versus Psychic.
 
 To set up the repository, see [**INSTALL.md**](INSTALL.md).

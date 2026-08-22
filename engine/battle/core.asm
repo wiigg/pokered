@@ -1844,6 +1844,7 @@ DrawPlayerHUDAndHPBar:
 	hlcoord 10, 7
 	call CenterMonName
 	call PlaceString
+	callfar PrintEXPBar
 	ld hl, wBattleMonSpecies
 	ld de, wLoadedMon
 	ld bc, wBattleMonDVs - wBattleMonSpecies
@@ -6542,7 +6543,12 @@ LoadHudTilePatterns:
 	ld de, vChars2 tile $73
 	ld bc, BattleHudTiles3End - BattleHudTiles2
 	ld a, BANK(BattleHudTiles2)
-	jp FarCopyDataDouble
+	call FarCopyDataDouble
+	ld hl, EXPBarGraphics
+	ld de, vChars1 tile $40
+	ld bc, EXPBarGraphicsEnd - EXPBarGraphics
+	ld a, BANK(EXPBarGraphics)
+	jp FarCopyData2
 .lcdEnabled
 	ld de, BattleHudTiles1
 	ld hl, vChars2 tile $6d
@@ -6551,7 +6557,11 @@ LoadHudTilePatterns:
 	ld de, BattleHudTiles2
 	ld hl, vChars2 tile $73
 	lb bc, BANK(BattleHudTiles2), (BattleHudTiles3End - BattleHudTiles2) / TILE_1BPP_SIZE
-	jp CopyVideoDataDouble
+	call CopyVideoDataDouble
+	ld de, EXPBarGraphics
+	ld hl, vChars1 tile $40
+	lb bc, BANK(EXPBarGraphics), (EXPBarGraphicsEnd - EXPBarGraphics) / TILE_SIZE
+	jp CopyVideoData
 
 PrintEmptyString:
 	ld hl, .emptyString

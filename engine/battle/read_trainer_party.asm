@@ -43,7 +43,7 @@ ReadTrainer:
 ; if the first byte of trainer data is FF,
 ; - each pokemon has a specific level
 ;      (as opposed to the whole team being of the same level)
-; - gym leaders can have complete custom movesets
+; - major trainers can have complete custom movesets
 ; else the first byte is the level of every pokemon on the team
 .IterateTrainer
 	ld a, [hli]
@@ -100,6 +100,10 @@ ReadTrainer:
 	ld a, [wCurOpponent]
 	sub OPP_ID_OFFSET
 	ld b, a
+	cp RIVAL1
+	jr z, .GiveRivalMoves
+	cp RIVAL2
+	jr z, .GiveRivalMoves
 	cp PROF_OAK
 	jr z, .GiveProfOakMoves
 	ld hl, TeamMoves
@@ -140,6 +144,9 @@ ReadTrainer:
 .GiveStarterMove
 	ld a, b
 	ld [wEnemyMon6Moves + 2], a
+	jr .FinishUp
+.GiveRivalMoves
+	farcall GiveRivalMoves
 	jr .FinishUp
 .GiveProfOakMoves
 	ld a, [wTrainerNo]
