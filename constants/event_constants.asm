@@ -5,7 +5,8 @@
 	const EVENT_FOLLOWED_OAK_INTO_LAB
 	const_skip 2
 	const EVENT_HALL_OF_FAME_DEX_RATING
-	const_skip 2
+	const_skip
+	const EVENT_BEAT_PROF_OAK
 	const EVENT_PALLET_AFTER_GETTING_POKEBALLS
 	const_skip 17
 	const EVENT_GOT_TOWN_MAP

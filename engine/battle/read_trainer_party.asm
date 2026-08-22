@@ -53,7 +53,7 @@ ReadTrainer:
 .LoopTrainerData
 	ld a, [hli]
 	and a ; have we reached the end of the trainer data?
-	jr z, .FinishUp
+	jp z, .FinishUp
 	ld [wCurPartySpecies], a
 	ld a, ENEMY_PARTY_DATA
 	ld [wMonDataLocation], a
@@ -95,7 +95,7 @@ ReadTrainer:
 	ld bc, PARTYMON_STRUCT_LENGTH
 	call AddNTimes
 	ld [hl], d
-	jr .FinishUp
+	jp .FinishUp
 .AddTeamMove
 ; check if our trainer's team has special moves
 
@@ -103,6 +103,8 @@ ReadTrainer:
 	ld a, [wCurOpponent]
 	sub OPP_ID_OFFSET
 	ld b, a
+	cp PROF_OAK
+	jr z, .GiveProfOakMoves
 	ld hl, TeamMoves
 
 ; iterate through entries in TeamMoves, checking each for our trainer class
@@ -141,6 +143,52 @@ ReadTrainer:
 .GiveStarterMove
 	ld a, b
 	ld [wEnemyMon6Moves + 2], a
+	jr .FinishUp
+.GiveProfOakMoves
+	ld a, [wTrainerNo]
+	dec a
+	ld hl, ProfOakMoveSets
+	ld bc, PROF_OAK_PARTY_LENGTH * NUM_MOVES
+	call AddNTimes
+	ld de, wEnemyMon1Moves
+	ld b, PROF_OAK_PARTY_LENGTH
+.copyProfOakMonMoves
+	ld c, NUM_MOVES
+.copyProfOakMove
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .copyProfOakMove
+	ld c, PARTYMON_STRUCT_LENGTH - NUM_MOVES
+.nextProfOakMon
+	inc de
+	dec c
+	jr nz, .nextProfOakMon
+	dec b
+	jr nz, .copyProfOakMonMoves
+	ld hl, wEnemyMon1Moves
+	ld de, wEnemyMon1PP - 1
+	ld b, PROF_OAK_PARTY_LENGTH
+.loadProfOakMovePPs
+	push bc
+	push hl
+	push de
+	predef LoadMovePPs
+	pop de
+	pop hl
+	ld bc, PARTYMON_STRUCT_LENGTH
+	add hl, bc
+	push hl
+	ld h, d
+	ld l, e
+	add hl, bc
+	ld d, h
+	ld e, l
+	pop hl
+	pop bc
+	dec b
+	jr nz, .loadProfOakMovePPs
 .FinishUp
 ; clear wAmountMoneyWon addresses
 	xor a

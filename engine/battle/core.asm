@@ -921,11 +921,14 @@ TrainerBattleVictory:
 	ld b, MUSIC_DEFEATED_TRAINER
 .gymleader
 	ld a, [wTrainerClass]
+	cp PROF_OAK
+	jr z, .boss
 	cp RIVAL3 ; final battle against rival
 	jr nz, .notrival
-	ld b, MUSIC_DEFEATED_GYM_LEADER
 	ld hl, wStatusFlags7
 	set BIT_NO_MAP_MUSIC, [hl]
+.boss
+	ld b, MUSIC_DEFEATED_GYM_LEADER
 .notrival
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
@@ -1128,11 +1131,27 @@ ChooseNextMon:
 	ret
 
 ; called when player is out of usable mons.
-; prints appropriate lose message, sets carry flag if player blacked out (special case for initial rival fight)
+; prints the appropriate loss message and skips blacking out for Oak's Lab battles
 HandlePlayerBlackOut:
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
 	jr z, .notRival1Battle
+	ld a, [wCurOpponent]
+	cp OPP_PROF_OAK
+	jr nz, .notProfOakBattle
+	ld a, [wCurMap]
+	cp OAKS_LAB
+	jr nz, .notRival1Battle
+	hlcoord 0, 0
+	lb bc, 8, 21
+	call ClearScreenArea
+	call ScrollTrainerPicAfterBattle
+	ld c, 40
+	call DelayFrames
+	call PrintEndBattleText
+	and a
+	ret
+.notProfOakBattle
 	ld a, [wCurOpponent]
 	cp OPP_RIVAL1
 	jr nz, .notRival1Battle

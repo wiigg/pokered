@@ -63,3 +63,6 @@ ENDM
 	trainer_const AGATHA         ; $2E
 	trainer_const LANCE          ; $2F
 DEF NUM_TRAINERS EQU const_value - 1
+
+DEF PROF_OAK_PARTY_LENGTH EQU 5
+DEF NUM_PROF_OAK_TEAMS EQU 3

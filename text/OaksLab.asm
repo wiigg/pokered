@@ -166,6 +166,66 @@ _OaksLabOak1HowIsYourPokedexComingText::
 	cont "a look!"
 	prompt
 
+_OaksLabOakChallengeText::
+	text "OAK: <PLAYER>!"
+	line "You became the"
+	cont "CHAMPION!"
+
+	para "When I was young,"
+	line "I was a serious"
+	cont "#MON trainer."
+
+	para "Would you care to"
+	line "test your team"
+	cont "against mine?"
+	done
+
+_OaksLabOakRematchText::
+	text "OAK: <PLAYER>!"
+	line "Ready to test your"
+	cont "team again?"
+	done
+
+_OaksLabOakAcceptedText::
+	text "OAK: Excellent!"
+	line "I'll restore your"
+	cont "#MON first."
+
+	para "Show me everything"
+	line "you've learned!"
+	done
+
+_OaksLabOakDefeatedText::
+	text "OAK: Remarkable!"
+	line "You truly are the"
+	cont "CHAMPION!"
+	prompt
+
+_OaksLabOakVictoryText::
+	text "OAK: Experience"
+	line "still has its"
+	cont "rewards!"
+	prompt
+
+_OaksLabOakWonBattleText::
+	text "OAK: Magnificent!"
+	line "There is nothing"
+	cont "more I can teach"
+	cont "you."
+
+	para "Come back anytime"
+	line "for a rematch!"
+	done
+
+_OaksLabOakLostBattleText::
+	text "OAK: Well fought!"
+	line "I've restored your"
+	cont "#MON."
+
+	para "Try again whenever"
+	line "you're ready."
+	done
+
 _OaksLabPokedexText::
 	text "It's encyclopedia-"
 	line "like, but the"

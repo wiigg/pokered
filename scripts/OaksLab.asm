@@ -30,6 +30,7 @@ OaksLab_ScriptPointers:
 	dw_const OaksLabOakGivesPokedexScript,           SCRIPT_OAKSLAB_OAK_GIVES_POKEDEX
 	dw_const OaksLabRivalLeavesWithPokedexScript,    SCRIPT_OAKSLAB_RIVAL_LEAVES_WITH_POKEDEX
 	dw_const OaksLabNoopScript,                      SCRIPT_OAKSLAB_NOOP
+	dw_const OaksLabOakPostBattleScript,             SCRIPT_OAKSLAB_OAK_POST_BATTLE
 
 OaksLabDefaultScript:
 	CheckEvent EVENT_OAK_APPEARED_IN_PALLET
@@ -651,6 +652,40 @@ OaksLabRivalLeavesWithPokedexScript:
 OaksLabNoopScript:
 	ret
 
+OaksLabOakPostBattleScript:
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld a, PLAYER_DIR_UP
+	ld [wPlayerMovingDirection], a
+	call UpdateSprites
+	ld a, OAKSLAB_OAK1
+	ld [wSpriteIndex], a
+	call SetSpritePosition1
+	ld a, OAKSLAB_OAK1
+	ldh [hSpriteIndex], a
+	xor a ; SPRITE_FACING_DOWN
+	ldh [hSpriteFacingDirection], a
+	call SetSpriteFacingDirectionAndDelay
+	ld a, [wBattleResult]
+	push af
+	predef HealParty
+	pop af
+	and a
+	ld hl, OaksLabOakLostBattleText
+	jr nz, .show_result
+	SetEvent EVENT_BEAT_PROF_OAK
+	ld hl, OaksLabOakWonBattleText
+.show_result
+	call PrintText
+	ld hl, wStatusFlags3
+	res BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, SCRIPT_OAKSLAB_NOOP
+	ld [wOaksLabCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ret
+
 OaksLabScript_RemoveParcel:
 	ld hl, wBagItems
 	ld bc, 0
@@ -964,6 +999,60 @@ OaksLabLastMonText:
 
 OaksLabOak1Text:
 	text_asm
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .regular_text
+	CheckEvent EVENT_BEAT_PROF_OAK
+	ld hl, .RematchText
+	jr nz, .ask_for_battle
+	ld hl, .ChallengeText
+.ask_for_battle
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jp nz, .already_got_poke_balls
+	ld hl, .AcceptedText
+	call PrintText
+	predef HealParty
+	ld c, BANK(Music_MeetProfOak)
+	ld a, MUSIC_MEET_PROF_OAK
+	call PlayMusic
+	ld a, OAKSLAB_OAK1
+	ld [wSpriteIndex], a
+	call GetSpritePosition1
+	ld hl, .DefeatedText
+	ld de, .VictoryText
+	call SaveEndBattleTextPointers
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, OPP_PROF_OAK
+	ld [wCurOpponent], a
+	ld a, [wPlayerStarter]
+	cp STARTER3
+	jr z, .blastoise_team
+	cp STARTER1
+	jr z, .venusaur_team
+	ld a, 3 ; Charizard team
+	jr .set_team
+.blastoise_team
+	ld a, 1
+	jr .set_team
+.venusaur_team
+	ld a, 2
+.set_team
+	ld [wTrainerNo], a
+	ld a, PLAYER_DIR_UP
+	ld [wPlayerMovingDirection], a
+	ld a, SCRIPT_OAKSLAB_OAK_POST_BATTLE
+	ld [wOaksLabCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	jp TextScriptEnd
+.regular_text
 	CheckEvent EVENT_PALLET_AFTER_GETTING_POKEBALLS
 	jr nz, .already_got_poke_balls
 	ld hl, wPokedexOwned
@@ -1067,6 +1156,34 @@ OaksLabOak1Text:
 
 .HowIsYourPokedexComingText:
 	text_far _OaksLabOak1HowIsYourPokedexComingText
+	text_end
+
+.ChallengeText:
+	text_far _OaksLabOakChallengeText
+	text_end
+
+.RematchText:
+	text_far _OaksLabOakRematchText
+	text_end
+
+.AcceptedText:
+	text_far _OaksLabOakAcceptedText
+	text_end
+
+.DefeatedText:
+	text_far _OaksLabOakDefeatedText
+	text_end
+
+.VictoryText:
+	text_far _OaksLabOakVictoryText
+	text_end
+
+OaksLabOakWonBattleText:
+	text_far _OaksLabOakWonBattleText
+	text_end
+
+OaksLabOakLostBattleText:
+	text_far _OaksLabOakLostBattleText
 	text_end
 
 OaksLabPokedexText:
