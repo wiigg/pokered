@@ -12,6 +12,8 @@
 	const_export MTMOON1F_ESCAPE_ROPE
 	const_export MTMOON1F_POTION2
 	const_export MTMOON1F_TM_WATER_GUN
+	const_export MTMOON1F_CLEFAIRY1
+	const_export MTMOON1F_CLEFAIRY2
 
 MtMoon1F_Object:
 	db $3 ; border block
@@ -24,6 +26,7 @@ MtMoon1F_Object:
 	warp_event 25, 15, MT_MOON_B1F, 4
 
 	def_bg_events
+	bg_event  2,  2, TEXT_MTMOON1F_MOONFALL_SITE
 	bg_event 15, 23, TEXT_MTMOON1F_BEWARE_ZUBAT_SIGN
 
 	def_object_events
@@ -40,5 +43,7 @@ MtMoon1F_Object:
 	object_event 36, 23, SPRITE_POKE_BALL, STAY, NONE, TEXT_MTMOON1F_ESCAPE_ROPE, ESCAPE_ROPE
 	object_event 20, 33, SPRITE_POKE_BALL, STAY, NONE, TEXT_MTMOON1F_POTION2, POTION
 	object_event  5, 32, SPRITE_POKE_BALL, STAY, NONE, TEXT_MTMOON1F_TM_WATER_GUN, TM_WATER_GUN
+	object_event -4, -4, SPRITE_FAIRY, STAY, LEFT, TEXT_MTMOON1F_CLEFAIRY1
+	object_event -4, -4, SPRITE_FAIRY, STAY, UP, TEXT_MTMOON1F_CLEFAIRY2
 
 	def_warps_to MT_MOON_1F

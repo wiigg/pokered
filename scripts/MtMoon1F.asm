@@ -28,6 +28,9 @@ MtMoon1F_TextPointers:
 	dw_const PickUpItemText,            TEXT_MTMOON1F_ESCAPE_ROPE
 	dw_const PickUpItemText,            TEXT_MTMOON1F_POTION2
 	dw_const PickUpItemText,            TEXT_MTMOON1F_TM_WATER_GUN
+	dw_const MtMoon1FClefairyText,      TEXT_MTMOON1F_CLEFAIRY1
+	dw_const MtMoon1FClefairyText,      TEXT_MTMOON1F_CLEFAIRY2
+	dw_const MtMoon1FMoonfallSiteText,  TEXT_MTMOON1F_MOONFALL_SITE
 	dw_const MtMoon1FBewareZubatSign,   TEXT_MTMOON1F_BEWARE_ZUBAT_SIGN
 
 MtMoon1TrainerHeaders:
@@ -172,6 +175,168 @@ MtMoon1FYoungster3EndBattleText:
 
 MtMoon1FYoungster3AfterBattleText:
 	text_far _MtMoon1FYoungster3AfterBattleText
+	text_end
+
+MtMoon1FMoonfallSiteText:
+	text_asm
+	CheckEvent EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	jr nz, .ceremony_complete
+	CheckEvent EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
+	jr z, .quiet
+	ld a, [wToggleableObjectFlags + (TOGGLE_MT_MOON_1F_ITEM_2 / 8)]
+	bit TOGGLE_MT_MOON_1F_ITEM_2 % 8, a
+	jr z, .quiet
+
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	call GBFadeOutToWhite
+	call MtMoon1FShowMoonfallClefairy
+	call GBFadeInFromWhite
+	ld hl, MtMoon1FMoonfallBeginsText
+	call PrintText
+	ld a, CLEFAIRY
+	call PlayCry
+	call WaitForSoundToFinish
+	call MtMoon1FAnimateMoonfallDance
+	ld hl, MtMoon1FMoonfallDanceText
+	call PrintText
+	call GBFadeOutToWhite
+	call MtMoon1FHideMoonfallClefairy
+	call GBFadeInFromWhite
+	ld hl, MtMoon1FMoonfallGiftText
+	call PrintText
+	lb bc, MOON_STONE, 1
+	call GiveItem
+	jr nc, .bag_full
+	SetEvent EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	ld hl, MtMoon1FReceivedMoonStoneText
+	call PrintText
+	jr .unlock
+
+.bag_full
+	ld hl, MtMoon1FMoonfallBagFullText
+	call PrintText
+.unlock
+	xor a
+	ld [wJoyIgnore], a
+	jp TextScriptEnd
+
+.ceremony_complete
+	ld hl, MtMoon1FMoonfallCompleteText
+	call PrintText
+	jp TextScriptEnd
+
+.quiet
+	ld hl, MtMoon1FMoonfallQuietText
+	call PrintText
+	jp TextScriptEnd
+
+MtMoon1FShowMoonfallClefairy:
+	ld a, MTMOON1F_CLEFAIRY1
+	lb bc, 2, 4
+	call MtMoon1FSetCeremonySpritePosition
+	ld a, MTMOON1F_CLEFAIRY2
+	lb bc, 3, 3
+	call MtMoon1FSetCeremonySpritePosition
+	jp UpdateSprites
+
+MtMoon1FHideMoonfallClefairy:
+	ld a, MTMOON1F_CLEFAIRY1
+	lb bc, -4, -4
+	call MtMoon1FSetCeremonySpritePosition
+	ld a, MTMOON1F_CLEFAIRY2
+	lb bc, -4, -4
+	call MtMoon1FSetCeremonySpritePosition
+	jp UpdateSprites
+
+; Places an object at map coordinate (c, b), including its current screen position.
+MtMoon1FSetCeremonySpritePosition:
+	ld [wSpriteIndex], a
+	ld a, b
+	add 4
+	ldh [hSpriteMapYCoord], a
+	ld d, a
+	ld a, [wYCoord]
+	ld e, a
+	ld a, d
+	sub e
+	swap a
+	sub 4
+	ldh [hSpriteScreenYCoord], a
+	ld a, c
+	add 4
+	ldh [hSpriteMapXCoord], a
+	ld d, a
+	ld a, [wXCoord]
+	ld e, a
+	ld a, d
+	sub e
+	swap a
+	ldh [hSpriteScreenXCoord], a
+	jp SetSpritePosition1
+
+MtMoon1FAnimateMoonfallDance:
+	ld a, MTMOON1F_CLEFAIRY1
+	ldh [hSpriteIndex], a
+	ld a, SPRITE_FACING_DOWN
+	ldh [hSpriteFacingDirection], a
+	call MtMoon1FTurnCeremonySprite
+	ld a, MTMOON1F_CLEFAIRY2
+	ldh [hSpriteIndex], a
+	ld a, SPRITE_FACING_RIGHT
+	ldh [hSpriteFacingDirection], a
+	call MtMoon1FTurnCeremonySprite
+	ld a, MTMOON1F_CLEFAIRY1
+	ldh [hSpriteIndex], a
+	ld a, SPRITE_FACING_LEFT
+	ldh [hSpriteFacingDirection], a
+	call MtMoon1FTurnCeremonySprite
+	ld a, MTMOON1F_CLEFAIRY2
+	ldh [hSpriteIndex], a
+	ld a, SPRITE_FACING_UP
+	ldh [hSpriteFacingDirection], a
+	call MtMoon1FTurnCeremonySprite
+	ld a, CLEFAIRY
+	call PlayCry
+	jp WaitForSoundToFinish
+
+MtMoon1FTurnCeremonySprite:
+	call SetSpriteFacingDirection
+	call UpdateSprites
+	ld c, 6
+	jp DelayFrames
+
+MtMoon1FMoonfallBeginsText:
+	text_far _MtMoon1FMoonfallBeginsText
+	text_end
+
+MtMoon1FMoonfallDanceText:
+	text_far _MtMoon1FMoonfallDanceText
+	text_end
+
+MtMoon1FMoonfallGiftText:
+	text_far _MtMoon1FMoonfallGiftText
+	text_end
+
+MtMoon1FReceivedMoonStoneText:
+	text_far _MtMoon1FReceivedMoonStoneText
+	sound_get_item_1
+	text_end
+
+MtMoon1FMoonfallBagFullText:
+	text_far _MtMoon1FMoonfallBagFullText
+	text_end
+
+MtMoon1FMoonfallCompleteText:
+	text_far _MtMoon1FMoonfallCompleteText
+	text_end
+
+MtMoon1FMoonfallQuietText:
+	text_far _MtMoon1FMoonfallQuietText
+	text_end
+
+MtMoon1FClefairyText:
+	text_far _MtMoon1FClefairyText
 	text_end
 
 MtMoon1FBewareZubatSign:

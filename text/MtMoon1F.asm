@@ -113,6 +113,65 @@ _MtMoon1FYoungster3AfterBattleText::
 	cont "catch one."
 	done
 
+_MtMoon1FMoonfallBeginsText::
+	text "A pale glow spills"
+	line "from the old"
+	cont "impact hollow!"
+
+	para "Two CLEFAIRY"
+	line "gather round the"
+	cont "moonlit hollow."
+	done
+
+_MtMoon1FMoonfallDanceText::
+	text "They turn and sway"
+	line "in a strange,"
+	cont "silent ceremony."
+	done
+
+_MtMoon1FMoonfallGiftText::
+	text "The light fades."
+	line "A fresh fragment"
+	cont "rests in the"
+	cont "hollow."
+	done
+
+_MtMoon1FReceivedMoonStoneText::
+	text "<PLAYER> found"
+	line "a MOON STONE!"
+	done
+
+_MtMoon1FMoonfallBagFullText::
+	text "But the BAG is"
+	line "full!"
+
+	para "The fragment sinks"
+	line "back into the"
+	cont "silver light..."
+	done
+
+_MtMoon1FMoonfallCompleteText::
+	text "Tiny footprints"
+	line "circle the old"
+	cont "impact hollow."
+
+	para "A silver sparkle"
+	line "lingers in the"
+	cont "stone."
+	done
+
+_MtMoon1FMoonfallQuietText::
+	text "A round hollow is"
+	line "scored into the"
+	cont "rock."
+
+	para "The cave is still."
+	done
+
+_MtMoon1FClefairyText::
+	text "CLEFAIRY: Pii!"
+	done
+
 _MtMoon1FBewareZubatSign::
 	text "Beware! ZUBAT is"
 	line "a blood sucker!"
