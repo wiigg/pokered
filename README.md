@@ -24,6 +24,7 @@ an original location that an unmodified game can load safely.
 - [x] Make [Bill's Secret Garden](scripts/BillsSecretGarden.asm) real as a postgame Eevee-family secret, with a unique Surfing Pikachu and hints of discoveries still to come.
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.
+- [x] Help [Erik and Sara](scripts/FuchsiaCity.asm) find each other at Fuchsia City's different gates.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Give a completed 151-species Pokédex a proper epilogue and a framed bedroom diploma.
 - [x] Add a repeatable [Trial of Three](scripts/FightingDojo.asm) gauntlet with no rest between battles.

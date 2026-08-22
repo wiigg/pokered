@@ -14,6 +14,7 @@
 	const SPRITESET_FUCHSIA         ; 0a
 	const SPRITESET_BILLS_GARDEN    ; 0b
 	const SPRITESET_ROUTE_25_WANDERER ; 0c
+	const SPRITESET_FUCHSIA_SARA    ; 0d
 DEF NUM_SPRITE_SETS EQU const_value - 1
 
 ; split sprite set ids

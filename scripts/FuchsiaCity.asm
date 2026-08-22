@@ -13,6 +13,7 @@ FuchsiaCity_TextPointers:
 	dw_const FuchsiaCityPokemonText,         TEXT_FUCHSIACITY_SLOWPOKE
 	dw_const FuchsiaCityPokemonText,         TEXT_FUCHSIACITY_LAPRAS
 	dw_const FuchsiaCityPokemonText,         TEXT_FUCHSIACITY_FOSSIL
+	dw_const FuchsiaCitySaraText,            TEXT_FUCHSIACITY_SARA
 	dw_const FuchsiaCitySignText,            TEXT_FUCHSIACITY_SIGN1
 	dw_const FuchsiaCitySignText,            TEXT_FUCHSIACITY_SIGN2
 	dw_const FuchsiaCitySafariGameSignText,  TEXT_FUCHSIACITY_SAFARI_GAME_SIGN
@@ -37,7 +38,35 @@ FuchsiaCityGamblerText:
 	text_end
 
 FuchsiaCityErikText:
-	text_far _FuchsiaCityErikText
+	text_asm
+	CheckEvent EVENT_REUNITED_ERIK_AND_SARA
+	jr nz, .reunited
+	CheckEvent EVENT_ERIK_ASKED_TO_FIND_SARA
+	jr nz, .waiting
+	ld hl, .LookingForSaraText
+	call PrintText
+	SetEvent EVENT_ERIK_ASKED_TO_FIND_SARA
+	jr .done
+.waiting
+	ld hl, .WaitingForSaraText
+	call PrintText
+	jr .done
+.reunited
+	ld hl, .ReunitedText
+	call PrintText
+.done
+	jp TextScriptEnd
+
+.LookingForSaraText:
+	text_far _FuchsiaCityErikLookingForSaraText
+	text_end
+
+.WaitingForSaraText:
+	text_far _FuchsiaCityErikWaitingForSaraText
+	text_end
+
+.ReunitedText:
+	text_far _FuchsiaCityErikReunitedText
 	text_end
 
 FuchsiaCityYoungster2Text:
@@ -46,6 +75,10 @@ FuchsiaCityYoungster2Text:
 
 FuchsiaCityPokemonText:
 	text_far _FuchsiaCityPokemonText
+	text_end
+
+FuchsiaCitySaraText:
+	text_far _FuchsiaCitySaraText
 	text_end
 
 FuchsiaCitySignText:

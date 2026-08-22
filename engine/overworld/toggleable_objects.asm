@@ -180,11 +180,19 @@ IsObjectHidden:
 	ld b, a
 	ld a, [wCurMap]
 	cp VIRIDIAN_GYM
-	jr nz, .loop
+	jr nz, .checkFuchsiaCity
 	ld a, b
 	cp VIRIDIANGYM_BLUE
 	jr nz, .loop
 	call IsViridianGymBlueHidden
+	jr .done
+.checkFuchsiaCity
+	cp FUCHSIA_CITY
+	jr nz, .loop
+	ld a, b
+	cp FUCHSIACITY_SARA
+	jr nz, .loop
+	call IsFuchsiaCitySaraHidden
 	jr .done
 .loop
 	ld hl, wToggleableObjectList
@@ -228,6 +236,22 @@ IsViridianGymBlueHidden:
 	ld a, c
 	and a
 	jr z, .hidden
+	xor a
+	ret
+.hidden
+	ld a, 1
+	ret
+
+IsFuchsiaCitySaraHidden:
+	CheckEvent EVENT_REUNITED_ERIK_AND_SARA
+	jr z, .hidden
+	ld a, [wYCoord]
+	cp 14
+	jr nz, .visible
+	ld a, [wXCoord]
+	cp 29
+	jr z, .hidden
+.visible
 	xor a
 	ret
 .hidden

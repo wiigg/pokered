@@ -151,7 +151,9 @@
 	const_next $238
 	const EVENT_GOT_HM04
 	const EVENT_GAVE_GOLD_TEETH
-	const_skip 20
+	const EVENT_ERIK_ASKED_TO_FIND_SARA
+	const EVENT_REUNITED_ERIK_AND_SARA
+	const_skip 18
 	const EVENT_SAFARI_GAME_OVER
 	const EVENT_IN_SAFARI_ZONE
 	const_skip 8

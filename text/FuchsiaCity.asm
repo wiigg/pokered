@@ -22,10 +22,35 @@ _FuchsiaCityGamblerText::
 	cont "catching #MON."
 	done
 
-_FuchsiaCityErikText::
+_FuchsiaCityErikLookingForSaraText::
 	text "ERIK: Where's"
 	line "SARA? I said I'd"
 	cont "meet her here."
+
+	para "If you see her,"
+	line "tell her I'm by"
+	cont "the zoo gate!"
+	done
+
+_FuchsiaCityErikWaitingForSaraText::
+	text "ERIK: I hope SARA"
+	line "gets my message."
+	done
+
+_FuchsiaCityErikReunitedText::
+	text "ERIK: We were at"
+	line "different gates!"
+
+	para "No wonder we never"
+	line "crossed paths!"
+	done
+
+_FuchsiaCitySaraText::
+	text "SARA: We finally"
+	line "found each other!"
+
+	para "Thank you for"
+	line "passing the word."
 	done
 
 _FuchsiaCityYoungster2Text::
