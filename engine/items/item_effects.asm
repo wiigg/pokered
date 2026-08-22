@@ -2235,11 +2235,8 @@ ItemUseTMHM:
 	ld [wWhichPokemon], a
 	ld a, b
 	and a
-	ret z
-	ld a, [wCurItem]
-	call IsItemHM
-	ret c
-	jp RemoveUsedItem
+	ret z ; move was not learned
+	ret ; TMs and HMs are reusable
 
 BootedUpTMText:
 	text_far _BootedUpTMText

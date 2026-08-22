@@ -21,7 +21,7 @@ IDs.
 - [ ] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.
 - [ ] Upgrade Gym Leaders, rivals, and the Elite Four with fuller, smarter teams.
 - [ ] Add a small “Red+” package:
-  - [ ] Make TMs reusable.
+  - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
   - [ ] Improve weak moves.
   - [ ] Add optional fixes for Focus Energy and Ghost versus Psychic.
