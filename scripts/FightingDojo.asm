@@ -20,6 +20,9 @@ FightingDojo_ScriptPointers:
 	dw_const DisplayEnemyTrainerTextAndStartBattle,    SCRIPT_FIGHTINGDOJO_START_BATTLE
 	dw_const EndTrainerBattle,                         SCRIPT_FIGHTINGDOJO_END_BATTLE
 	dw_const FightingDojoKarateMasterPostBattleScript, SCRIPT_FIGHTINGDOJO_KARATE_MASTER_POST_BATTLE
+	dw_const FightingDojoTrialSwiftnessPostBattleScript, SCRIPT_FIGHTINGDOJO_TRIAL_SWIFTNESS_POST_BATTLE
+	dw_const FightingDojoTrialEndurancePostBattleScript, SCRIPT_FIGHTINGDOJO_TRIAL_ENDURANCE_POST_BATTLE
+	dw_const FightingDojoTrialMasteryPostBattleScript,   SCRIPT_FIGHTINGDOJO_TRIAL_MASTERY_POST_BATTLE
 
 FightingDojoDefaultScript:
 	CheckEvent EVENT_DEFEATED_FIGHTING_DOJO
@@ -80,6 +83,86 @@ FightingDojoKarateMasterPostBattleScript:
 	ld [wCurMapScript], a
 	ret
 
+FightingDojoTrialSwiftnessPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, FightingDojoResetScripts
+	xor a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld hl, FightingDojoTrialOneCompleteText
+	call PrintText
+	ld hl, FightingDojoTrialEnduranceEndBattleText
+	ld a, FIGHTING_DOJO_TRIAL_ENDURANCE_TEAM
+	ld b, SCRIPT_FIGHTINGDOJO_TRIAL_ENDURANCE_POST_BATTLE
+	jp FightingDojoStartTrialBattle
+
+FightingDojoTrialEndurancePostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, FightingDojoResetScripts
+	xor a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld hl, FightingDojoTrialTwoCompleteText
+	call PrintText
+	ld hl, FightingDojoTrialMasteryEndBattleText
+	ld a, FIGHTING_DOJO_TRIAL_MASTERY_TEAM
+	ld b, SCRIPT_FIGHTINGDOJO_TRIAL_MASTERY_POST_BATTLE
+	jp FightingDojoStartTrialBattle
+
+FightingDojoTrialMasteryPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jp z, FightingDojoResetScripts
+	xor a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld hl, FightingDojoTrialCompleteText
+	call PrintText
+	predef HealParty
+	call GBFadeOutToWhite
+	call Delay3
+	call GBFadeInFromWhite
+	ld hl, FightingDojoTrialPartyRestoredText
+	call PrintText
+	jp FightingDojoResetScripts
+
+; Start a repeatable trainer battle without touching the Dojo's saved trainer flags.
+; a = Blackbelt team, b = post-battle script, hl = end-battle text
+FightingDojoStartTrialBattle:
+	push af
+	push bc
+	ld d, h
+	ld e, l
+	call SaveEndBattleTextPointers
+	pop bc
+	pop af
+	ld [wTrainerNo], a
+	ld a, OPP_BLACKBELT
+	ld [wCurOpponent], a
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, b
+	ld [wFightingDojoCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	ret
+
 FightingDojo_TextPointers:
 	def_text_pointers
 	dw_const FightingDojoKarateMasterText,                          TEXT_FIGHTINGDOJO_KARATE_MASTER
@@ -126,10 +209,39 @@ FightingDojoKarateMasterText:
 	ld [wCurMapScript], a
 	jr .end
 .defeated_dojo
+	ld a, [wNumHoFTeams]
+	and a
+	jr z, .stay_and_train
+	jr .offer_trial
+.defeated_master
+	ld a, [wNumHoFTeams]
+	and a
+	jr z, .give_pokemon
+	ld hl, .PrizeStillWaitsText
+	call PrintText
+.offer_trial
+	ld hl, .TrialOfferText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined_trial
+	ld hl, .TrialAcceptedText
+	call PrintText
+	ld hl, FightingDojoTrialSwiftnessEndBattleText
+	ld a, FIGHTING_DOJO_TRIAL_SWIFTNESS_TEAM
+	ld b, SCRIPT_FIGHTINGDOJO_TRIAL_SWIFTNESS_POST_BATTLE
+	call FightingDojoStartTrialBattle
+	jr .end
+.declined_trial
+	ld hl, .TrialDeclinedText
+	call PrintText
+	jr .end
+.stay_and_train
 	ld hl, .StayAndTrainWithUsText
 	call PrintText
 	jr .end
-.defeated_master
+.give_pokemon
 	ld hl, .IWillGiveYouAPokemonText
 	call PrintText
 .end
@@ -149,6 +261,50 @@ FightingDojoKarateMasterText:
 
 .StayAndTrainWithUsText:
 	text_far _FightingDojoKarateMasterStayAndTrainWithUsText
+	text_end
+
+.TrialOfferText:
+	text_far _FightingDojoKarateMasterTrialOfferText
+	text_end
+
+.TrialAcceptedText:
+	text_far _FightingDojoKarateMasterTrialAcceptedText
+	text_end
+
+.TrialDeclinedText:
+	text_far _FightingDojoKarateMasterTrialDeclinedText
+	text_end
+
+.PrizeStillWaitsText:
+	text_far _FightingDojoKarateMasterPrizeStillWaitsText
+	text_end
+
+FightingDojoTrialSwiftnessEndBattleText:
+	text_far _FightingDojoTrialSwiftnessEndBattleText
+	text_end
+
+FightingDojoTrialEnduranceEndBattleText:
+	text_far _FightingDojoTrialEnduranceEndBattleText
+	text_end
+
+FightingDojoTrialMasteryEndBattleText:
+	text_far _FightingDojoTrialMasteryEndBattleText
+	text_end
+
+FightingDojoTrialOneCompleteText:
+	text_far _FightingDojoTrialOneCompleteText
+	text_end
+
+FightingDojoTrialTwoCompleteText:
+	text_far _FightingDojoTrialTwoCompleteText
+	text_end
+
+FightingDojoTrialCompleteText:
+	text_far _FightingDojoTrialCompleteText
+	text_end
+
+FightingDojoTrialPartyRestoredText:
+	text_far _FightingDojoTrialPartyRestoredText
 	text_end
 
 FightingDojoBlackbelt1Text:

@@ -118,3 +118,31 @@ ENDC
 	db TRI_ATTACK, RECOVER,     ICE_BEAM,     THUNDERBOLT  ; Porygon
 ChiefMoveSetsEnd:
 	assert ChiefMoveSetsEnd - ChiefMoveSets == CHIEF_PARTY_LENGTH * NUM_MOVES
+
+FightingDojoTrialMoveSetPointers:
+	table_width 2
+	dw FightingDojoTrialSwiftnessMoveSets
+	dw FightingDojoTrialEnduranceMoveSets
+	dw FightingDojoTrialMasteryMoveSets
+	assert_table_length NUM_FIGHTING_DOJO_TRIAL_TEAMS
+
+FightingDojoTrialSwiftnessMoveSets:
+	db SLASH,         BUBBLEBEAM,  THUNDERBOLT,  SCREECH      ; Persian
+	db SUBMISSION,    ROCK_SLIDE,  BODY_SLAM,    FOCUS_ENERGY ; Primeape
+	db DRILL_PECK,    TRI_ATTACK,  AGILITY,      HYPER_BEAM   ; Dodrio
+.end
+	assert .end - FightingDojoTrialSwiftnessMoveSets == FIGHTING_DOJO_TRIAL_PARTY_LENGTH * NUM_MOVES
+
+FightingDojoTrialEnduranceMoveSets:
+	db SURF,          SUBMISSION,  HYPNOSIS,     BODY_SLAM    ; Poliwrath
+	db BODY_SLAM,     EARTHQUAKE,  ROCK_SLIDE,   COUNTER      ; Kangaskhan
+	db BODY_SLAM,     EARTHQUAKE,  BLIZZARD,     HYPER_BEAM   ; Snorlax
+.end
+	assert .end - FightingDojoTrialEnduranceMoveSets == FIGHTING_DOJO_TRIAL_PARTY_LENGTH * NUM_MOVES
+
+FightingDojoTrialMasteryMoveSets:
+	db SUBMISSION,    MEGA_PUNCH,  ICE_PUNCH,    THUNDERPUNCH ; Hitmonchan
+	db HI_JUMP_KICK,  MEGA_KICK,   MEDITATE,     BODY_SLAM    ; Hitmonlee
+	db SUBMISSION,    EARTHQUAKE,  ROCK_SLIDE,   BODY_SLAM    ; Machamp
+.end
+	assert .end - FightingDojoTrialMasteryMoveSets == FIGHTING_DOJO_TRIAL_PARTY_LENGTH * NUM_MOVES

@@ -39,6 +39,83 @@ _FightingDojoKarateMasterStayAndTrainWithUsText::
 	line "Karate with us!"
 	done
 
+_FightingDojoKarateMasterTrialOfferText::
+	text "Ho! You conquered"
+	line "the #MON LEAGUE!"
+
+	para "Face our secret"
+	line "TRIAL OF THREE?"
+
+	para "Three battles!"
+	line "No rest between!"
+	cont "Items are allowed."
+	done
+
+_FightingDojoKarateMasterTrialAcceptedText::
+	text "Fwaaa! Begin!"
+
+	para "First, the path"
+	line "of SWIFTNESS!"
+	done
+
+_FightingDojoKarateMasterTrialDeclinedText::
+	text "Ho! The trial"
+	line "will wait!"
+	done
+
+_FightingDojoKarateMasterPrizeStillWaitsText::
+	text "Ho! Our prized"
+	line "#MON still wait"
+	cont "for you!"
+	prompt
+
+_FightingDojoTrialSwiftnessEndBattleText::
+	text "Your pace..."
+	line "surpassed mine!"
+	prompt
+
+_FightingDojoTrialEnduranceEndBattleText::
+	text "My guard..."
+	line "broken!"
+	prompt
+
+_FightingDojoTrialMasteryEndBattleText::
+	text "Hwa! The third"
+	line "gate falls!"
+	prompt
+
+_FightingDojoTrialOneCompleteText::
+	text "One! Two remain!"
+
+	para "Now, the path"
+	line "of ENDURANCE!"
+	prompt
+
+_FightingDojoTrialTwoCompleteText::
+	text "Two! Now face me!"
+
+	para "Show me true"
+	line "MASTERY!"
+	prompt
+
+_FightingDojoTrialCompleteText::
+	text "Hwa! Splendid!"
+
+	para "You passed the"
+	line "TRIAL OF THREE!"
+
+	para "Your #MON"
+	line "fought as one."
+
+	para "Rest now. You have"
+	line "earned it!"
+	prompt
+
+_FightingDojoTrialPartyRestoredText::
+	text "Your #MON are"
+	line "fighting fit!"
+	prompt
+
 _FightingDojoBlackbelt1BattleText::
 	text "Hoargh! Take your"
 	line "shoes off!"

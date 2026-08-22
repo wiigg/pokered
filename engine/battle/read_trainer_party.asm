@@ -100,6 +100,8 @@ ReadTrainer:
 	ld a, [wCurOpponent]
 	sub OPP_ID_OFFSET
 	ld b, a
+	cp BLACKBELT
+	jr z, .GiveFightingDojoTrialMoves
 	cp RIVAL1
 	jr z, .GiveRivalMoves
 	cp RIVAL2
@@ -119,6 +121,23 @@ ReadTrainer:
 	cp LANCE
 	jr z, .GiveBossMoves
 	jr .FinishUp
+.GiveFightingDojoTrialMoves
+	ld a, [wTrainerNo]
+	sub FIGHTING_DOJO_TRIAL_SWIFTNESS_TEAM
+	jr c, .FinishUp
+	cp NUM_FIGHTING_DOJO_TRIAL_TEAMS
+	jr nc, .FinishUp
+	add a
+	ld c, a
+	ld b, 0
+	ld hl, FightingDojoTrialMoveSetPointers
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld a, [wEnemyPartyCount]
+	ld b, a
+	jp .GiveFullTeamMoves
 .GiveRivalMoves
 	farcall GiveRivalMoves
 	jr .FinishUp

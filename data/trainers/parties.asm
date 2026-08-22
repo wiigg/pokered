@@ -485,6 +485,12 @@ BlackbeltData:
 	db 38, MACHOKE, MACHOP, MACHOKE, 0
 ; Victory Road 2F
 	db 43, MACHOKE, MACHOP, MACHOKE, 0
+; Fighting Dojo postgame Trial of Three: Swiftness
+	db $FF, 58, PERSIAN, 59, PRIMEAPE, 60, DODRIO, 0
+; Fighting Dojo postgame Trial of Three: Endurance
+	db $FF, 59, POLIWRATH, 60, KANGASKHAN, 61, SNORLAX, 0
+; Fighting Dojo postgame Trial of Three: Mastery
+	db $FF, 61, HITMONCHAN, 62, HITMONLEE, 64, MACHAMP, 0
 
 Rival1Data:
 	db 6, SQUIRTLE, 0
