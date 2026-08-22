@@ -1934,7 +1934,7 @@ wToggleableObjectList:: ds 16 * 2 + 1
 wGameProgressFlags::
 wOaksLabCurScript:: db
 wPalletTownCurScript:: db
-	ds 1
+wLavenderTownCurScript:: db
 wBluesHouseCurScript:: db
 wViridianCityCurScript:: db
 	ds 2

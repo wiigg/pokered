@@ -16,6 +16,7 @@ IDs.
 ## Roadmap
 
 - [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
+- [x] Make Lavender Town's [“white hand” rumour](scripts/LavenderTown.asm) real with a hidden Haunter encounter.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.

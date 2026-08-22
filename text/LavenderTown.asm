@@ -17,6 +17,25 @@ _LavenderTownLittleGirlHaHaGuessNotText::
 	cont "it's not real."
 	done
 
+_LavenderTownLittleGirlWhiteHandMovedText::
+	text "..."
+	line "It moved."
+	done
+
+_LavenderTownLittleGirlShoulderFeelsLighterText::
+	text "Your shoulder"
+	line "feels lighter."
+	done
+
+_LavenderTownWhiteHandFadedText::
+	text "The white hand"
+	line "faded away..."
+	done
+
+_LavenderTownWhiteHandFollowedText::
+	text "It followed you."
+	done
+
 _LavenderTownCooltrainerMText::
 	text "This town is known"
 	line "as the grave site"
