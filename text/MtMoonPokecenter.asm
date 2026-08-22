@@ -43,6 +43,50 @@ _MtMoonPokecenterMagikarpSalesmanNoRefundsText::
 	line "give refunds!"
 	done
 
+_MtMoonPokecenterMagikarpSalesmanChallengeText::
+	text "MAN: You own a"
+	line "GYARADOS?"
+
+	para "Maybe you know a"
+	line "good investment!"
+
+	para "Beat my best"
+	line "stock. Win, and"
+	cont "I'll pay a ¥500"
+	cont "dividend!"
+	done
+
+_MtMoonPokecenterMagikarpSalesmanDeclinedChallengeText::
+	text "MAN: No hurry."
+	line "My offer stands!"
+	done
+
+_MtMoonPokecenterMagikarpSalesmanBattleText::
+	text "MAN: Let's see"
+	line "what my stock can"
+	cont "really do!"
+	done
+
+_MtMoonPokecenterMagikarpSalesmanEndBattleText::
+	text "That's one strong"
+	line "investment!"
+	prompt
+
+_MtMoonPokecenterMagikarpSalesmanDividendText::
+	text "MAN: No refunds!"
+	line "But here's your"
+	cont "¥500 dividend!"
+	done
+
+_MtMoonPokecenterMagikarpSalesmanAfterChallengeText::
+	text "MAN: A GYARADOS..."
+	line "Now that's a fine"
+	cont "investment!"
+
+	para "Spend that"
+	line "dividend wisely!"
+	done
+
 _MtMoonPokecenterClipboardText::
 	text_start
 	done

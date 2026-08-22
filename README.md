@@ -19,6 +19,7 @@ IDs.
 - [x] Make Lavender Town's [“white hand” rumour](scripts/LavenderTown.asm) real with a hidden Haunter encounter.
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
+- [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.

@@ -246,7 +246,9 @@
 	const_next $3F0
 	const_skip 2
 	const EVENT_BEAT_ROUTE_4_TRAINER_0
-	const_skip 12
+	const_skip
+	const EVENT_BEAT_MAGIKARP_SALESMAN
+	const_skip 10
 	const EVENT_BOUGHT_MAGIKARP
 
 ; Route 6 events

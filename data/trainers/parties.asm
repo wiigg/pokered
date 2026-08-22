@@ -330,6 +330,8 @@ FisherData:
 	db 33, SEAKING, GOLDEEN, 0
 ; Route 12
 	db 24, MAGIKARP, MAGIKARP, 0
+; Mt. Moon Pokecenter
+	db $FF, 18, MAGIKARP, 19, GOLDEEN, 20, HORSEA, 22, SEAKING, 24, GYARADOS, 0
 
 SwimmerData:
 ; Cerulean Gym
