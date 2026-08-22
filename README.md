@@ -22,7 +22,7 @@ IDs.
 - [ ] Upgrade Gym Leaders, rivals, and the Elite Four with fuller, smarter teams.
 - [ ] Add a small “Red+” package:
   - [ ] Make TMs reusable.
-  - [ ] Hold B to run.
+  - [x] Hold B to run while walking.
   - [ ] Improve weak moves.
   - [ ] Add optional fixes for Focus Energy and Ghost versus Psychic.
 

@@ -276,13 +276,10 @@ OverworldLoopLessDelay::
 .moveAhead2
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
-	ld a, [wWalkBikeSurfState]
-	dec a ; riding a bike?
-	jr nz, .normalPlayerSpriteAdvancement
 	ld a, [wMovementFlags]
 	bit BIT_LEDGE_OR_FISHING, a
 	jr nz, .normalPlayerSpriteAdvancement
-	call DoBikeSpeedup
+	call DoPlayerMovementSpeedup
 .normalPlayerSpriteAdvancement
 	call AdvancePlayerSprite
 	ld a, [wWalkCounter]
@@ -372,6 +369,35 @@ NewBattle::
 .noBattle
 	and a
 	ret
+
+; function to make walking with B held or riding a bike twice as fast
+DoPlayerMovementSpeedup::
+	ld a, [wWalkBikeSurfState]
+	and a ; walking?
+	jr z, DoRunningSpeedup
+	dec a ; riding a bike?
+	ret nz ; surfing
+	jp DoBikeSpeedup
+
+DoRunningSpeedup:
+	ldh a, [hJoyHeld]
+	bit B_PAD_B, a
+	ret z
+	ld a, [wWalkCounter]
+	cp 2 ; never let the extra advance consume the final movement tick
+	ret c
+	call IsPlayerCharacterBeingControlledByGame
+	ret nz
+	ld a, [wStatusFlags5]
+	bit BIT_SCRIPTED_NPC_MOVEMENT, a
+	ret nz
+	ld a, [wMovementFlags]
+	bit BIT_SPINNING, a
+	ret nz
+	ld a, [wMiscFlags]
+	bit BIT_BOULDER_DUST, a
+	ret nz
+	jp AdvancePlayerSprite
 
 ; function to make bikes twice as fast as walking
 DoBikeSpeedup::
