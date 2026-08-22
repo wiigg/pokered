@@ -43,7 +43,7 @@ ReadTrainer:
 ; if the first byte of trainer data is FF,
 ; - each pokemon has a specific level
 ;      (as opposed to the whole team being of the same level)
-; - if [wLoneAttackNo] != 0, one pokemon on the team has a special move
+; - gym leaders can have complete custom movesets
 ; else the first byte is the level of every pokemon on the team
 .IterateTrainer
 	ld a, [hli]
@@ -65,10 +65,9 @@ ReadTrainer:
 ; if this code is being run:
 ; - each pokemon has a specific level
 ;      (as opposed to the whole team being of the same level)
-; - if [wLoneAttackNo] != 0, one pokemon on the team has a special move
 	ld a, [hli]
 	and a ; have we reached the end of the trainer data?
-	jr z, .AddLoneMove
+	jr z, .AddGymLeaderMoves
 	ld [wCurEnemyLevel], a
 	ld a, [hli]
 	ld [wCurPartySpecies], a
@@ -78,24 +77,22 @@ ReadTrainer:
 	call AddPartyMon
 	pop hl
 	jr .SpecialTrainer
-.AddLoneMove
-; does the trainer have a single monster with a different move?
-	ld a, [wLoneAttackNo] ; Brock is 01, Misty is 02, Erika is 04, etc
+.AddGymLeaderMoves
+	ld a, [wGymLeaderNo]
 	and a
 	jr z, .AddTeamMove
 	dec a
 	add a
 	ld c, a
 	ld b, 0
-	ld hl, LoneMoves
+	ld hl, GymLeaderMoveSetPointers
 	add hl, bc
 	ld a, [hli]
-	ld d, [hl]
-	ld hl, wEnemyMon1Moves + 2
-	ld bc, PARTYMON_STRUCT_LENGTH
-	call AddNTimes
-	ld [hl], d
-	jp .FinishUp
+	ld h, [hl]
+	ld l, a
+	ld a, [wEnemyPartyCount]
+	ld b, a
+	jp .GiveFullTeamMoves
 .AddTeamMove
 ; check if our trainer's team has special moves
 
@@ -150,27 +147,29 @@ ReadTrainer:
 	ld hl, ProfOakMoveSets
 	ld bc, PROF_OAK_PARTY_LENGTH * NUM_MOVES
 	call AddNTimes
-	ld de, wEnemyMon1Moves
 	ld b, PROF_OAK_PARTY_LENGTH
-.copyProfOakMonMoves
+.GiveFullTeamMoves
+	push bc
+	ld de, wEnemyMon1Moves
+.copyTrainerMonMoves
 	ld c, NUM_MOVES
-.copyProfOakMove
+.copyTrainerMove
 	ld a, [hli]
 	ld [de], a
 	inc de
 	dec c
-	jr nz, .copyProfOakMove
+	jr nz, .copyTrainerMove
 	ld c, PARTYMON_STRUCT_LENGTH - NUM_MOVES
-.nextProfOakMon
+.nextTrainerMon
 	inc de
 	dec c
-	jr nz, .nextProfOakMon
+	jr nz, .nextTrainerMon
 	dec b
-	jr nz, .copyProfOakMonMoves
+	jr nz, .copyTrainerMonMoves
+	pop bc
 	ld hl, wEnemyMon1Moves
 	ld de, wEnemyMon1PP - 1
-	ld b, PROF_OAK_PARTY_LENGTH
-.loadProfOakMovePPs
+.loadTrainerMovePPs
 	push bc
 	push hl
 	push de
@@ -188,7 +187,7 @@ ReadTrainer:
 	pop hl
 	pop bc
 	dec b
-	jr nz, .loadProfOakMovePPs
+	jr nz, .loadTrainerMovePPs
 .FinishUp
 ; clear wAmountMoneyWon addresses
 	xor a

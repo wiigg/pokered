@@ -37,12 +37,12 @@ TrainerAIPointers:
 	dbw 2, CooltrainerMAI ; COOLTRAINER_M
 	dbw 1, CooltrainerFAI ; COOLTRAINER_F
 	dbw 2, BrunoAI ; BRUNO
-	dbw 5, BrockAI ; BROCK
+	dbw 1, BrockAI ; BROCK
 	dbw 1, MistyAI ; MISTY
 	dbw 1, LtSurgeAI ; LT_SURGE
 	dbw 1, ErikaAI ; ERIKA
-	dbw 2, KogaAI ; KOGA
-	dbw 2, BlaineAI ; BLAINE
+	dbw 1, KogaAI ; KOGA
+	dbw 1, BlaineAI ; BLAINE
 	dbw 1, SabrinaAI ; SABRINA
 	dbw 3, GenericAI ; GENTLEMAN
 	dbw 1, Rival2AI ; RIVAL2

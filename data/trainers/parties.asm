@@ -542,7 +542,10 @@ GiovanniData:
 ; Silph Co. 11F
 	db $FF, 37, NIDORINO, 35, KANGASKHAN, 37, RHYHORN, 41, NIDOQUEEN, 0
 ; Viridian Gym
-	db $FF, 45, RHYHORN, 42, DUGTRIO, 44, NIDOQUEEN, 45, NIDOKING, 50, RHYDON, 0
+GiovanniGymData:
+	db $FF, 45, RHYHORN, 43, DUGTRIO, 44, PERSIAN, 45, NIDOQUEEN, 46, NIDOKING, 50, RHYDON, 0
+GiovanniGymDataEnd:
+	assert GiovanniGymDataEnd - GiovanniGymData == 2 + 6 * 2
 
 RocketData:
 ; Mt. Moon B2F
@@ -644,25 +647,39 @@ BrunoData:
 	db $FF, 53, ONIX, 55, HITMONCHAN, 55, HITMONLEE, 56, ONIX, 58, MACHAMP, 0
 
 BrockData:
-	db $FF, 12, GEODUDE, 14, ONIX, 0
+	db $FF, 11, GEODUDE, 12, SANDSHREW, 14, ONIX, 0
+BrockDataEnd:
+	assert BrockDataEnd - BrockData == 2 + 3 * 2
 
 MistyData:
-	db $FF, 18, STARYU, 21, STARMIE, 0
+	db $FF, 18, PSYDUCK, 19, STARYU, 22, STARMIE, 0
+MistyDataEnd:
+	assert MistyDataEnd - MistyData == 2 + 3 * 2
 
 LtSurgeData:
-	db $FF, 21, VOLTORB, 18, PIKACHU, 24, RAICHU, 0
+	db $FF, 21, VOLTORB, 22, MAGNEMITE, 23, PIKACHU, 25, RAICHU, 0
+LtSurgeDataEnd:
+	assert LtSurgeDataEnd - LtSurgeData == 2 + 4 * 2
 
 ErikaData:
-	db $FF, 29, VICTREEBEL, 24, TANGELA, 29, VILEPLUME, 0
+	db $FF, 26, TANGELA, 27, EXEGGCUTE, 29, VICTREEBEL, 31, VILEPLUME, 0
+ErikaDataEnd:
+	assert ErikaDataEnd - ErikaData == 2 + 4 * 2
 
 KogaData:
-	db $FF, 37, KOFFING, 39, MUK, 37, KOFFING, 43, WEEZING, 0
+	db $FF, 38, KOFFING, 38, GOLBAT, 39, ARBOK, 40, MUK, 43, WEEZING, 0
+KogaDataEnd:
+	assert KogaDataEnd - KogaData == 2 + 5 * 2
 
 BlaineData:
-	db $FF, 42, GROWLITHE, 40, PONYTA, 42, RAPIDASH, 47, ARCANINE, 0
+	db $FF, 40, PONYTA, 42, GROWLITHE, 43, MAGMAR, 44, RAPIDASH, 47, ARCANINE, 0
+BlaineDataEnd:
+	assert BlaineDataEnd - BlaineData == 2 + 5 * 2
 
 SabrinaData:
-	db $FF, 38, KADABRA, 37, MR_MIME, 38, VENOMOTH, 43, ALAKAZAM, 0
+	db $FF, 38, KADABRA, 38, MR_MIME, 39, VENOMOTH, 40, SLOWBRO, 43, ALAKAZAM, 0
+SabrinaDataEnd:
+	assert SabrinaDataEnd - SabrinaData == 2 + 5 * 2
 
 GentlemanData:
 ; SS Anne 1F Rooms

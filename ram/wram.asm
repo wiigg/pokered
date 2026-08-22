@@ -1260,9 +1260,8 @@ wBattleType:: db
 ; bit 7: STAB
 wDamageMultipliers:: db
 
-; which entry in LoneAttacks to use
-; it's actually the same thing as ^
-wLoneAttackNo::
+; which Gym Leader is being battled, from 1 to 8
+wLoneAttackNo:: ; legacy alias
 wGymLeaderNo:: db
 ; which instance of [youngster, lass, etc] is this?
 wTrainerNo:: db

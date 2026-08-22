@@ -19,7 +19,10 @@ IDs.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.
-- [ ] Upgrade Gym Leaders, rivals, and the Elite Four with fuller, smarter teams.
+- [ ] Upgrade major trainers with fuller, smarter teams:
+  - [x] Upgrade all eight Gym Leaders.
+  - [ ] Strengthen rival battles.
+  - [ ] Rebuild the Elite Four and Champion.
 - [ ] Add a small “Red+” package:
   - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
