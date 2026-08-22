@@ -26,7 +26,22 @@ IndigoPlateauLobbyNurseText:
 	script_pokecenter_nurse
 
 IndigoPlateauLobbyGymGuideText:
+	text_asm
+	ld a, [wNumHoFTeams]
+	and a
+	ld hl, .ChampInMakingText
+	jr z, .print
+	ld hl, .ChampionText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.ChampInMakingText:
 	text_far _IndigoPlateauLobbyGymGuideText
+	text_end
+
+.ChampionText:
+	text_far _IndigoPlateauLobbyGymGuideChampionText
 	text_end
 
 IndigoPlateauLobbyCooltrainerFText:

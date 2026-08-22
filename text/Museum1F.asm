@@ -102,6 +102,34 @@ _Museum1FScientist3Text::
 	cont "#MON!"
 	done
 
+_Museum1FScientist3OmanyteText::
+	text "It moved! It"
+	line "really moved!"
+
+	para "An OMANYTE!"
+	line "That spiral shell"
+	cont "matches our"
+	cont "HELIX FOSSIL!"
+	done
+
+_Museum1FScientist3KabutoText::
+	text "It moved! It"
+	line "really moved!"
+
+	para "A KABUTO!"
+	line "Those eyes match"
+	cont "our DOME FOSSIL!"
+	done
+
+_Museum1FScientist3AerodactylText::
+	text "It moved! It"
+	line "really moved!"
+
+	para "An AERODACTYL!"
+	line "The OLD AMBER"
+	cont "really held life!"
+	done
+
 _Museum1FOldAmberText::
 	text "The AMBER is"
 	line "clear and gold!"

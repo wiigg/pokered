@@ -96,9 +96,21 @@ PokemonFanClubSeelText:
 
 PokemonFanClubChairmanText:
 	text_asm
+	ld a, [wPartyCount]
+	and a
+	jr z, .check_bike
+	ld a, [wPartySpecies]
+	cp RAPIDASH
+	jr nz, .check_bike
+	ld hl, .RapidashText
+	call PrintText
+	call PokemonFanClub_CheckBikeInBag
+	jr nz, .done
+	jr .offer_story
+.check_bike
 	call PokemonFanClub_CheckBikeInBag
 	jr nz, .nothingleft
-
+.offer_story:
 	ld hl, .IntroText
 	call PrintText
 	call YesNoChoice
@@ -154,6 +166,10 @@ PokemonFanClubChairmanText:
 
 .BagFullText:
 	text_far _PokemonFanClubBagFullText
+	text_end
+
+.RapidashText:
+	text_far _PokemonFanClubChairmanRapidashText
 	text_end
 
 PokemonFanClubReceptionistText:

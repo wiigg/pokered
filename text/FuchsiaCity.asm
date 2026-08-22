@@ -3,6 +3,13 @@ _FuchsiaCityYoungster1Text::
 	line "SAFARI GAME? Some"
 	cont "#MON can only"
 	cont "be caught there."
+
+	para "I saw a round blue"
+	line "mouse beyond the"
+	cont "fence!"
+
+	para "Nobody believes"
+	line "me."
 	done
 
 _FuchsiaCityGamblerText::

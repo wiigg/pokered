@@ -122,6 +122,11 @@ _PokemonFanClubChairFinalText::
 	para "No? Too bad!"
 	done
 
+_PokemonFanClubChairmanRapidashText::
+	text "Oh! Your RAPIDASH!"
+	line "It's magnificent!"
+	done
+
 _PokemonFanClubBagFullText::
 	text "Make room for"
 	line "this!"

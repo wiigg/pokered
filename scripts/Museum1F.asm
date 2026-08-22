@@ -230,12 +230,35 @@ Museum1FScientist2Text:
 
 Museum1FScientist3Text:
 	text_asm
+	ld a, [wPartySpecies]
+	cp OMANYTE
+	ld hl, .OmanyteText
+	jr z, .print_text
+	cp KABUTO
+	ld hl, .KabutoText
+	jr z, .print_text
+	cp AERODACTYL
+	ld hl, .AerodactylText
+	jr z, .print_text
 	ld hl, .Text
+.print_text
 	call PrintText
 	jp TextScriptEnd
 
 .Text:
 	text_far _Museum1FScientist3Text
+	text_end
+
+.OmanyteText:
+	text_far _Museum1FScientist3OmanyteText
+	text_end
+
+.KabutoText:
+	text_far _Museum1FScientist3KabutoText
+	text_end
+
+.AerodactylText:
+	text_far _Museum1FScientist3AerodactylText
 	text_end
 
 Museum1FOldAmberText:

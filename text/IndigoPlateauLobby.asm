@@ -13,6 +13,14 @@ _IndigoPlateauLobbyGymGuideText::
 	cont "is it! Go for it!"
 	done
 
+_IndigoPlateauLobbyGymGuideChampionText::
+	text "Yo! Champ-"
+	line "...Wait!"
+
+	para "You really are"
+	line "the CHAMP!"
+	done
+
 _IndigoPlateauLobbyCooltrainerFText::
 	text "From here on, you"
 	line "face the ELITE"

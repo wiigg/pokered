@@ -155,6 +155,13 @@ _GymStatueText2::
 	cont "<PLAYER>"
 	done
 
+_GymStatueRhydonText::
+	text "RHYDON studies"
+	line "the statue..."
+
+	para "It seems pleased."
+	done
+
 _ViridianCityPokecenterGuyText::
 	text "#MON CENTERs"
 	line "heal your tired,"

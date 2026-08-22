@@ -18,6 +18,14 @@ GymStatues:
 	inc hl
 	jr .loop
 .match
+	ld a, [wPartySpecies]
+	cp RHYDON
+	jr nz, .checkBadge
+	tx_pre_id GymStatueRhydonText
+	push hl
+	call PrintPredefTextID
+	pop hl
+.checkBadge
 	ld b, [hl]
 	ld a, [wBeatGymFlags]
 	and b
@@ -36,4 +44,8 @@ GymStatueText1::
 
 GymStatueText2::
 	text_far _GymStatueText2
+	text_end
+
+GymStatueRhydonText::
+	text_far _GymStatueRhydonText
 	text_end
