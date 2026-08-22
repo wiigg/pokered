@@ -4541,15 +4541,12 @@ CriticalHitTest:
 	ld c, [hl]                   ; read move id
 	ld a, [de]
 	bit GETTING_PUMPED, a        ; test for focus energy
-	jr nz, .focusEnergyUsed      ; bug: using focus energy causes a shift to the right instead of left,
-	                             ; resulting in 1/4 the usual crit chance
-	sla b                        ; (effective (base speed/2)*2)
-	jr nc, .noFocusEnergyUsed
-	ld b, $ff                    ; cap at 255/256
-	jr .noFocusEnergyUsed
-.focusEnergyUsed
-	srl b
-.noFocusEnergyUsed
+	jr z, .checkHighCritical
+	sla b                        ; Focus Energy multiplies the base critical-hit chance by four
+	jr c, .maxCriticalHitProbability
+	sla b
+	jr c, .maxCriticalHitProbability
+.checkHighCritical
 	ld hl, HighCriticalMoves     ; table of high critical hit moves
 .Loop
 	ld a, [hli]                  ; read move from move table
@@ -4557,17 +4554,17 @@ CriticalHitTest:
 	jr z, .HighCritical          ; if so, the move about to be used is a high critical hit ratio move
 	inc a                        ; move on to the next move, FF terminates loop
 	jr nz, .Loop                 ; check the next move in HighCriticalMoves
-	srl b                        ; /2 for regular move (effective (base speed / 2))
-	jr .SkipHighCritical         ; continue as a normal move
+	jr .rollForCriticalHit       ; continue as a normal move
 .HighCritical
-	sla b                        ; *2 for high critical hit moves
-	jr nc, .noCarry
-	ld b, $ff                    ; cap at 255/256
-.noCarry
-	sla b                        ; *4 for high critical move (effective (base speed/2)*8))
-	jr nc, .SkipHighCritical
+	sla b                        ; high critical-hit moves multiply the base chance by eight
+	jr c, .maxCriticalHitProbability
+	sla b
+	jr c, .maxCriticalHitProbability
+	sla b
+	jr nc, .rollForCriticalHit
+.maxCriticalHitProbability
 	ld b, $ff
-.SkipHighCritical
+.rollForCriticalHit
 	call BattleRandom            ; generates a random value, in "a"
 	rlc a
 	rlc a
