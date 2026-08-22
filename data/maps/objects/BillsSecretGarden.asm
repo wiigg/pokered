@@ -9,6 +9,9 @@ BillsSecretGarden_Object:
 	def_warp_events
 
 	def_bg_events
+	bg_event 13,  5, TEXT_BILLSSECRETGARDEN_POND
+	bg_event 15,  5, TEXT_BILLSSECRETGARDEN_POND
+	bg_event 17,  5, TEXT_BILLSSECRETGARDEN_POND
 
 	def_object_events
 	object_event 11,  3, SPRITE_FAIRY, STAY, RIGHT, TEXT_BILLSSECRETGARDEN_PIKACHU

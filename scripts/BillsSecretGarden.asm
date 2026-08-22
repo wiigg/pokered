@@ -40,6 +40,7 @@ BillsSecretGarden_TextPointers:
 	dw_const BillsSecretGardenPikachuText, TEXT_BILLSSECRETGARDEN_PIKACHU
 	dw_const BillsSecretGardenNotebookText, TEXT_BILLSSECRETGARDEN_NOTEBOOK
 	dw_const BillsSecretGardenChairText, TEXT_BILLSSECRETGARDEN_CHAIR
+	dw_const BillsSecretGardenPondText, TEXT_BILLSSECRETGARDEN_POND
 
 BillsSecretGardenPikachuText:
 	text_asm
@@ -86,6 +87,38 @@ BillsSecretGardenChairText:
 	text_asm
 	call DisableWaitingAfterTextDisplay
 	jp TextScriptEnd
+
+BillsSecretGardenPondText:
+	text_asm
+	CheckEvent EVENT_GOT_BILLS_GARDEN_PIKACHU
+	jr z, .rippling
+	ld hl, .StillText
+	call PrintText
+	ld a, SFX_TELEPORT_ENTER_1
+	call PlaySound
+	call GBFadeOutToWhite
+	call Delay3
+	call GBFadeInFromWhite
+	call WaitForSoundToFinish
+	ld hl, .ReflectionText
+	call PrintText
+	jp TextScriptEnd
+.rippling
+	ld hl, .RipplesText
+	call PrintText
+	jp TextScriptEnd
+
+.RipplesText:
+	text_far _BillsSecretGardenPondRipplesText
+	text_end
+
+.StillText:
+	text_far _BillsSecretGardenPondStillText
+	text_end
+
+.ReflectionText:
+	text_far _BillsSecretGardenPondReflectionText
+	text_end
 
 BillsSecretGardenCustomizePikachu:
 	ld a, [wAddedToParty]

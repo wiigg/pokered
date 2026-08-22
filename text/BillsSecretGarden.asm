@@ -38,3 +38,19 @@ _BillsSecretGardenNotebookText::
 	line "A PC THAT LINKS"
 	cont "TODAY TO TOMORROW."
 	done
+
+_BillsSecretGardenPondRipplesText::
+	text "Ripples race"
+	line "across the pond."
+	done
+
+_BillsSecretGardenPondStillText::
+	text "The pond is"
+	line "perfectly still."
+	prompt
+
+_BillsSecretGardenPondReflectionText::
+	text "For an instant,"
+	line "someone older is"
+	cont "looking back..."
+	done
