@@ -61,13 +61,13 @@ MarkTownVisitedAndLoadToggleableObjects::
 	inc de
 	jr .writeToggleableObjectsListLoop
 .done
-	call LoadWandererToggleableObject
+	call LoadSupplementalToggleableObject
 	ld a, -1
 	ld [de], a                 ; write sentinel
 	ret
 
-LoadWandererToggleableObject:
-	ld hl, WandererToggleableObjectStates
+LoadSupplementalToggleableObject:
+	ld hl, SupplementalToggleableObjectStates
 	ld c, TOGGLE_MT_MOON_POKECENTER_WANDERER
 	ld a, [wCurMap]
 	ld b, a
@@ -89,7 +89,7 @@ LoadWandererToggleableObject:
 	ld a, c
 	ld [de], a                 ; global toggleable object index
 	inc de
-	call IsWandererHiddenByEvent
+	call IsSupplementalObjectHiddenByEvent
 	ld b, FLAG_RESET
 	jr z, .applyState
 	ld b, FLAG_SET
@@ -97,7 +97,10 @@ LoadWandererToggleableObject:
 	ld hl, wToggleableObjectFlags
 	jp ToggleableObjectFlagAction
 
-IsWandererHiddenByEvent:
+IsSupplementalObjectHiddenByEvent:
+	ld a, [wCurMap]
+	cp REDS_HOUSE_2F
+	jr z, .diploma
 	CheckEvent EVENT_MET_WANDERER_CERULEAN_CAVE
 	ret nz
 	ld a, [wCurMap]
@@ -129,6 +132,15 @@ IsWandererHiddenByEvent:
 	ret
 .pokemonMansion
 	CheckEvent EVENT_MET_WANDERER_POKEMON_MANSION
+	ret
+.diploma
+	CheckEvent EVENT_COMPLETED_POKEDEX_EPILOGUE
+	jr nz, .visible
+	ld a, 1
+	and a
+	ret
+.visible
+	xor a
 	ret
 
 InitializeToggleableObjectsFlags:

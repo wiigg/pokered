@@ -1001,7 +1001,20 @@ OaksLabOak1Text:
 	text_asm
 	ld a, [wElite4Flags]
 	bit BIT_BEAT_ELITE_4, a
-	jr z, .regular_text
+	jp z, .regular_text
+	ld hl, wPokedexOwned
+	ld b, wPokedexOwnedEnd - wPokedexOwned
+	call CountSetBits
+	ld a, [wNumSetBits]
+	cp NUM_POKEMON
+	jr c, .battle_prompt
+	CheckEvent EVENT_COMPLETED_POKEDEX_EPILOGUE
+	jr nz, .battle_prompt
+	ld hl, .PokedexCompleteText
+	call PrintText
+	SetEvent EVENT_COMPLETED_POKEDEX_EPILOGUE
+	jp TextScriptEnd
+.battle_prompt
 	CheckEvent EVENT_BEAT_PROF_OAK
 	ld hl, .RematchText
 	jr nz, .ask_for_battle
@@ -1156,6 +1169,10 @@ OaksLabOak1Text:
 
 .HowIsYourPokedexComingText:
 	text_far _OaksLabOak1HowIsYourPokedexComingText
+	text_end
+
+.PokedexCompleteText:
+	text_far _OaksLabOakPokedexCompleteText
 	text_end
 
 .ChallengeText:

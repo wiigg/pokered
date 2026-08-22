@@ -23,5 +23,17 @@ RedsHouse2FNoopScript:
 
 RedsHouse2F_TextPointers:
 	def_text_pointers
+	dw_const RedsHouse2FDiplomaText, TEXT_REDSHOUSE2F_DIPLOMA
 
-	text_end ; unused
+RedsHouse2FDiplomaText:
+	text_asm
+	ld hl, .Text
+	call PrintText
+	callfar DisplayDiploma
+	ld a, TRUE
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	jp TextScriptEnd
+
+.Text:
+	text_far _RedsHouse2FDiplomaText
+	text_end

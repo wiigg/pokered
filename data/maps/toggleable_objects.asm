@@ -423,13 +423,14 @@ ToggleableObjectStates:
 
 ; Append-only Red+ objects use a supplemental map lookup so existing toggle
 ; indices keep their original save meanings.
-WandererToggleableObjectStates:
+SupplementalToggleableObjectStates:
 	db MT_MOON_POKECENTER,  MTMOONPOKECENTER_WANDERER,  ON
 	db VERMILION_DOCK,      VERMILIONDOCK_WANDERER,      ON
 	db POKEMON_TOWER_1F,    POKEMONTOWER1F_WANDERER,     ON
 	db ROUTE_25,            ROUTE25_WANDERER,             ON
 	db POKEMON_MANSION_B1F, POKEMONMANSIONB1F_WANDERER,  ON
 	db CERULEAN_CAVE_B1F,   CERULEANCAVEB1F_WANDERER,    ON
+	db REDS_HOUSE_2F,       REDSHOUSE2F_DIPLOMA,          ON
 
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 

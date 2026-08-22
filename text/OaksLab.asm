@@ -166,6 +166,29 @@ _OaksLabOak1HowIsYourPokedexComingText::
 	cont "a look!"
 	prompt
 
+_OaksLabOakPokedexCompleteText::
+	text "OAK: <PLAYER>!"
+	line "I've checked every"
+	cont "entry twice."
+
+	para "All 151 #MON..."
+	line "You found all 151!"
+
+	para "This #DEX was"
+	line "once my dream."
+
+	para "You carried it"
+	line "farther than I"
+	cont "ever could."
+
+	para "A special DIPLOMA"
+	line "is waiting in"
+	cont "your room."
+
+	para "Well done,"
+	line "<PLAYER>."
+	done
+
 _OaksLabOakChallengeText::
 	text "OAK: <PLAYER>!"
 	line "You became the"

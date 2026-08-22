@@ -25,6 +25,7 @@ an original location that an unmodified game can load safely.
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.
 - [x] Add Professor Oak as a postgame superboss.
+- [x] Give a completed 151-species Pokédex a proper epilogue and a framed bedroom diploma.
 - [x] Add a repeatable [Trial of Three](scripts/FightingDojo.asm) gauntlet with no rest between battles.
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.

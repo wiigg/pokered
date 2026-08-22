@@ -42,6 +42,24 @@ _CeladonMansion3FGameDesignerCompletedDexText::
 	cont "...@"
 	text_end
 
+_CeladonMansion3FGameDesignerAll151BeforeOakText::
+	text "All 151? Even..."
+
+	para "PROF.OAK must see"
+	line "this!"
+	cont "...@"
+	text_end
+
+_CeladonMansion3FGameDesignerAll151AfterOakText::
+	text "All 151! We sent"
+	line "a copy of your"
+	cont "DIPLOMA home."
+
+	para "That's one for the"
+	line "history books!"
+	cont "...@"
+	text_end
+
 _CeladonMansion3FGameProgramPCText::
 	text "It's the game"
 	line "program! Messing"

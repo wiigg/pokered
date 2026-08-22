@@ -30,12 +30,20 @@ CeladonMansion3FGameDesignerText:
 	ld b, wPokedexOwnedEnd - wPokedexOwned
 	call CountSetBits
 	ld a, [wNumSetBits]
+	cp NUM_POKEMON
+	jr nc, .all_151
 	cp NUM_POKEMON - 1 ; discount Mew
 	jr nc, .completed_dex
 	ld hl, .Text
 	jr .done
 .completed_dex
 	ld hl, .CompletedDexText
+	jr .done
+.all_151
+	CheckEvent EVENT_COMPLETED_POKEDEX_EPILOGUE
+	ld hl, .All151BeforeOakText
+	jr z, .done
+	ld hl, .All151AfterOakText
 .done
 	call PrintText
 	jp TextScriptEnd
@@ -46,6 +54,24 @@ CeladonMansion3FGameDesignerText:
 
 .CompletedDexText:
 	text_far _CeladonMansion3FGameDesignerCompletedDexText
+	text_promptbutton
+	text_asm
+	callfar DisplayDiploma
+	ld a, TRUE
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	jp TextScriptEnd
+
+.All151BeforeOakText:
+	text_far _CeladonMansion3FGameDesignerAll151BeforeOakText
+	text_promptbutton
+	text_asm
+	callfar DisplayDiploma
+	ld a, TRUE
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	jp TextScriptEnd
+
+.All151AfterOakText:
+	text_far _CeladonMansion3FGameDesignerAll151AfterOakText
 	text_promptbutton
 	text_asm
 	callfar DisplayDiploma
