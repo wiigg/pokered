@@ -104,6 +104,8 @@ ReadTrainer:
 	jr z, .GiveRivalMoves
 	cp RIVAL2
 	jr z, .GiveRivalMoves
+	cp CHIEF
+	jr z, .GiveChiefMoves
 	cp PROF_OAK
 	jr z, .GiveProfOakMoves
 	cp RIVAL3
@@ -123,6 +125,10 @@ ReadTrainer:
 .GiveBossMoves
 	farcall GiveBossMoves
 	jr .FinishUp
+.GiveChiefMoves
+	ld hl, ChiefMoveSets
+	ld b, CHIEF_PARTY_LENGTH
+	jr .GiveFullTeamMoves
 .GiveProfOakMoves
 	ld a, [wTrainerNo]
 	dec a

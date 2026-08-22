@@ -509,7 +509,22 @@ ProfOakDataEnd:
 	assert ProfOakDataEnd - ProfOakData == NUM_PROF_OAK_TEAMS * (2 + PROF_OAK_PARTY_LENGTH * 2)
 
 ChiefData:
-; none
+	db $FF
+	db 54, ALAKAZAM
+	db 55, CLEFABLE
+IF DEF(_RED)
+	db 56, NIDOQUEEN
+	db 58, SCYTHER
+ENDC
+IF DEF(_BLUE)
+	db 56, NIDOKING
+	db 58, PINSIR
+ENDC
+	db 59, DRAGONITE
+	db 62, PORYGON
+	db 0
+ChiefDataEnd:
+	assert ChiefDataEnd - ChiefData == 2 + CHIEF_PARTY_LENGTH * 2
 
 ScientistData:
 ; Unused

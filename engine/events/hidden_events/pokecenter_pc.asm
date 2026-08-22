@@ -1,4 +1,4 @@
-OpenPokemonCenterPC:
+OpenPokemonCenterPC::
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	cp SPRITE_FACING_UP
 	ret nz
