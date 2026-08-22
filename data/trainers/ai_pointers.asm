@@ -29,14 +29,14 @@ TrainerAIPointers:
 	dbw 3, GenericAI ; BIRD_KEEPER
 	dbw 2, BlackbeltAI ; BLACKBELT
 	dbw 3, GenericAI ; RIVAL1
-	dbw 3, GenericAI ; PROF_OAK
+	dbw 1, ChampionAI ; PROF_OAK
 	dbw 1, GenericAI ; CHIEF
 	dbw 3, GenericAI ; SCIENTIST
 	dbw 1, GiovanniAI ; GIOVANNI
 	dbw 3, GenericAI ; ROCKET
 	dbw 2, CooltrainerMAI ; COOLTRAINER_M
 	dbw 1, CooltrainerFAI ; COOLTRAINER_F
-	dbw 2, BrunoAI ; BRUNO
+	dbw 1, EliteFourAI ; BRUNO
 	dbw 1, BrockAI ; BROCK
 	dbw 1, MistyAI ; MISTY
 	dbw 1, LtSurgeAI ; LT_SURGE
@@ -46,9 +46,9 @@ TrainerAIPointers:
 	dbw 1, SabrinaAI ; SABRINA
 	dbw 3, GenericAI ; GENTLEMAN
 	dbw 1, Rival2AI ; RIVAL2
-	dbw 1, Rival3AI ; RIVAL3
-	dbw 2, LoreleiAI ; LORELEI
+	dbw 1, ChampionAI ; RIVAL3
+	dbw 1, EliteFourAI ; LORELEI
 	dbw 3, GenericAI ; CHANNELER
-	dbw 2, AgathaAI ; AGATHA
-	dbw 1, LanceAI ; LANCE
+	dbw 1, EliteFourAI ; AGATHA
+	dbw 1, EliteFourAI ; LANCE
 	assert_table_length NUM_TRAINERS

@@ -30,6 +30,51 @@ GiveRivalMoves::
 
 	ld a, [wEnemyPartyCount]
 	ld b, a
+	jp GiveTrainerMoves
+
+GiveBossMoves::
+	ld a, [wCurOpponent]
+	sub OPP_ID_OFFSET
+	cp LORELEI
+	jr z, .lorelei
+	cp BRUNO
+	jr z, .bruno
+	cp AGATHA
+	jr z, .agatha
+	cp LANCE
+	jr z, .lance
+	cp RIVAL3
+	ret nz
+
+	ld a, [wTrainerNo]
+	dec a
+	add a
+	ld c, a
+	ld b, 0
+	ld hl, ChampionMoveSetPointers
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	ld b, PARTY_LENGTH
+	jp GiveTrainerMoves
+
+.lorelei
+	ld hl, LoreleiMoveSets
+	jr .eliteFour
+.bruno
+	ld hl, BrunoMoveSets
+	jr .eliteFour
+.agatha
+	ld hl, AgathaMoveSets
+	jr .eliteFour
+.lance
+	ld hl, LanceMoveSets
+.eliteFour
+	ld b, ELITE_FOUR_PARTY_LENGTH
+	; fallthrough
+
+GiveTrainerMoves:
 	push bc
 	ld de, wEnemyMon1Moves
 .copyMonMoves
@@ -73,3 +118,4 @@ GiveRivalMoves::
 	ret
 
 INCLUDE "data/trainers/rival_moves.asm"
+INCLUDE "data/trainers/boss_moves.asm"

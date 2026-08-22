@@ -1322,8 +1322,23 @@ EnemySendOutFirstMon:
 	ld hl, wPlayerUsedMove
 	ld [hli], a
 	ld [hl], a
-	dec a
+	; League bosses and Oak share one item allowance across their whole team.
+	ld a, [wTrainerClass]
+	cp PROF_OAK
+	jr z, .keepAICount
+	cp BRUNO
+	jr z, .keepAICount
+	cp RIVAL3
+	jr z, .keepAICount
+	cp LORELEI
+	jr z, .keepAICount
+	cp AGATHA
+	jr z, .keepAICount
+	cp LANCE
+	jr z, .keepAICount
+	ld a, $ff
 	ld [wAICount], a
+.keepAICount
 	ld hl, wPlayerBattleStatus1
 	res USING_TRAPPING_MOVE, [hl]
 	hlcoord 18, 0

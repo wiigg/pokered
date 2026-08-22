@@ -106,47 +106,22 @@ ReadTrainer:
 	jr z, .GiveRivalMoves
 	cp PROF_OAK
 	jr z, .GiveProfOakMoves
-	ld hl, TeamMoves
-
-; iterate through entries in TeamMoves, checking each for our trainer class
-.IterateTeamMoves
-	ld a, [hli]
-	cp b
-	jr z, .GiveTeamMoves ; is there a match?
-	inc hl ; if not, go to the next entry
-	inc a
-	jr nz, .IterateTeamMoves
-
-; no matches found. is this trainer champion rival?
-	ld a, b
 	cp RIVAL3
-	jr z, .ChampionRival
-	jr .FinishUp ; nope
-.GiveTeamMoves
-	ld a, [hl]
-	ld [wEnemyMon5Moves + 2], a
-	jr .FinishUp
-.ChampionRival ; give moves to his team
-
-; pidgeot
-	ld a, SKY_ATTACK
-	ld [wEnemyMon1Moves + 2], a
-
-; starter
-	ld a, [wRivalStarter]
-	cp STARTER3
-	ld b, MEGA_DRAIN
-	jr z, .GiveStarterMove
-	cp STARTER1
-	ld b, FIRE_BLAST
-	jr z, .GiveStarterMove
-	ld b, BLIZZARD ; must be squirtle
-.GiveStarterMove
-	ld a, b
-	ld [wEnemyMon6Moves + 2], a
+	jr z, .GiveBossMoves
+	cp LORELEI
+	jr z, .GiveBossMoves
+	cp BRUNO
+	jr z, .GiveBossMoves
+	cp AGATHA
+	jr z, .GiveBossMoves
+	cp LANCE
+	jr z, .GiveBossMoves
 	jr .FinishUp
 .GiveRivalMoves
 	farcall GiveRivalMoves
+	jr .FinishUp
+.GiveBossMoves
+	farcall GiveBossMoves
 	jr .FinishUp
 .GiveProfOakMoves
 	ld a, [wTrainerNo]

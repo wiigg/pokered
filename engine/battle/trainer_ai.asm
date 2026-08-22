@@ -109,11 +109,15 @@ AIMoveChoiceModificationFunctionPointers:
 	dw AIMoveChoiceModification3
 	dw AIMoveChoiceModification4 ; unused, does nothing
 
-; discourages moves that cause no damage but only a status ailment if player's mon already has one
+; discourages moves that only inflict a status the player's Pokémon already has
 AIMoveChoiceModification1:
+	ld a, [wPlayerBattleStatus1]
+	bit CONFUSED, a
+	jr nz, .nextMoveSetup
 	ld a, [wBattleMonStatus]
 	and a
 	ret z ; return if no status ailment on player's mon
+.nextMoveSetup
 	ld hl, wBuffer - 1 ; temp move selection array (-1 byte offset)
 	ld de, wEnemyMonMoves ; enemy moves
 	ld b, NUM_MOVES + 1
@@ -130,6 +134,17 @@ AIMoveChoiceModification1:
 	and a
 	jr nz, .nextMove
 	ld a, [wEnemyMoveEffect]
+	cp CONFUSION_EFFECT
+	jr nz, .persistentStatus
+	ld a, [wPlayerBattleStatus1]
+	bit CONFUSED, a
+	jr nz, .discourageMove
+	jr .nextMove
+.persistentStatus
+	ld a, [wBattleMonStatus]
+	and a
+	jr z, .nextMove
+	ld a, [wEnemyMoveEffect]
 	push hl
 	push de
 	push bc
@@ -140,6 +155,7 @@ AIMoveChoiceModification1:
 	pop de
 	pop hl
 	jr nc, .nextMove
+.discourageMove
 	ld a, [hl]
 	add $5 ; heavily discourage move
 	ld [hl], a
@@ -408,44 +424,21 @@ Rival2AI:
 	ret nc
 	jp AIUsePotion
 
-Rival3AI:
-	cp 13 percent - 1
-	ret nc
-	ld a, 5
-	call AICheckIfHPBelowFraction
-	ret nc
-	jp AIUseFullRestore
-
-LoreleiAI:
-	cp 50 percent + 1
-	ret nc
-	ld a, 5
-	call AICheckIfHPBelowFraction
-	ret nc
-	jp AIUseSuperPotion
-
-BrunoAI:
-	cp 25 percent + 1
-	ret nc
-	jp AIUseXDefend
-
-AgathaAI:
-	cp 8 percent
-	jp c, AISwitchIfEnoughMons
+EliteFourAI:
 	cp 50 percent + 1
 	ret nc
 	ld a, 4
 	call AICheckIfHPBelowFraction
 	ret nc
-	jp AIUseSuperPotion
+	jp AIUseHyperPotion
 
-LanceAI:
+ChampionAI:
 	cp 50 percent + 1
 	ret nc
-	ld a, 5
+	ld a, 4
 	call AICheckIfHPBelowFraction
 	ret nc
-	jp AIUseHyperPotion
+	jp AIUseFullRestore
 
 GenericAI:
 	and a ; clear carry
