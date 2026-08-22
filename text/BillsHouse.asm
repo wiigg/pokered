@@ -129,6 +129,6 @@ _BillsHouseSecretGardenOpenedText::
 	text "KRR-CHNK!"
 
 	para "Something clicked"
-	line "behind BILL's"
+	line "east of BILL's"
 	cont "cottage."
 	done

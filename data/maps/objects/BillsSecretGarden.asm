@@ -20,5 +20,5 @@ BillsSecretGarden_Object:
 
 	def_warps_to BILLS_SECRET_GARDEN
 
-	; destination-only arrival point inside the mountain passage
-	warp_to 9, 16, BILLS_SECRET_GARDEN_WIDTH
+	; destination-only arrival point inside the eastern mountain passage
+	warp_to 15, 16, BILLS_SECRET_GARDEN_WIDTH

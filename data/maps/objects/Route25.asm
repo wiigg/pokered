@@ -18,7 +18,7 @@ Route25_Object:
 
 	def_bg_events
 	bg_event 43,  3, TEXT_ROUTE25_BILL_SIGN
-	bg_event 50,  3, TEXT_ROUTE25_SECRET_GARDEN_GATE
+	bg_event 51,  3, TEXT_ROUTE25_SECRET_GARDEN_GATE
 
 	def_object_events
 	object_event 14,  2, SPRITE_YOUNGSTER, STAY, DOWN, TEXT_ROUTE25_YOUNGSTER1, OPP_YOUNGSTER, 5
@@ -35,4 +35,4 @@ Route25_Object:
 	def_warps_to ROUTE_25
 
 	; destination-only return point in front of the secret entrance
-	warp_to 50, 4, ROUTE_25_WIDTH
+	warp_to 51, 4, ROUTE_25_WIDTH

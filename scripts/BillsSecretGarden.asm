@@ -8,9 +8,9 @@ BillsSecretGardenCheckExit:
 	cp 17
 	ret nz
 	ld a, [wXCoord]
-	cp 8
+	cp 14
 	jr z, .leave
-	cp 9
+	cp 15
 	ret nz
 .leave
 	ld a, ROUTE_25
