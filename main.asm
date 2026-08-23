@@ -283,6 +283,11 @@ SECTION "Field Move Interactions", ROMX
 INCLUDE "engine/overworld/field_move_interactions.asm"
 
 
+SECTION "Music Overrides", ROMX
+
+INCLUDE "engine/audio/no_bike_music.asm"
+
+
 SECTION "Starter Dex", ROMX
 
 INCLUDE "engine/events/starter_dex.asm"

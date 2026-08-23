@@ -60,6 +60,9 @@ checks the original byte layout and core stored IDs automatically; run
   - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
   - [x] Show an animated EXP bar in battle.
   - [x] Mark wild Pokémon species that have already been caught.
+  - [x] Preserve Route 23, Victory Road, and Indigo Plateau music while cycling.
+  - [x] Apply selected natural learnset corrections, including Kinesis for Kadabra and Alakazam.
+  - [x] Default new games to fast text while respecting existing save settings.
   - [x] Fix Focus Energy and make Ghost super effective against Psychic.
 
 To set up the repository, see [**INSTALL.md**](INSTALL.md).

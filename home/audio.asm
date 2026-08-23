@@ -24,6 +24,10 @@ PlayDefaultMusicCommon::
 	jr z, .walking
 	cp $2
 	jr z, .surfing
+	push bc
+	farcall CheckForNoBikingMusicMap
+	pop bc
+	jr c, .walking
 	ld a, MUSIC_BIKE_RIDING
 	jr .next
 
@@ -50,7 +54,10 @@ PlayDefaultMusicCommon::
 .walking
 	ld a, [wMapMusicSoundID]
 	ld b, a
-	call CompareMapMusicBankWithCurrentBank
+	ld d, c ; farcall does not preserve c
+	push bc
+	farcall CompareMapMusicBankWithCurrentBank
+	pop bc
 	jr c, .next4
 
 .next3
@@ -97,33 +104,6 @@ UpdateMusic6Times::
 	pop bc
 	dec c
 	jr nz, .loop
-	ret
-
-CompareMapMusicBankWithCurrentBank::
-; Compares the map music's audio ROM bank with the current audio ROM bank
-; and updates the audio ROM bank variables.
-; Returns whether the banks are different in carry.
-	ld a, [wMapMusicROMBank]
-	ld e, a
-	ld a, [wAudioROMBank]
-	cp e
-	jr nz, .differentBanks
-	ld [wAudioSavedROMBank], a
-	and a
-	ret
-.differentBanks
-	ld a, c ; this is a fade-out counter value and it's always non-zero
-	and a
-	ld a, e
-	jr nz, .next
-; If the fade-counter is non-zero, we don't change the audio ROM bank because
-; it's needed to keep playing the music as it fades out. The FadeOutAudio
-; routine will take care of copying [wAudioSavedROMBank] to [wAudioROMBank]
-; when the music has faded out.
-	ld [wAudioROMBank], a
-.next
-	ld [wAudioSavedROMBank], a
-	scf
 	ret
 
 PlayMusic::
