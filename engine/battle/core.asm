@@ -746,17 +746,10 @@ FaintEnemyPokemon:
 .wild
 	ld hl, wPlayerBattleStatus1
 	res ATTACKING_MULTIPLE_TIMES, [hl]
-; Bug. This only zeroes the high byte of the player's accumulated damage,
-; setting the accumulated damage to itself mod 256 instead of 0 as was probably
-; intended. That alone is problematic, but this mistake has another more severe
-; effect. This function's counterpart for when the player mon faints,
-; RemoveFaintedPlayerMon, zeroes both the high byte and the low byte. In a link
-; battle, the other player's Game Boy will call that function in response to
-; the enemy mon (the player mon from the other side's perspective) fainting,
-; and the states of the two Game Boys will go out of sync unless the damage
-; was congruent to 0 modulo 256.
 	xor a
-	ld [wPlayerBideAccumulatedDamage], a
+	ld hl, wPlayerBideAccumulatedDamage
+	ld [hli], a
+	ld [hl], a
 	ld hl, wEnemyStatsToDouble ; clear enemy statuses
 	ld [hli], a
 	ld [hli], a
@@ -3523,17 +3516,6 @@ CheckPlayerStatusConditions:
 	jr z, .ThrashingAboutCheck
 	xor a
 	ld [wPlayerMoveNum], a
-	ld hl, wDamage
-	ld a, [hli]
-	ld b, a
-	ld c, [hl]
-	ld hl, wPlayerBideAccumulatedDamage + 1
-	ld a, [hl]
-	add c ; accumulate damage taken
-	ld [hld], a
-	ld a, [hl]
-	adc b
-	ld [hl], a
 	ld hl, wPlayerNumAttacksLeft
 	dec [hl] ; did Bide counter hit 0?
 	jr z, .UnleashEnergy
@@ -4755,6 +4737,12 @@ ApplyDamageToEnemyPokemon:
 	ld [hli], a
 	ld [hl], a
 .animateHpBar
+	ld a, [wEnemyBattleStatus1]
+	bit STORING_ENERGY, a
+	jr z, .skipBideDamage
+	ld hl, wEnemyBideAccumulatedDamage + 1
+	call AccumulateBideDamage
+.skipBideDamage
 	ld hl, wEnemyMonMaxHP
 	ld a, [hli]
 	ld [wHPBarMaxHP+1], a
@@ -4878,6 +4866,12 @@ ApplyDamageToPlayerPokemon:
 	ld [hli], a
 	ld [hl], a
 .animateHpBar
+	ld a, [wPlayerBattleStatus1]
+	bit STORING_ENERGY, a
+	jr z, .skipBideDamage
+	ld hl, wPlayerBideAccumulatedDamage + 1
+	call AccumulateBideDamage
+.skipBideDamage
 	ld hl, wBattleMonMaxHP
 	ld a, [hli]
 	ld [wHPBarMaxHP+1], a
@@ -4889,6 +4883,17 @@ ApplyDamageToPlayerPokemon:
 	predef UpdateHPBar2 ; animate the HP bar shortening
 ApplyAttackToPlayerPokemonDone:
 	jp DrawHUDsAndHPBars
+
+; Add the HP actually lost to a Bide accumulator.
+; hl points to its low byte.
+AccumulateBideDamage:
+	ld a, [wDamage + 1]
+	add [hl]
+	ld [hld], a
+	ld a, [wDamage]
+	adc [hl]
+	ld [hl], a
+	ret
 
 AttackSubstitute:
 ; Unlike the two ApplyAttackToPokemon functions, Attack Substitute is shared by player and enemy.
@@ -5903,17 +5908,6 @@ CheckEnemyStatusConditions:
 	jr z, .checkIfThrashingAbout
 	xor a
 	ld [wEnemyMoveNum], a
-	ld hl, wDamage
-	ld a, [hli]
-	ld b, a
-	ld c, [hl]
-	ld hl, wEnemyBideAccumulatedDamage + 1
-	ld a, [hl]
-	add c ; accumulate damage taken
-	ld [hld], a
-	ld a, [hl]
-	adc b
-	ld [hl], a
 	ld hl, wEnemyNumAttacksLeft
 	dec [hl] ; did Bide counter hit 0?
 	jr z, .unleashEnergy
