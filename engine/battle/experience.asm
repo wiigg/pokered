@@ -165,6 +165,8 @@ GainExperience:
 	ld a, [wCurEnemyLevel]
 	push af
 	push hl
+	ld a, [hl]
+	push af ; level before gaining experience
 	ld a, d
 	ld [wCurEnemyLevel], a
 	ld [hl], a
@@ -256,7 +258,20 @@ GainExperience:
 	ld [wMonDataLocation], a
 	ld a, [wCurSpecies]
 	ld [wPokedexNum], a
+	ld a, [wCurEnemyLevel]
+	ld c, a ; final level
+	pop af
+	ld b, a ; previous level
+.learnLevelUpMoves
+	inc b
+	ld a, b
+	ld [wCurEnemyLevel], a
+	push bc
 	predef LearnMoveFromLevelUp
+	pop bc
+	ld a, b
+	cp c
+	jr nz, .learnLevelUpMoves
 	ld hl, wCanEvolveFlags
 	ld a, [wWhichPokemon]
 	ld c, a
