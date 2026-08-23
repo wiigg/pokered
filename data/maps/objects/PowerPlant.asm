@@ -23,6 +23,8 @@ PowerPlant_Object:
 	warp_event  0, 11, LAST_MAP, 4
 
 	def_bg_events
+	bg_event  6,  1, TEXT_POWERPLANT_MASTER_SWITCH
+	bg_event 32, 31, TEXT_POWERPLANT_RAIL_BLUEPRINT
 
 	def_object_events
 	object_event  9, 20, SPRITE_POKE_BALL, STAY, NONE, TEXT_POWERPLANT_VOLTORB1, VOLTORB, 40

@@ -57,7 +57,29 @@ Route10SuperNerd1EndBattleText:
 	text_end
 
 Route10SuperNerd1AfterBattleText:
+	text_asm
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	ld hl, .OriginalText
+	jr z, .print
+	CheckEvent EVENT_RESTORED_POWER_PLANT
+	ld hl, .EngineerText
+	jr z, .print
+	ld hl, .RestoredText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.OriginalText:
 	text_far _Route10SuperNerd1AfterBattleText
+	text_end
+
+.EngineerText:
+	text_far _Route10SuperNerd1EngineerText
+	text_end
+
+.RestoredText:
+	text_far _Route10SuperNerd1RestoredText
 	text_end
 
 Route10Hiker1Text:
@@ -155,5 +177,27 @@ Route10RockTunnelSignText:
 	text_end
 
 Route10PowerPlantSignText:
+	text_asm
+	CheckEvent EVENT_RESTORED_POWER_PLANT
+	ld hl, .RestoredText
+	jr nz, .print
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	ld hl, .OriginalText
+	jr z, .print
+	ld hl, .ReopeningText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.OriginalText:
 	text_far _Route10PowerPlantSignText
+	text_end
+
+.ReopeningText:
+	text_far _Route10PowerPlantSignReopeningText
+	text_end
+
+.RestoredText:
+	text_far _Route10PowerPlantSignRestoredText
 	text_end

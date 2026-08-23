@@ -29,6 +29,8 @@ PowerPlant_TextPointers:
 	dw_const PickUpItemText,           TEXT_POWERPLANT_RARE_CANDY
 	dw_const PickUpItemText,           TEXT_POWERPLANT_TM_THUNDER
 	dw_const PickUpItemText,           TEXT_POWERPLANT_TM_REFLECT
+	dw_const PowerPlantMasterSwitchText, TEXT_POWERPLANT_MASTER_SWITCH
+	dw_const PowerPlantRailBlueprintText, TEXT_POWERPLANT_RAIL_BLUEPRINT
 
 PowerPlantTrainerHeaders:
 	def_trainers
@@ -114,3 +116,134 @@ PowerPlantZapdosBattleText:
 	call PlayCry
 	call WaitForSoundToFinish
 	jp TextScriptEnd
+
+PowerPlantMasterSwitchText:
+	text_asm
+	CheckEvent EVENT_RESTORED_POWER_PLANT
+	jr nz, .powerRestored
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .offline
+	CheckEvent EVENT_BEAT_ZAPDOS
+	jr z, .birdOnGrid
+	call PowerPlantAllLiveCellsCleared
+	jr nz, .liveCellsRemain
+	ld hl, .ReadyText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .leaveAlone
+	ld a, SFX_SWITCH
+	call PlaySound
+	call WaitForSoundToFinish
+	ld a, SFX_TURN_ON_PC
+	call PlaySound
+	call WaitForSoundToFinish
+	ld b, 2
+	predef PredefShakeScreenHorizontally
+	SetEvent EVENT_RESTORED_POWER_PLANT
+	call PowerPlantChargeParty
+	ld hl, .RestoredText
+	jr .print
+.powerRestored
+	ld hl, .RechargeText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .leaveAlone
+	ld a, SFX_TURN_ON_PC
+	call PlaySound
+	call WaitForSoundToFinish
+	call PowerPlantChargeParty
+	ld hl, .RechargedText
+	jr .print
+.offline
+	ld hl, .OfflineText
+	jr .print
+.birdOnGrid
+	ld hl, .BirdOnGridText
+	jr .print
+.liveCellsRemain
+	ld hl, .LiveCellsRemainText
+	jr .print
+.leaveAlone
+	ld hl, .LeaveAloneText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.OfflineText:
+	text_far _PowerPlantMasterSwitchOfflineText
+	text_end
+
+.BirdOnGridText:
+	text_far _PowerPlantMasterSwitchBirdOnGridText
+	text_end
+
+.LiveCellsRemainText:
+	text_far _PowerPlantMasterSwitchLiveCellsRemainText
+	text_end
+
+.ReadyText:
+	text_far _PowerPlantMasterSwitchReadyText
+	text_end
+
+.LeaveAloneText:
+	text_far _PowerPlantMasterSwitchLeaveAloneText
+	text_end
+
+.RestoredText:
+	text_far _PowerPlantMasterSwitchRestoredText
+	text_end
+
+.RechargeText:
+	text_far _PowerPlantMasterSwitchRechargeText
+	text_end
+
+.RechargedText:
+	text_far _PowerPlantMasterSwitchRechargedText
+	text_end
+
+PowerPlantAllLiveCellsCleared:
+; The seven first encounter flags share a byte; the eighth begins the next.
+	ld a, [wEventFlags + EVENT_BEAT_POWER_PLANT_VOLTORB_0 / 8]
+	and %11111110
+	cp %11111110
+	ret nz
+	ld a, [wEventFlags + EVENT_BEAT_POWER_PLANT_VOLTORB_7 / 8]
+	and %00000001
+	cp %00000001
+	ret
+
+PowerPlantChargeParty:
+	call GBFadeOutToWhite
+	predef HealParty
+	ld a, MUSIC_PKMN_HEALED
+	ld [wNewSoundID], a
+	call PlaySound
+.waitForHealSound
+	ld a, [wChannelSoundIDs]
+	cp MUSIC_PKMN_HEALED
+	jr z, .waitForHealSound
+	call GBFadeInFromWhite
+	ret
+
+PowerPlantRailBlueprintText:
+	text_asm
+	CheckEvent EVENT_RESTORED_POWER_PLANT
+	ld hl, .WaitingText
+	jr z, .print
+	ld hl, .ReadyText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.WaitingText:
+	text_far _PowerPlantRailBlueprintWaitingText
+	text_end
+
+.ReadyText:
+	text_far _PowerPlantRailBlueprintReadyText
+	text_end

@@ -15,6 +15,27 @@ _Route10SuperNerd1AfterBattleText::
 	line "#MON at home!"
 	done
 
+_Route10SuperNerd1EngineerText::
+	text "CHAMP! I finally"
+	line "got a real job!"
+	para "The POWER PLANT"
+	line "is reopening."
+	para "Eight round cells"
+	line "are still live,"
+	cont "and a great bird"
+	cont "feeds the grid."
+	para "Clear them out,"
+	line "then try the"
+	cont "north-wall switch!"
+	done
+
+_Route10SuperNerd1RestoredText::
+	text "You did it, CHAMP!"
+	line "Hear that hum?"
+	para "The whole grid is"
+	line "holding steady!"
+	done
+
 _Route10Hiker1BattleText::
 	text "Ha-hahah-ah-ha!"
 	done
@@ -105,4 +126,14 @@ _Route10RockTunnelSignText::
 
 _Route10PowerPlantSignText::
 	text "POWER PLANT"
+	done
+
+_Route10PowerPlantSignReopeningText::
+	text "POWER PLANT"
+	line "REOPENING WORK"
+	done
+
+_Route10PowerPlantSignRestoredText::
+	text "POWER PLANT"
+	line "CURRENT: STABLE"
 	done
