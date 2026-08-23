@@ -85,7 +85,19 @@ MrFujisHouseMrFujiText:
 	call PrintText
 	jr .done
 .got_item
+	ld a, [wPartySpecies]
+	cp MEWTWO
+	jr z, .mewtwo
+	cp MEW
+	jr z, .mew
 	ld hl, .HasMyFluteHelpedYouText
+	jr .print_postgift_text
+.mewtwo
+	ld hl, .RecognizesMewtwoText
+	jr .print_postgift_text
+.mew
+	ld hl, .RecognizesMewText
+.print_postgift_text
 	call PrintText
 .done
 	jp TextScriptEnd
@@ -106,6 +118,14 @@ MrFujisHouseMrFujiText:
 
 .HasMyFluteHelpedYouText:
 	text_far _MrFujisHouseMrFujiHasMyFluteHelpedYouText
+	text_end
+
+.RecognizesMewtwoText:
+	text_far _MrFujisHouseMrFujiRecognizesMewtwoText
+	text_end
+
+.RecognizesMewText:
+	text_far _MrFujisHouseMrFujiRecognizesMewText
 	text_end
 
 MrFujisHouseMrFujiPokedexText:

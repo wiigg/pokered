@@ -76,6 +76,28 @@ _MrFujisHouseMrFujiHasMyFluteHelpedYouText::
 	line "FLUTE helped you?"
 	done
 
+_MrFujisHouseMrFujiRecognizesMewtwoText::
+	text "MR.FUJI: ..."
+	line "Those eyes..."
+
+	para "So, you survived."
+
+	para "You seem calmer"
+	line "now. I am glad."
+	done
+
+_MrFujisHouseMrFujiRecognizesMewText::
+	text "MR.FUJI: ..."
+	line "MEW..."
+
+	para "Do you remember"
+	line "me?"
+
+	para "No... Perhaps"
+	line "that is for the"
+	cont "best."
+	done
+
 _MrFujisHouseMrFujiPokedexText::
 	text "#MON Monthly"
 	line "Grand Prize"
