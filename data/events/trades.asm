@@ -26,3 +26,18 @@ TradeMons:
 	npctrade VENONAT,    TANGELA,   TRADE_DIALOGSET_HAPPY,     "CRINKLES"   ; used in CINNABAR_LAB_TRADE_ROOM
 	npctrade NIDORAN_M,  NIDORAN_F, TRADE_DIALOGSET_HAPPY,     "SPOT"       ; used in UNDERGROUND_PATH_ROUTE_5
 	assert_table_length NUM_NPC_TRADES
+
+InGameTradeReunionSpecies:
+; The received species followed by any evolution it can have in this game.
+	table_width NUM_TRADE_REUNION_SPECIES
+	db NIDORINA, NIDOQUEEN, 0
+	db MR_MIME, 0, 0
+	db BEEDRILL, 0, 0
+	db SEEL, DEWGONG, 0
+	db FARFETCHD, 0, 0
+	db LICKITUNG, 0, 0
+	db JYNX, 0, 0
+	db ELECTRODE, 0, 0
+	db TANGELA, 0, 0
+	db NIDORAN_F, NIDORINA, NIDOQUEEN
+	assert_table_length NUM_NPC_TRADES

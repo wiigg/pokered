@@ -5,7 +5,10 @@
 	const TRADETEXT_WRONG_MON   ; 2
 	const TRADETEXT_THANKS      ; 3
 	const TRADETEXT_AFTER_TRADE ; 4
+	const TRADETEXT_REUNION     ; 5
 DEF NUM_TRADE_TEXTS EQU const_value
+
+DEF NUM_TRADE_REUNION_SPECIES EQU 3
 
 DoInGameTradeDialogue:
 ; trigger the trade offer/action specified by wWhichTrade
@@ -51,10 +54,16 @@ DoInGameTradeDialogue:
 	predef FlagActionPredef
 	ld a, c
 	and a
+	jr z, .tradeNotCompleted
+	call InGameTrade_CheckForReunion
 	ld a, TRADETEXT_AFTER_TRADE
+	jr nc, .setCompletedTradeText
+	ld a, TRADETEXT_REUNION
+.setCompletedTradeText
 	ld [wInGameTradeTextPointerTableIndex], a
-	jr nz, .printText
+	jr .printText
 ; if the trade hasn't been done yet
+.tradeNotCompleted
 	ASSERT TRADETEXT_WANNA_TRADE == 0
 	xor a
 	ld [wInGameTradeTextPointerTableIndex], a
@@ -93,6 +102,80 @@ InGameTrade_GetMonName:
 	pop de
 	ld bc, NAME_LENGTH
 	jp CopyData
+
+InGameTrade_CheckForReunion:
+; The random OT ID created by the trade is not retained elsewhere, so identify
+; the gift by its evolution family, fixed nickname, and NPC trainer name.
+	ld a, [wWhichPokemon]
+	push af
+	xor a
+	ld [wWhichPokemon], a
+.partyLoop
+	ld a, [wWhichPokemon]
+	ld b, a
+	ld a, [wPartyCount]
+	cp b
+	jr z, .notFound
+	ld hl, wPartySpecies
+	ld c, b
+	ld b, 0
+	add hl, bc
+	ld a, [hl]
+	call InGameTrade_IsReunionSpecies
+	jr nc, .nextPartyMon
+	ld hl, wPartyMonNicks
+	ld a, [wWhichPokemon]
+	call SkipFixedLengthTextEntries
+	ld de, wInGameTradeMonNick
+	ld c, NAME_LENGTH
+	call StringCmp
+	jr nz, .nextPartyMon
+	ld hl, wPartyMonOT
+	ld a, [wWhichPokemon]
+	call SkipFixedLengthTextEntries
+	ld de, InGameTrade_TrainerString
+	ld c, NAME_LENGTH
+	call StringCmp
+	jr nz, .nextPartyMon
+	pop af
+	ld [wWhichPokemon], a
+	scf
+	ret
+.nextPartyMon
+	ld hl, wWhichPokemon
+	inc [hl]
+	jr .partyLoop
+.notFound
+	pop af
+	ld [wWhichPokemon], a
+	and a
+	ret
+
+InGameTrade_IsReunionSpecies:
+	ld d, a
+	ld hl, InGameTradeReunionSpecies
+	ld a, [wWhichTrade]
+	ld c, a
+	add a
+	add c
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld b, NUM_TRADE_REUNION_SPECIES
+.speciesLoop
+	ld a, [hli]
+	and a
+	jr z, .notFound
+	cp d
+	jr z, .found
+	dec b
+	jr nz, .speciesLoop
+.notFound
+	and a
+	ret
+.found
+	scf
+	ret
 
 INCLUDE "data/events/trades.asm"
 
@@ -257,6 +340,7 @@ TradeTextPointers1:
 	dw WrongMon1Text
 	dw Thanks1Text
 	dw AfterTrade1Text
+	dw Reunion1Text
 	assert_table_length NUM_TRADE_TEXTS
 
 TradeTextPointers2:
@@ -266,6 +350,7 @@ TradeTextPointers2:
 	dw WrongMon2Text
 	dw Thanks2Text
 	dw AfterTrade2Text
+	dw Reunion2Text
 	assert_table_length NUM_TRADE_TEXTS
 
 TradeTextPointers3:
@@ -275,6 +360,7 @@ TradeTextPointers3:
 	dw WrongMon3Text
 	dw Thanks3Text
 	dw AfterTrade3Text
+	dw Reunion3Text
 	assert_table_length NUM_TRADE_TEXTS
 
 ConnectCableText:
@@ -345,4 +431,16 @@ Thanks3Text:
 
 AfterTrade3Text:
 	text_far _AfterTrade3Text
+	text_end
+
+Reunion1Text:
+	text_far _Reunion1Text
+	text_end
+
+Reunion2Text:
+	text_far _Reunion2Text
+	text_end
+
+Reunion3Text:
+	text_far _Reunion3Text
 	text_end

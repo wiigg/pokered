@@ -188,6 +188,29 @@ _AfterTrade3Text::
 	line "doing great!"
 	done
 
+_Reunion1Text::
+	text "Oh! @"
+	text_ram wInGameTradeMonNick
+	text "!"
+	line "You came back!"
+	para "You look great!"
+	done
+
+_Reunion2Text::
+	text "My! @"
+	text_ram wInGameTradeMonNick
+	text "!"
+	line "You've grown so"
+	cont "strong!"
+	done
+
+_Reunion3Text::
+	text_ram wInGameTradeMonNick
+	text "! It's"
+	line "really you!"
+	para "You look happy!"
+	done
+
 _NothingToCutText::
 	text "There isn't"
 	line "anything to CUT!"
