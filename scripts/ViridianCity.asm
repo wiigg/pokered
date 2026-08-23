@@ -10,6 +10,7 @@ ViridianCity_ScriptPointers:
 	dw_const ViridianCityOldManStartCatchTrainingScript, SCRIPT_VIRIDIANCITY_OLD_MAN_START_CATCH_TRAINING
 	dw_const ViridianCityOldManEndCatchTrainingScript,   SCRIPT_VIRIDIANCITY_OLD_MAN_END_CATCH_TRAINING
 	dw_const ViridianCityPlayerMovingDownScript,         SCRIPT_VIRIDIANCITY_PLAYER_MOVING_DOWN
+	dw_const ViridianCityOldManPostBattleScript,         SCRIPT_VIRIDIANCITY_OLD_MAN_POST_BATTLE
 
 ViridianCityDefaultScript:
 	call ViridianCityCheckGymOpenScript
@@ -112,6 +113,27 @@ ViridianCityPlayerMovingDownScript:
 	call Delay3
 	ld a, SCRIPT_VIRIDIANCITY_DEFAULT
 	ld [wViridianCityCurScript], a
+	ret
+
+ViridianCityOldManPostBattleScript:
+	ld hl, wStatusFlags3
+	res BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, .reset_scripts
+	ld hl, wStatusFlags7
+	res BIT_NO_MAP_MUSIC, [hl]
+	call PlayDefaultMusic
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_VIRIDIAN_OLD_MAN
+	ld hl, ViridianCityOldManAfterBattleText
+	call PrintText
+.reset_scripts
+	xor a
+	ld [wJoyIgnore], a
+	ld [wViridianCityCurScript], a
+	ld [wCurMapScript], a
 	ret
 
 ViridianCityMovePlayerDownScript:
@@ -273,6 +295,51 @@ ViridianCityFisherText:
 
 ViridianCityOldManText:
 	text_asm
+	CheckEvent EVENT_BEAT_VIRIDIAN_GYM_GIOVANNI
+	jr z, .catching_tutorial
+	CheckEvent EVENT_BEAT_VIRIDIAN_OLD_MAN
+	jr nz, .already_battled
+	ld hl, .BattleOfferText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined_battle
+	ld hl, .BattleAcceptedText
+	call PrintText
+	ld a, VIRIDIANCITY_OLD_MAN
+	ld [wSpriteIndex], a
+	call GetSpritePosition1
+	ld hl, .DefeatedText
+	ld de, .VictoryText
+	call SaveEndBattleTextPointers
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	xor a
+	ld [wGymLeaderNo], a
+	ld a, OPP_GENTLEMAN
+	ld [wCurOpponent], a
+	ld a, GENTLEMAN_VIRIDIAN_OLD_MAN_TEAM
+	ld [wTrainerNo], a
+	ld a, SCRIPT_VIRIDIANCITY_OLD_MAN_POST_BATTLE
+	ld [wViridianCityCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	jr .done
+.declined_battle
+	ld hl, .BattleDeclinedText
+	call PrintText
+	jr .done
+.already_battled
+	ld hl, ViridianCityOldManAfterBattleText
+	call PrintText
+	jr .done
+.catching_tutorial
 	ld hl, .HadMyCoffeeNowText
 	call PrintText
 	ld c, 2
@@ -302,6 +369,30 @@ ViridianCityOldManText:
 
 .TimeIsMoneyText:
 	text_far _ViridianCityOldManTimeIsMoneyText
+	text_end
+
+.BattleOfferText:
+	text_far ViridianCityOldManBattleOfferText
+	text_end
+
+.BattleAcceptedText:
+	text_far ViridianCityOldManBattleAcceptedText
+	text_end
+
+.BattleDeclinedText:
+	text_far ViridianCityOldManBattleDeclinedText
+	text_end
+
+.DefeatedText:
+	text_far ViridianCityOldManDefeatedText
+	text_end
+
+.VictoryText:
+	text_far _ViridianCityOldManYouNeedToWeakenTheTargetText
+	text_end
+
+ViridianCityOldManAfterBattleText:
+	text_far ViridianCityOldManAfterBattleText
 	text_end
 
 ViridianCityOldManYouNeedToWeakenTheTargetText:

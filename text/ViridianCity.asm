@@ -132,6 +132,38 @@ _ViridianCityOldManTimeIsMoneyText::
 	line "Go along then."
 	done
 
+ViridianCityOldManBattleOfferText::
+	text "Ah! Remember that"
+	line "WEEDLE I caught?"
+
+	para "It grew into a"
+	line "fine BEEDRILL!"
+
+	para "Care for a battle?"
+	done
+
+ViridianCityOldManBattleAcceptedText::
+	text "Then let me show"
+	line "you what it has"
+	cont "learned!"
+	done
+
+ViridianCityOldManBattleDeclinedText::
+	text "Another time,"
+	line "then."
+	done
+
+ViridianCityOldManDefeatedText::
+	text "My! You've grown"
+	line "strong too!"
+	prompt
+
+ViridianCityOldManAfterBattleText::
+	text "BEEDRILL and I"
+	line "still practise"
+	cont "every day!"
+	done
+
 _ViridianCityOldManYouNeedToWeakenTheTargetText::
 	text "First, you need"
 	line "to weaken the"

@@ -78,6 +78,11 @@ GiovanniMoveSets:
 GiovanniMoveSetsEnd:
 	assert GiovanniMoveSetsEnd - GiovanniMoveSets == 6 * NUM_MOVES
 
+ViridianOldManMoveSet:
+	db SWORDS_DANCE, TWINEEDLE, SWIFT, HYPER_BEAM ; Beedrill
+ViridianOldManMoveSetEnd:
+	assert ViridianOldManMoveSetEnd - ViridianOldManMoveSet == VIRIDIAN_OLD_MAN_PARTY_LENGTH * NUM_MOVES
+
 ProfOakMoveSets:
 ; Blastoise team
 	db TRI_ATTACK, SHARPEN, ICE_BEAM, THUNDERBOLT
