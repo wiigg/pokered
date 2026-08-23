@@ -559,7 +559,7 @@ ASSERT EVENT_SEAFOAM4_BOULDER1_DOWN_HOLE == $09d0, "save ABI: EVENT_SEAFOAM4_BOU
 ASSERT EVENT_SEAFOAM4_BOULDER2_DOWN_HOLE == $09d1, "save ABI: EVENT_SEAFOAM4_BOULDER2_DOWN_HOLE"
 ASSERT EVENT_BEAT_ARTICUNO == $09da, "save ABI: EVENT_BEAT_ARTICUNO"
 
-; Frozen fork event identifiers (28).
+; Frozen fork event identifiers (29).
 ASSERT EVENT_COMPLETED_POKEDEX_EPILOGUE == $0004, "save ABI: EVENT_COMPLETED_POKEDEX_EPILOGUE"
 ASSERT EVENT_BEAT_PROF_OAK == $0005, "save ABI: EVENT_BEAT_PROF_OAK"
 ASSERT EVENT_BEAT_VIRIDIAN_OLD_MAN == $002a, "save ABI: EVENT_BEAT_VIRIDIAN_OLD_MAN"
@@ -578,6 +578,7 @@ ASSERT EVENT_SAFARI_MASTER_CAUGHT_SCYTHER_OR_PINSIR == $0244, "save ABI: EVENT_S
 ASSERT EVENT_BECAME_SAFARI_MASTER == $0245, "save ABI: EVENT_BECAME_SAFARI_MASTER"
 ASSERT EVENT_MET_WANDERER_MT_MOON == $03f0, "save ABI: EVENT_MET_WANDERER_MT_MOON"
 ASSERT EVENT_BEAT_MAGIKARP_SALESMAN == $03f4, "save ABI: EVENT_BEAT_MAGIKARP_SALESMAN"
+ASSERT EVENT_BEAT_ROUTE_23_SHORTS_YOUNGSTER == $0537, "save ABI: EVENT_BEAT_ROUTE_23_SHORTS_YOUNGSTER"
 ASSERT EVENT_GOT_BILLS_GARDEN_PIKACHU == $054a, "save ABI: EVENT_GOT_BILLS_GARDEN_PIKACHU"
 ASSERT EVENT_MET_WANDERER_ROUTE_25 == $054b, "save ABI: EVENT_MET_WANDERER_ROUTE_25"
 ASSERT EVENT_UNLOCKED_BILLS_SECRET_GARDEN == $055a, "save ABI: EVENT_UNLOCKED_BILLS_SECRET_GARDEN"
@@ -1529,11 +1530,11 @@ ASSERT LAST_MAP == $ff, "save ABI: LAST_MAP"
 ; Save-value ABI assertion supplement.
 ; Stock provenance: pret/pokered fork base 0cd19d3b877b7dc66d12c7050bed9a7f38154d4b.
 ; Fork comparison: 8e31923e2753407f0d37342e65f5dbb04034c827.
-; 348 assertions: 346 frozen values plus 2 fixed-array capacity guards.
+; 349 assertions: 347 frozen values plus 2 fixed-array capacity guards.
 ; All 337 names with stock equivalents match the base exactly.
 ; BIT_BEAT_ELITE_4 is the current name for stock BIT_UNUSED_BEAT_ELITE_4 (bit 0).
 ; BIT_FORCE_DESTINATION_WARP_POSITION uses stock-reserved wStatusFlags3 bit 1.
-; Fork toggle IDs $e4-$eb append after the stock range $00-$e3.
+; Fork toggle IDs $e4-$ec append after the stock range $00-$e3.
 
 ; Saved option, badge, box, status, Elite Four and movement flags (70).
 ASSERT TEXT_DELAY_MASK == $07, "save ABI: TEXT_DELAY_MASK"
@@ -1654,7 +1655,7 @@ ASSERT TRADE_FOR_DORIS == $07, "save ABI: TRADE_FOR_DORIS"
 ASSERT TRADE_FOR_CRINKLES == $08, "save ABI: TRADE_FOR_CRINKLES"
 ASSERT TRADE_FOR_SPOT == $09, "save ABI: TRADE_FOR_SPOT"
 
-; Bit indexes in wToggleableObjectFlags (228 stock + 8 append-only fork values).
+; Bit indexes in wToggleableObjectFlags (228 stock + 9 append-only fork values).
 ASSERT NUM_TOGGLEABLE_OBJECTS <= $100, "save ABI: toggleable object flags exceed 256 bits"
 ASSERT TOGGLE_PALLET_TOWN_OAK == $00, "save ABI: TOGGLE_PALLET_TOWN_OAK"
 ASSERT TOGGLE_LYING_OLD_MAN == $01, "save ABI: TOGGLE_LYING_OLD_MAN"
@@ -1892,6 +1893,7 @@ ASSERT TOGGLE_ROUTE_25_WANDERER == $e8, "save ABI: TOGGLE_ROUTE_25_WANDERER"
 ASSERT TOGGLE_POKEMON_MANSION_B1F_WANDERER == $e9, "save ABI: TOGGLE_POKEMON_MANSION_B1F_WANDERER"
 ASSERT TOGGLE_CERULEAN_CAVE_B1F_WANDERER == $ea, "save ABI: TOGGLE_CERULEAN_CAVE_B1F_WANDERER"
 ASSERT TOGGLE_REDS_HOUSE_2F_DIPLOMA == $eb, "save ABI: TOGGLE_REDS_HOUSE_2F_DIPLOMA"
+ASSERT TOGGLE_ROUTE_23_SHORTS_YOUNGSTER == $ec, "save ABI: TOGGLE_ROUTE_23_SHORTS_YOUNGSTER"
 
 ; Character values which can appear in saved player, rival and Pokemon names.
 ASSERT CHARVAL("@") == $50, "save ABI charmap: @"

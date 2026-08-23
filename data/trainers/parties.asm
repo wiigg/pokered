@@ -77,8 +77,15 @@ YoungsterData:
 	db 19, SANDSHREW, ZUBAT, 0
 	db 17, RATTATA, RATTATA, RATICATE, 0
 	db 18, NIDORAN_M, NIDORINO, 0
-; Unused
-	db 17, SPEAROW, RATTATA, RATTATA, SPEAROW, 0
+; Route 23 rematch
+	db $FF
+	db 72, BUTTERFREE
+	db 73, BEEDRILL
+	db 74, PIDGEOT
+	db 75, FEAROW
+	db 78, RATICATE
+	db 80, ARBOK
+	db 0
 
 BugCatcherData:
 ; Viridian Forest

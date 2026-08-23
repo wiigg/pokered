@@ -24,6 +24,7 @@ Route23_ScriptPointers:
 	dw_const Route23DefaultScript,        SCRIPT_ROUTE23_DEFAULT
 	dw_const Route23PlayerMovingScript,   SCRIPT_ROUTE23_PLAYER_MOVING
 	dw_const Route23ResetToDefaultScript, SCRIPT_ROUTE23_RESET_TO_DEFAULT
+	dw_const Route23ShortsYoungsterPostBattleScript, SCRIPT_ROUTE23_SHORTS_YOUNGSTER_POST_BATTLE
 
 Route23DefaultScript:
 	ld hl, Route23GuardsYCoords
@@ -139,6 +140,27 @@ Route23ResetToDefaultScript:
 	ld [wRoute23CurScript], a
 	ret
 
+Route23ShortsYoungsterPostBattleScript:
+	ld hl, wStatusFlags3
+	res BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, .reset_scripts
+	ld hl, wStatusFlags7
+	res BIT_NO_MAP_MUSIC, [hl]
+	call PlayDefaultMusic
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_ROUTE_23_SHORTS_YOUNGSTER
+	ld hl, Route23ShortsYoungsterAfterBattleText
+	call PrintText
+.reset_scripts
+	xor a
+	ld [wJoyIgnore], a
+	ld [wRoute23CurScript], a
+	ld [wCurMapScript], a
+	ret
+
 Route23_TextPointers:
 	def_text_pointers
 	dw_const Route23Guard1Text,              TEXT_ROUTE23_GUARD1
@@ -148,6 +170,7 @@ Route23_TextPointers:
 	dw_const Route23Guard3Text,              TEXT_ROUTE23_GUARD3
 	dw_const Route23Guard4Text,              TEXT_ROUTE23_GUARD4
 	dw_const Route23Guard5Text,              TEXT_ROUTE23_GUARD5
+	dw_const Route23ShortsYoungsterText,     TEXT_ROUTE23_SHORTS_YOUNGSTER
 	dw_const Route23VictoryRoadGateSignText, TEXT_ROUTE23_VICTORY_ROAD_GATE_SIGN
 
 Route23Guard1Text:
@@ -191,6 +214,76 @@ Route23Guard5Text:
 	EventFlagBit a, EVENT_PASSED_CASCADEBADGE_CHECK
 	call Route23CheckForBadgeScript
 	jp TextScriptEnd
+
+Route23ShortsYoungsterText:
+	text_asm
+	CheckEvent EVENT_BEAT_ROUTE_23_SHORTS_YOUNGSTER
+	jr nz, .already_battled
+	ld hl, .OfferText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined
+	ld hl, .AcceptedText
+	call PrintText
+	ld a, ROUTE23_SHORTS_YOUNGSTER
+	ld [wSpriteIndex], a
+	call GetSpritePosition1
+	ld hl, .DefeatedText
+	ld de, .VictoryText
+	call SaveEndBattleTextPointers
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	xor a
+	ld [wGymLeaderNo], a
+	ld a, OPP_YOUNGSTER
+	ld [wCurOpponent], a
+	ld a, SHORTS_YOUNGSTER_TEAM
+	ld [wTrainerNo], a
+	ld a, SCRIPT_ROUTE23_SHORTS_YOUNGSTER_POST_BATTLE
+	ld [wRoute23CurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	jr .done
+.declined
+	ld hl, .DeclinedText
+	call PrintText
+	jr .done
+.already_battled
+	ld hl, Route23ShortsYoungsterAfterBattleText
+	call PrintText
+.done
+	jp TextScriptEnd
+
+.OfferText:
+	text_far Route23ShortsYoungsterOfferText
+	text_end
+
+.AcceptedText:
+	text_far Route23ShortsYoungsterAcceptedText
+	text_end
+
+.DeclinedText:
+	text_far Route23ShortsYoungsterDeclinedText
+	text_end
+
+.DefeatedText:
+	text_far Route23ShortsYoungsterDefeatedText
+	text_end
+
+.VictoryText:
+	text_far Route23ShortsYoungsterVictoryText
+	text_end
+
+Route23ShortsYoungsterAfterBattleText:
+	text_far Route23ShortsYoungsterAfterBattleText
+	text_end
 
 Route23CheckForBadgeScript:
 	ld [wWhichBadge], a

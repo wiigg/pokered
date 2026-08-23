@@ -6,6 +6,7 @@
 	const_export ROUTE23_GUARD3
 	const_export ROUTE23_GUARD4
 	const_export ROUTE23_GUARD5
+	const_export ROUTE23_SHORTS_YOUNGSTER
 
 Route23_Object:
 	db $f ; border block
@@ -27,5 +28,6 @@ Route23_Object:
 	object_event 12, 105, SPRITE_GUARD, STAY, DOWN, TEXT_ROUTE23_GUARD3
 	object_event  8, 119, SPRITE_GUARD, STAY, DOWN, TEXT_ROUTE23_GUARD4
 	object_event  8, 136, SPRITE_GUARD, STAY, DOWN, TEXT_ROUTE23_GUARD5
+	object_event 13,  20, SPRITE_YOUNGSTER, STAY, RIGHT, TEXT_ROUTE23_SHORTS_YOUNGSTER
 
 	def_warps_to ROUTE_23

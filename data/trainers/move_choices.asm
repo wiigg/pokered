@@ -1,5 +1,8 @@
 DEF __move_choices__ = 0
 
+ShortsYoungsterMoveChoiceModifications:
+	db 1, 2, 3, 0
+
 MACRO move_choices
 	IF _NARG
 		db \# ; all args

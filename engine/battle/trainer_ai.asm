@@ -18,6 +18,14 @@ AIEnemyTrainerChooseMoves:
 	add hl, bc    ; advance pointer to forbidden move
 	ld [hl], $50  ; forbid (highly discourage) disabled move
 .noMoveDisabled
+	ld a, [wTrainerClass]
+	cp YOUNGSTER
+	jr nz, .readTrainerClass
+	ld a, [wTrainerNo]
+	cp SHORTS_YOUNGSTER_TEAM
+	ld hl, ShortsYoungsterMoveChoiceModifications
+	jr z, .readTrainerClassData
+.readTrainerClass
 	ld hl, TrainerClassMoveChoiceModifications
 	ld a, [wTrainerClass]
 	ld b, a

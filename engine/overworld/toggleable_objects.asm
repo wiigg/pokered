@@ -99,6 +99,8 @@ LoadSupplementalToggleableObject:
 
 IsSupplementalObjectHiddenByEvent:
 	ld a, [wCurMap]
+	cp ROUTE_23
+	jr z, .shortsYoungster
 	cp REDS_HOUSE_2F
 	jr z, .diploma
 	CheckEvent EVENT_MET_WANDERER_CERULEAN_CAVE
@@ -136,12 +138,27 @@ IsSupplementalObjectHiddenByEvent:
 .diploma
 	CheckEvent EVENT_COMPLETED_POKEDEX_EPILOGUE
 	jr nz, .visible
+.hidden
 	ld a, 1
 	and a
 	ret
 .visible
 	xor a
 	ret
+.shortsYoungster
+	CheckEvent EVENT_BEAT_ROUTE_3_TRAINER_1
+	jr z, .hidden
+	ld a, [wObtainedBadges]
+	bit BIT_EARTHBADGE, a
+	jr z, .hidden
+	; Do not place the returning youngster on top of an imported save's player.
+	ld a, [wXCoord]
+	cp 13
+	jr nz, .visible
+	ld a, [wYCoord]
+	cp 20
+	jr z, .hidden
+	jr .visible
 
 InitializeToggleableObjectsFlags:
 	ld hl, wToggleableObjectFlags

@@ -83,6 +83,16 @@ ViridianOldManMoveSet:
 ViridianOldManMoveSetEnd:
 	assert ViridianOldManMoveSetEnd - ViridianOldManMoveSet == VIRIDIAN_OLD_MAN_PARTY_LENGTH * NUM_MOVES
 
+ShortsYoungsterMoveSets:
+	db SLEEP_POWDER, PSYCHIC_M,    MEGA_DRAIN,  REFLECT     ; Butterfree
+	db SWORDS_DANCE, TWINEEDLE,    DOUBLE_EDGE, HYPER_BEAM  ; Beedrill
+	db WING_ATTACK,   DOUBLE_EDGE,  AGILITY,     HYPER_BEAM  ; Pidgeot
+	db DRILL_PECK,    DOUBLE_EDGE,  AGILITY,     HYPER_BEAM  ; Fearow
+	db SUPER_FANG,    BODY_SLAM,    DIG,         HYPER_BEAM  ; Raticate
+	db GLARE,         EARTHQUAKE,   ROCK_SLIDE,  BODY_SLAM   ; Arbok
+ShortsYoungsterMoveSetsEnd:
+	assert ShortsYoungsterMoveSetsEnd - ShortsYoungsterMoveSets == SHORTS_YOUNGSTER_PARTY_LENGTH * NUM_MOVES
+
 ProfOakMoveSets:
 ; Blastoise team
 	db TRI_ATTACK, SHARPEN, ICE_BEAM, THUNDERBOLT

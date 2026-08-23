@@ -110,6 +110,8 @@ ReadTrainer:
 	jr z, .GiveChiefMoves
 	cp PROF_OAK
 	jr z, .GiveProfOakMoves
+	cp YOUNGSTER
+	jr z, .GiveShortsYoungsterMoves
 	cp GENTLEMAN
 	jr z, .GiveViridianOldManMoves
 	cp RIVAL3
@@ -128,7 +130,7 @@ ReadTrainer:
 	sub FIGHTING_DOJO_TRIAL_SWIFTNESS_TEAM
 	jp c, .FinishUp
 	cp NUM_FIGHTING_DOJO_TRIAL_TEAMS
-	jr nc, .FinishUp
+	jp nc, .FinishUp
 	add a
 	ld c, a
 	ld b, 0
@@ -157,6 +159,13 @@ ReadTrainer:
 	ld bc, PROF_OAK_PARTY_LENGTH * NUM_MOVES
 	call AddNTimes
 	ld b, PROF_OAK_PARTY_LENGTH
+	jr .GiveFullTeamMoves
+.GiveShortsYoungsterMoves
+	ld a, [wTrainerNo]
+	cp SHORTS_YOUNGSTER_TEAM
+	jr nz, .FinishUp
+	ld hl, ShortsYoungsterMoveSets
+	ld b, SHORTS_YOUNGSTER_PARTY_LENGTH
 	jr .GiveFullTeamMoves
 .GiveViridianOldManMoves
 	ld a, [wTrainerNo]
