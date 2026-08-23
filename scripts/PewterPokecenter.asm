@@ -21,6 +21,13 @@ PewterPokecenterJigglypuffText:
 	ld a, TRUE
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
 	ld hl, .Text
+	call .LeadCanDuet
+	jr nz, .print_text
+	xor a
+	ld hl, wPartyMonNicks
+	call GetPartyMonName
+	ld hl, .DuetText
+.print_text
 	call PrintText
 
 	ld a, SFX_STOP_ALL_MUSIC
@@ -28,6 +35,13 @@ PewterPokecenterJigglypuffText:
 	ld c, 32
 	call DelayFrames
 
+	call .LeadCanDuet
+	jr nz, .prepare_singer
+	call PlayCry
+	call WaitForSoundToFinish
+	ld c, 12
+	call DelayFrames
+.prepare_singer
 	ld hl, .FacingDirections
 	ld de, wJigglypuffFacingDirections
 	ld bc, .FacingDirectionsEnd - .FacingDirections
@@ -70,10 +84,31 @@ PewterPokecenterJigglypuffText:
 	ld c, 48
 	call DelayFrames
 	call PlayDefaultMusic
+	call .LeadCanDuet
+	jp nz, TextScriptEnd
+	xor a
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	ld hl, .DuetFinishedText
+	call PrintText
 	jp TextScriptEnd
+
+.LeadCanDuet:
+	ld a, [wPartySpecies]
+	cp JIGGLYPUFF
+	ret z
+	cp WIGGLYTUFF
+	ret
 
 .Text:
 	text_far _PewterPokecenterJigglypuffText
+	text_end
+
+.DuetText:
+	text_far _PewterPokecenterJigglypuffDuetText
+	text_end
+
+.DuetFinishedText:
+	text_far _PewterPokecenterJigglypuffDuetFinishedText
 	text_end
 
 .FacingDirections:

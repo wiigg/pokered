@@ -12,3 +12,18 @@ _PewterPokecenterJigglypuffText::
 	text "JIGGLYPUFF: Puu"
 	line "pupuu!"
 	done
+
+_PewterPokecenterJigglypuffDuetText::
+	text "JIGGLYPUFF: Puu"
+	line "pupuu!"
+
+	para "@"
+	text_ram wNameBuffer
+	text_start
+	line "joins the song!"
+	done
+
+_PewterPokecenterJigglypuffDuetFinishedText::
+	text "The two finish"
+	line "together!"
+	done
