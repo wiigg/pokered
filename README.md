@@ -47,6 +47,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Add a small “Red+” package:
   - [x] Make TMs reusable.
   - [x] Hold B to run while walking.
+  - [x] Let [Mr. Psychic](scripts/MrPsychicsHouse.asm) restore natural moves or erase unwanted moves, including HMs.
   - [x] Automatically select and save the next available PC box when the current one fills.
   - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
   - [x] Show an animated EXP bar in battle.

@@ -207,6 +207,7 @@ INCLUDE "engine/battle/effects.asm"
 SECTION "bank10", ROMX
 
 INCLUDE "engine/menus/pokedex.asm"
+INCLUDE "engine/pokemon/move_services.asm"
 INCLUDE "engine/movie/trade.asm"
 INCLUDE "engine/movie/intro.asm"
 INCLUDE "engine/movie/trade2.asm"

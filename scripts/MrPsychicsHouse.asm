@@ -23,8 +23,7 @@ MrPsychicsHouseMrPsychicText:
 	call PrintText
 	jr .done
 .got_item
-	ld hl, .TM29ExplanationText
-	call PrintText
+	farcall MrPsychicMoveServices
 .done
 	jp TextScriptEnd
 
@@ -35,10 +34,6 @@ MrPsychicsHouseMrPsychicText:
 .ReceivedTM29Text:
 	text_far _MrPsychicsHouseMrPsychicReceivedTM29Text
 	sound_get_item_1
-	text_end
-
-.TM29ExplanationText:
-	text_far _MrPsychicsHouseMrPsychicTM29ExplanationText
 	text_end
 
 .TM29NoRoomText:

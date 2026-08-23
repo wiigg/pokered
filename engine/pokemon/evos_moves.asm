@@ -378,6 +378,125 @@ LearnMoveFromLevelUp:
 	ld [wPokedexNum], a
 	ret
 
+; Builds a menu list of natural moves the loaded party mon can remember.
+; This includes its current species' starting moves and level-up moves at or
+; below its current level, excluding moves it already knows.
+DEF MOVE_REMINDER_LIST_CAPACITY EQU 14 ; wItemList minus count and terminator
+BuildMoveReminderList::
+	xor a
+	ld [wItemList], a
+	ld a, [wPokedexNum]
+	push af
+	ld a, [wLoadedMonSpecies]
+	and a
+	jr z, .invalidSpecies
+	cp NUM_POKEMON_INDEXES + 1
+	jr nc, .invalidSpecies
+	ld [wPokedexNum], a
+	predef IndexToPokedex
+	ld a, [wPokedexNum]
+	and a
+	jr z, .invalidSpecies
+	cp NUM_POKEMON + 1
+	jr nc, .invalidSpecies
+	pop af
+	ld [wPokedexNum], a
+
+	ld hl, wMonHMoves
+	ld b, NUM_MOVES
+.baseMoveLoop
+	ld a, [hli]
+	push hl
+	push bc
+	call .AddMove
+	pop bc
+	pop hl
+	dec b
+	jr nz, .baseMoveLoop
+
+	ld a, [wLoadedMonSpecies]
+	dec a
+	ld b, 0
+	add a
+	rl b
+	ld c, a
+	ld hl, EvosMovesPointerTable
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+.skipEvolutionData
+	ld a, [hli]
+	and a
+	jr nz, .skipEvolutionData
+.levelUpMoveLoop
+	ld a, [hli]
+	and a
+	jr z, .finish
+	ld b, a
+	ld a, [wLoadedMonLevel]
+	cp b
+	jr c, .finish
+	ld a, [hli]
+	push hl
+	call .AddMove
+	pop hl
+	jr .levelUpMoveLoop
+
+.invalidSpecies
+	pop af
+	ld [wPokedexNum], a
+.finish
+	ld a, [wItemList]
+	ld c, a
+	ld b, 0
+	ld hl, wItemList + 1
+	add hl, bc
+	ld [hl], -1
+	ret
+
+.AddMove
+	and a
+	ret z
+	cp NUM_ATTACKS + 1
+	ret nc
+	ld d, a
+
+	ld hl, wLoadedMonMoves
+	ld b, NUM_MOVES
+.knownMoveLoop
+	ld a, [hli]
+	cp d
+	ret z
+	dec b
+	jr nz, .knownMoveLoop
+
+	ld a, [wItemList]
+	cp MOVE_REMINDER_LIST_CAPACITY
+	ret nc
+	ld c, a
+	ld b, 0
+	ld hl, wItemList + 1
+.duplicateMoveLoop
+	ld a, c
+	and a
+	jr z, .appendMove
+	ld a, [hli]
+	cp d
+	ret z
+	dec c
+	jr .duplicateMoveLoop
+.appendMove
+	ld a, [wItemList]
+	ld c, a
+	inc a
+	ld [wItemList], a
+	ld b, 0
+	ld hl, wItemList + 1
+	add hl, bc
+	ld [hl], d
+	ret
+
 ; writes the moves a mon has at level [wCurEnemyLevel] to [de]
 ; move slots are being filled up sequentially and shifted if all slots are full
 WriteMonMoves:

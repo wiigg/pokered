@@ -30,9 +30,6 @@ DisplayListMenuID::
 	ld [wTextBoxID], a
 	call DisplayTextBoxID ; draw the menu text box
 	call UpdateSprites ; disable sprites behind the text box
-; the code up to .skipMovingSprites appears to be useless
-	hlcoord 4, 2 ; coordinates of upper left corner of menu text box
-	lb de, 9, 14 ; height and width of menu text box
 	ld a, [wListMenuID]
 	and a ; PCPOKEMONLISTMENU?
 	jr nz, .skipMovingSprites
@@ -90,11 +87,6 @@ DisplayListMenuIDLoop::
 	ld a, [wCurrentMenuItem]
 	call PlaceUnfilledArrowMenuCursor
 
-; pointless because both values are overwritten before they are read
-	ld a, $01
-	ld [wMenuExitMethod], a
-	ld [wChosenMenuItem], a
-
 	xor a
 	ld [wMenuWatchMovingOutOfBounds], a
 	ld a, [wCurrentMenuItem]
@@ -128,6 +120,8 @@ DisplayListMenuIDLoop::
 	ld a, [wListMenuID]
 	and a ; PCPOKEMONLISTMENU?
 	jr z, .pokemonList
+	cp MOVESLISTMENU
+	jr z, .movesList
 ; if it's an item menu
 	ASSERT wCurListMenuItem == wCurItem
 	push hl
@@ -145,6 +139,11 @@ DisplayListMenuIDLoop::
 	ld a, BANK(ItemNames)
 	ld [wPredefBank], a
 	call GetName
+	jr .storeChosenEntry
+.movesList
+	ld a, [wCurListMenuItem]
+	ld [wNamedObjectIndex], a
+	call GetMoveName
 	jr .storeChosenEntry
 .pokemonList
 	ASSERT wCurListMenuItem == wCurPartySpecies
