@@ -59,6 +59,7 @@ checks the original byte layout and core stored IDs automatically; run
   - [x] Automatically select and save the next available PC box when the current one fills.
   - [x] Improve overlooked moves such as Cut, Wing Attack, Vine Whip, Leech Life, and Rock Throw.
   - [x] Show an animated EXP bar in battle.
+  - [x] Mark wild Pokémon species that have already been caught.
   - [x] Fix Focus Energy and make Ghost super effective against Psychic.
 
 To set up the repository, see [**INSTALL.md**](INSTALL.md).

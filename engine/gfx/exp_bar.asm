@@ -309,4 +309,7 @@ FOR pixels, 9
 	db $ff, $ff
 	dw 0
 ENDR
+; Reuse the party-screen Poké Ball as the wild-battle caught marker.
+ASSERT CAUGHT_BALL_TILE_ID == EXP_BAR_BASE_TILE_ID + EXP_BAR_TILES + 1
+INCBIN "gfx/battle/balls.2bpp", 0, TILE_SIZE
 EXPBarGraphicsEnd::

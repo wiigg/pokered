@@ -1,3 +1,5 @@
+DEF CAUGHT_BALL_TILE_ID EQU $c9
+
 DrawAllPokeballs:
 	call LoadPartyPokeballGfx
 	call SetupOwnPartyPokeballs
@@ -136,6 +138,30 @@ PlaceEnemyHUDTiles:
 	ld de, wHUDGraphicsTiles
 	ld bc, wHUDGraphicsTilesEnd - wHUDGraphicsTiles
 	call CopyData
+	hlcoord 1, 1
+	ld [hl], ' '
+	ld a, [wIsInBattle]
+	dec a
+	jr nz, .placeHUD
+	ld a, [wEnemyMonSpecies2]
+	and a
+	jr z, .placeHUD
+	ld [wPokedexNum], a
+	predef IndexToPokedex
+	ld a, [wPokedexNum]
+	and a
+	jr z, .placeHUD
+	dec a
+	ld c, a
+	ld b, FLAG_TEST
+	ld hl, wPokedexOwned
+	predef FlagActionPredef
+	ld a, c
+	and a
+	jr z, .placeHUD
+	hlcoord 1, 1
+	ld [hl], CAUGHT_BALL_TILE_ID
+.placeHUD
 	hlcoord 1, 2
 	ld de, $1
 	jr PlaceHUDTiles
