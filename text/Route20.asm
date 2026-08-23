@@ -153,3 +153,20 @@ _Route20Swimmer9AfterBattleText::
 _Route20SeafoamIslandsSignText::
 	text "SEAFOAM ISLANDS"
 	done
+
+_Route20VisitingArticunoText::
+	text "A bitter wind"
+	line "blows in from the"
+	cont "sea..."
+
+	para "ARTICUNO watches"
+	line "you in silence."
+
+	para "Approach it?"
+	done
+
+_Route20ArticunoDepartedText::
+	text "With one last cry,"
+	line "ARTICUNO vanishes"
+	cont "over the sea!"
+	done

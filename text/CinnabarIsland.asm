@@ -42,3 +42,19 @@ _CinnabarIslandSquareWavesText::
 
 	para "...NO. 000?"
 	done
+
+_CinnabarVisitingMoltresText::
+	text "Heat ripples above"
+	line "the south shore."
+
+	para "MOLTRES spreads"
+	line "its blazing wings."
+
+	para "Approach it?"
+	done
+
+_CinnabarMoltresDepartedText::
+	text "With one last cry,"
+	line "MOLTRES becomes a"
+	cont "spark in the sky!"
+	done

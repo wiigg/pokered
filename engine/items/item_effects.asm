@@ -164,19 +164,10 @@ ItemUseBall:
 	jp .captured
 
 .notOldManBattle
-; The ancient Venusaur can be fought, but not captured.
-	ld a, [wCurMap]
-	cp VIRIDIAN_FOREST
-	jr nz, .checkGhostMarowak
-	ld a, [wEnemyMonSpecies2]
-	cp VENUSAUR
-	jr nz, .checkGhostMarowak
-	ld a, [wEnemyMonLevel]
-	cp MAX_LEVEL
+	call IsSpecialWildEncounterUncatchable
 	ld b, $10 ; can't be caught value
 	jp z, .setAnimData
 
-.checkGhostMarowak
 ; If the player is fighting the ghost Marowak, set the value that indicates the
 ; Pokémon can't be caught and skip the capture calculations.
 	ld a, [wCurMap]
@@ -590,6 +581,43 @@ ItemUseBall:
 	inc a
 	ld [wItemQuantity], a
 	jp RemoveItemFromInventory
+
+IsSpecialWildEncounterUncatchable:
+; Map identity keeps the canonical legendary encounters catchable.
+	ld a, [wCurMap]
+	cp VIRIDIAN_FOREST
+	jr z, .ancientVenusaur
+	cp ROUTE_20
+	jr z, .visitingArticuno
+	cp ROUTE_10
+	jr z, .visitingZapdos
+	cp CINNABAR_ISLAND
+	jr z, .visitingMoltres
+	ld a, 1
+	and a
+	ret
+.ancientVenusaur
+	ld b, VENUSAUR
+	ld c, MAX_LEVEL
+	jr .checkSpeciesAndLevel
+.visitingArticuno
+	ld b, ARTICUNO
+	ld c, 50
+	jr .checkSpeciesAndLevel
+.visitingZapdos
+	ld b, ZAPDOS
+	ld c, 50
+	jr .checkSpeciesAndLevel
+.visitingMoltres
+	ld b, MOLTRES
+	ld c, 50
+.checkSpeciesAndLevel
+	ld a, [wEnemyMonSpecies2]
+	cp b
+	ret nz
+	ld a, [wEnemyMonLevel]
+	cp c
+	ret
 
 RecordSafariMasterCatch:
 	ld a, [wBattleType]

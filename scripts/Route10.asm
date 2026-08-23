@@ -12,6 +12,22 @@ Route10_ScriptPointers:
 	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE10_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_ROUTE10_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_ROUTE10_END_BATTLE
+	dw_const Route10ZapdosPostBattleScript,         SCRIPT_ROUTE10_ZAPDOS_POST_BATTLE
+
+Route10ZapdosPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, .resetScripts
+	ld a, ZAPDOS
+	call PlayCry
+	ld hl, Route10ZapdosDepartedText
+	call PrintText
+.resetScripts
+	xor a
+	ld [wJoyIgnore], a
+	ld [wRoute10CurScript], a
+	ld [wCurMapScript], a
+	ret
 
 Route10_TextPointers:
 	def_text_pointers
@@ -21,6 +37,7 @@ Route10_TextPointers:
 	dw_const Route10CooltrainerF1Text,  TEXT_ROUTE10_COOLTRAINER_F1
 	dw_const Route10Hiker2Text,         TEXT_ROUTE10_HIKER2
 	dw_const Route10CooltrainerF2Text,  TEXT_ROUTE10_COOLTRAINER_F2
+	dw_const Route10VisitingZapdosText, TEXT_ROUTE10_VISITING_ZAPDOS
 	dw_const Route10RockTunnelSignText, TEXT_ROUTE10_ROCKTUNNEL_NORTH_SIGN
 	dw_const PokeCenterSignText,        TEXT_ROUTE10_POKECENTER_SIGN
 	dw_const Route10RockTunnelSignText, TEXT_ROUTE10_ROCKTUNNEL_SOUTH_SIGN
@@ -41,6 +58,38 @@ Route10TrainerHeader4:
 Route10TrainerHeader5:
 	trainer EVENT_BEAT_ROUTE_10_TRAINER_5, 2, Route10CooltrainerF2BattleText, Route10CooltrainerF2EndBattleText, Route10CooltrainerF2AfterBattleText
 	db -1 ; end
+
+Route10VisitingZapdosText:
+	text_asm
+	ld hl, .WarningText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jp nz, TextScriptEnd
+	ld a, TOGGLE_ROUTE_10_VISITING_ZAPDOS
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	ld a, SFX_STOP_ALL_MUSIC
+	call PlaySound
+	ld c, 20
+	call DelayFrames
+	ld a, ZAPDOS
+	ld [wCurOpponent], a
+	ld a, 50
+	ld [wCurEnemyLevel], a
+	ld a, SCRIPT_ROUTE10_ZAPDOS_POST_BATTLE
+	ld [wRoute10CurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.WarningText:
+	text_far _Route10VisitingZapdosText
+	text_end
+
+Route10ZapdosDepartedText:
+	text_far _Route10ZapdosDepartedText
+	text_end
 
 Route10SuperNerd1Text:
 	text_asm

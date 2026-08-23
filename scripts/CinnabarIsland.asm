@@ -12,6 +12,22 @@ CinnabarIsland_ScriptPointers:
 	def_script_pointers
 	dw_const CinnabarIslandDefaultScript,      SCRIPT_CINNABARISLAND_DEFAULT
 	dw_const CinnabarIslandPlayerMovingScript, SCRIPT_CINNABARISLAND_PLAYER_MOVING
+	dw_const CinnabarMoltresPostBattleScript,   SCRIPT_CINNABARISLAND_MOLTRES_POST_BATTLE
+
+CinnabarMoltresPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, .resetScripts
+	ld a, MOLTRES
+	call PlayCry
+	ld hl, CinnabarMoltresDepartedText
+	call PrintText
+.resetScripts
+	xor a
+	ld [wJoyIgnore], a
+	ld [wCinnabarIslandCurScript], a
+	ld [wCurMapScript], a
+	ret
 
 CinnabarIslandDefaultScript:
 	ld b, SECRET_KEY
@@ -55,6 +71,7 @@ CinnabarIsland_TextPointers:
 	def_text_pointers
 	dw_const CinnabarIslandGirlText,           TEXT_CINNABARISLAND_GIRL
 	dw_const CinnabarIslandGamblerText,        TEXT_CINNABARISLAND_GAMBLER
+	dw_const CinnabarVisitingMoltresText,      TEXT_CINNABARISLAND_VISITING_MOLTRES
 	dw_const CinnabarIslandSignText,           TEXT_CINNABARISLAND_SIGN
 	dw_const MartSignText,                     TEXT_CINNABARISLAND_MART_SIGN
 	dw_const PokeCenterSignText,               TEXT_CINNABARISLAND_POKECENTER_SIGN
@@ -62,6 +79,38 @@ CinnabarIsland_TextPointers:
 	dw_const CinnabarIslandGymSignText,        TEXT_CINNABARISLAND_GYM_SIGN
 	dw_const CinnabarIslandDoorIsLockedText,   TEXT_CINNABARISLAND_DOOR_IS_LOCKED
 	dw_const CinnabarIslandSquareWavesText,    TEXT_CINNABARISLAND_SQUARE_WAVES
+
+CinnabarVisitingMoltresText:
+	text_asm
+	ld hl, .WarningText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jp nz, TextScriptEnd
+	ld a, TOGGLE_CINNABAR_VISITING_MOLTRES
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	ld a, SFX_STOP_ALL_MUSIC
+	call PlaySound
+	ld c, 20
+	call DelayFrames
+	ld a, MOLTRES
+	ld [wCurOpponent], a
+	ld a, 50
+	ld [wCurEnemyLevel], a
+	ld a, SCRIPT_CINNABARISLAND_MOLTRES_POST_BATTLE
+	ld [wCinnabarIslandCurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.WarningText:
+	text_far _CinnabarVisitingMoltresText
+	text_end
+
+CinnabarMoltresDepartedText:
+	text_far _CinnabarMoltresDepartedText
+	text_end
 
 CinnabarIslandDoorIsLockedText:
 	text_far _CinnabarIslandDoorIsLockedText

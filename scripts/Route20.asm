@@ -61,6 +61,22 @@ Route20_ScriptPointers:
 	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE20_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_ROUTE20_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_ROUTE20_END_BATTLE
+	dw_const Route20ArticunoPostBattleScript,       SCRIPT_ROUTE20_ARTICUNO_POST_BATTLE
+
+Route20ArticunoPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, .resetScripts
+	ld a, ARTICUNO
+	call PlayCry
+	ld hl, Route20ArticunoDepartedText
+	call PrintText
+.resetScripts
+	xor a
+	ld [wJoyIgnore], a
+	ld [wRoute20CurScript], a
+	ld [wCurMapScript], a
+	ret
 
 Route20_TextPointers:
 	def_text_pointers
@@ -74,6 +90,7 @@ Route20_TextPointers:
 	dw_const Route20Swimmer7Text,           TEXT_ROUTE20_SWIMMER7
 	dw_const Route20Swimmer8Text,           TEXT_ROUTE20_SWIMMER8
 	dw_const Route20Swimmer9Text,           TEXT_ROUTE20_SWIMMER9
+	dw_const Route20VisitingArticunoText,   TEXT_ROUTE20_VISITING_ARTICUNO
 	dw_const Route20SeafoamIslandsSignText, TEXT_ROUTE20_SEAFOAM_ISLANDS_WEST_SIGN
 	dw_const Route20SeafoamIslandsSignText, TEXT_ROUTE20_SEAFOAM_ISLANDS_EAST_SIGN
 
@@ -100,6 +117,38 @@ Route20TrainerHeader8:
 Route20TrainerHeader9:
 	trainer EVENT_BEAT_ROUTE_20_TRAINER_9, 4, Route20Swimmer9BattleText, Route20Swimmer9EndBattleText, Route20Swimmer9AfterBattleText
 	db -1 ; end
+
+Route20VisitingArticunoText:
+	text_asm
+	ld hl, .WarningText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jp nz, TextScriptEnd
+	ld a, TOGGLE_ROUTE_20_VISITING_ARTICUNO
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	ld a, SFX_STOP_ALL_MUSIC
+	call PlaySound
+	ld c, 20
+	call DelayFrames
+	ld a, ARTICUNO
+	ld [wCurOpponent], a
+	ld a, 50
+	ld [wCurEnemyLevel], a
+	ld a, SCRIPT_ROUTE20_ARTICUNO_POST_BATTLE
+	ld [wRoute20CurScript], a
+	ld [wCurMapScript], a
+	jp TextScriptEnd
+
+.WarningText:
+	text_far _Route20VisitingArticunoText
+	text_end
+
+Route20ArticunoDepartedText:
+	text_far _Route20ArticunoDepartedText
+	text_end
 
 Route20Swimmer1Text:
 	text_asm

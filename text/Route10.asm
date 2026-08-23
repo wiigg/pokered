@@ -137,3 +137,19 @@ _Route10PowerPlantSignRestoredText::
 	text "POWER PLANT"
 	line "CURRENT: STABLE"
 	done
+
+_Route10VisitingZapdosText::
+	text "The air begins to"
+	line "crackle..."
+
+	para "ZAPDOS fixes you"
+	line "with a sharp gaze."
+
+	para "Approach it?"
+	done
+
+_Route10ZapdosDepartedText::
+	text "With one last cry,"
+	line "ZAPDOS disappears"
+	cont "into the clouds!"
+	done

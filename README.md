@@ -20,6 +20,7 @@ checks the original byte layout and core stored IDs automatically; run
 
 - [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
 - [x] Seed the early adventure with [Oak's restless last Pokémon](scripts/OaksLab.asm), an unusual [Viridian Forest rustle](scripts/ViridianForest.asm), and an almost-impossible ancient Venusaur sighting.
+- [x] Let Articuno, Zapdos, and Moltres make rare visits beyond their lairs without replacing their original catchable encounters.
 - [x] Let the [Viridian Old Man's Weedle grow up](scripts/ViridianCity.asm) into a formidable Beedrill partner.
 - [x] Bring back Route 3's [shorts youngster](scripts/Route23.asm) near the League with a wildly overtrained early-route team.
 - [x] Let [Mr. Fuji recognise](scripts/MrFujisHouse.asm) a lead Mewtwo or Mew without explaining his past.

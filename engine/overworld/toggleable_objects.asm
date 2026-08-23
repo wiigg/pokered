@@ -99,10 +99,16 @@ LoadSupplementalToggleableObject:
 
 IsSupplementalObjectHiddenByEvent:
 	ld a, [wCurMap]
+	cp ROUTE_20
+	jp z, .visitingArticuno
+	cp ROUTE_10
+	jp z, .visitingZapdos
+	cp CINNABAR_ISLAND
+	jp z, .visitingMoltres
 	cp ROUTE_23
-	jr z, .shortsYoungster
+	jp z, .shortsYoungster
 	cp REDS_HOUSE_2F
-	jr z, .diploma
+	jp z, .diploma
 	CheckEvent EVENT_MET_WANDERER_CERULEAN_CAVE
 	ret nz
 	ld a, [wCurMap]
@@ -117,6 +123,43 @@ IsSupplementalObjectHiddenByEvent:
 	cp POKEMON_MANSION_B1F
 	jr z, .pokemonMansion
 	xor a                       ; Cerulean Cave before the reveal
+	ret
+.visitingArticuno
+	CheckEvent EVENT_BEAT_ARTICUNO
+	jr nz, .hidden
+	lb de, 53, 9
+	jr .rollLegendaryVisitor
+.visitingZapdos
+	CheckEvent EVENT_BEAT_ZAPDOS
+	jr nz, .hidden
+	lb de, 9, 42
+	jr .rollLegendaryVisitor
+.visitingMoltres
+	CheckEvent EVENT_BEAT_MOLTRES
+	jr nz, .hidden
+	lb de, 18, 13
+.rollLegendaryVisitor
+	ld a, [wXCoord]
+	cp d
+	jr nz, .notOverlappingPlayer
+	ld a, [wYCoord]
+	cp e
+	jr z, .hidden
+.notOverlappingPlayer
+	ld a, [wStatusFlags4]
+	bit BIT_BATTLE_OVER_OR_BLACKOUT, a
+	jr nz, .keepLegendaryVisitorState
+	call Random
+	and %11111 ; one chance in 32 on map entry
+	ret
+.keepLegendaryVisitorState
+	push bc
+	ld hl, wToggleableObjectFlags
+	ld b, FLAG_TEST
+	call ToggleableObjectFlagAction
+	ld a, c
+	pop bc
+	and a
 	ret
 .mtMoon
 	CheckEvent EVENT_MET_WANDERER_MT_MOON
