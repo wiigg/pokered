@@ -9,9 +9,45 @@ SSAnneBow_Script:
 
 SSAnneBow_ScriptPointers:
 	def_script_pointers
-	dw_const CheckFightingMapTrainers,              SCRIPT_SSANNEBOW_DEFAULT
+	dw_const SSAnneBowDefaultScript,                 SCRIPT_SSANNEBOW_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_SSANNEBOW_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_SSANNEBOW_END_BATTLE
+
+SSAnneBowDefaultScript:
+	call CheckFightingMapTrainers
+	ld a, [wCurMapScript]
+	and a
+	ret nz
+	CheckEvent EVENT_RUBBED_CAPTAINS_BACK
+	ret z
+	CheckEvent EVENT_SAW_SS_ANNE_SEA_SHADOW
+	ret nz
+	ld hl, .SeaShadowTriggerCoords
+	call ArePlayerCoordsInArray
+	ret nc
+
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	xor a
+	ldh [hJoyHeld], a
+	ld a, SFX_PUSH_BOULDER
+	call PlaySound
+	ld b, 3
+	predef PredefShakeScreenHorizontally
+	ld a, GYARADOS
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, SSAnneBowSeaShadowText
+	call PrintText
+	SetEvent EVENT_SAW_SS_ANNE_SEA_SHADOW
+	xor a
+	ld [wJoyIgnore], a
+	ret
+
+.SeaShadowTriggerCoords:
+	dbmapcoord 1, 6
+	dbmapcoord 1, 7
+	db -1 ; end
 
 SSAnneBow_TextPointers:
 	def_text_pointers
@@ -39,6 +75,10 @@ SSAnneBowSailor1Text:
 
 SSAnneBowCooltrainerMText:
 	text_far _SSAnneBowCooltrainerMText
+	text_end
+
+SSAnneBowSeaShadowText:
+	text_far _SSAnneBowSeaShadowText
 	text_end
 
 SSAnneBowSailor2Text:

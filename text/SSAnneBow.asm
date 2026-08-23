@@ -16,6 +16,15 @@ _SSAnneBowCooltrainerMText::
 	line "get some air."
 	done
 
+_SSAnneBowSeaShadowText::
+	text "The ship suddenly"
+	line "rocks!"
+
+	para "Something enormous"
+	line "passed beneath the"
+	cont "ship..."
+	done
+
 _SSAnneBowSailor2BattleText::
 	text "Hey matey!"
 
