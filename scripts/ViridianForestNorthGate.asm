@@ -7,8 +7,11 @@ ViridianForestNorthGate_TextPointers:
 	dw_const ViridianForestNorthGateGrampsText,    TEXT_VIRIDIANFORESTNORTHGATE_GRAMPS
 
 ViridianForestNorthGateSuperNerdText:
-	text_far _ViridianForestNorthGateSuperNerdText
-	text_end
+	text_asm
+	ld a, TRADE_FOR_CHIKUCHIKU
+	ld [wWhichTrade], a
+	predef DoInGameTradeDialogue
+	jp TextScriptEnd
 
 ViridianForestNorthGateGrampsText:
 	text_far _ViridianForestNorthGateGrampsText

@@ -43,6 +43,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Add a repeatable [Trial of Three](scripts/FightingDojo.asm) gauntlet with no rest between battles.
 - [x] Let Blue train with his future line-up in the empty [Viridian Gym](scripts/ViridianGym.asm).
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
+- [x] Restore the unused CHIKUCHIKU Butterfree-for-Beedrill trade at Viridian Forest's north gate.
 - [x] Let [in-game trade partners](engine/events/in_game_trades.asm) recognise their old Pokémon when reunited, including evolved forms.
 - [x] Remix wild encounters so each area has a stronger identity and occasional exciting rare finds.
 - [x] Upgrade major trainers with fuller, smarter teams:
