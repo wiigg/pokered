@@ -42,7 +42,7 @@ jobs:
       - name: Make
         if: ${{ github.repository_owner != 'pret' }}
         run: |
-          make -j$(nproc)
+          make -j$(nproc) check-save-compat
           .github/checkdiff.sh
 
       - name: Checkout symbols
@@ -98,5 +98,5 @@ jobs:
       - name: Make
         if: ${{ github.repository_owner != 'pret' }}
         run: |
-          make -j$(sysctl -n hw.ncpu)
+          make -j$(sysctl -n hw.ncpu) check-save-compat
           .github/checkdiff.sh

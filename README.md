@@ -12,7 +12,9 @@ Save compatibility is a core design constraint. Saves are intended to move in
 both directions between this fork and an unmodified Pokémon Red cartridge, so
 changes preserve the original save layout, Pokémon structures, and established
 IDs. Saving inside Bill's Secret Garden is disabled until the player returns to
-an original location that an unmodified game can load safely.
+an original location that an unmodified game can load safely. Every full build
+checks the original byte layout and core stored IDs automatically; run
+`make check-save-compat` to invoke it directly.
 
 ## Roadmap
 

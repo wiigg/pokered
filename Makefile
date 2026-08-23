@@ -57,6 +57,7 @@ RGBGFXFLAGS  ?= -Weverything
 	blue_debug \
 	red_vc \
 	blue_vc \
+	check-save-compat \
 	clean \
 	tidy \
 	compare \
@@ -90,6 +91,7 @@ tidy:
 	      $(pokered_vc_obj) \
 	      $(pokeblue_vc_obj) \
 	      $(pokeblue_debug_obj) \
+	      save_abi_constants.o \
 	      rgbdscheck.o
 	$(MAKE) clean -C tools/
 
@@ -133,6 +135,8 @@ $1: $2 $$(shell tools/scan_includes $2) $(preinclude_deps) | rgbdscheck.o
 	$$(RGBASM) $$(RGBASMFLAGS) -o $$@ $$<
 endef
 
+$(eval $(call DEP,save_abi_constants.o,.github/save_abi_constants.asm))
+
 # Dependencies for objects (drop _red and _blue from asm file basenames)
 $(foreach obj, $(pokered_obj), $(eval $(call DEP,$(obj),$(obj:_red.o=.asm))))
 $(foreach obj, $(pokeblue_obj), $(eval $(call DEP,$(obj),$(obj:_blue.o=.asm))))
@@ -141,6 +145,12 @@ $(foreach obj, $(pokered_vc_obj), $(eval $(call DEP,$(obj),$(obj:_red_vc.o=.asm)
 $(foreach obj, $(pokeblue_vc_obj), $(eval $(call DEP,$(obj),$(obj:_blue_vc.o=.asm))))
 
 endif
+
+
+check-save-compat: $(roms) save_abi_constants.o .github/check_save_abi.sh .github/save_abi_layout.txt .github/save_abi_hidden_items.txt
+	.github/check_save_abi.sh .github/save_abi_layout.txt $(roms)
+
+all compare: check-save-compat
 
 
 RGBLINKFLAGS += -d
