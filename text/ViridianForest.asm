@@ -6,6 +6,18 @@ _ViridianForestYoungster1Text::
 	line "#MON fights!"
 	done
 
+_ViridianForestRustleText::
+	text "The leaves beside"
+	line "you suddenly"
+	cont "rustle!"
+	done
+
+_ViridianForestNotABugText::
+	text "BUG CATCHER: Hey!"
+	line "That wasn't a"
+	cont "BUG..."
+	done
+
 _ViridianForestYoungster2BattleText::
 	text "Hey! You have"
 	line "#MON! Come on!"

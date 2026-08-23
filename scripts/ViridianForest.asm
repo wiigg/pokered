@@ -9,9 +9,44 @@ ViridianForest_Script:
 
 ViridianForest_ScriptPointers:
 	def_script_pointers
-	dw_const CheckFightingMapTrainers,              SCRIPT_VIRIDIANFOREST_DEFAULT
+	dw_const ViridianForestDefaultScript,           SCRIPT_VIRIDIANFOREST_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_VIRIDIANFOREST_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_VIRIDIANFOREST_END_BATTLE
+
+ViridianForestDefaultScript:
+	call CheckFightingMapTrainers
+	ld a, [wCurMapScript]
+	and a
+	ret nz
+	CheckEvent EVENT_HEARD_VIRIDIAN_FOREST_RUSTLE
+	ret nz
+	ld hl, .RustleTriggerCoords
+	call ArePlayerCoordsInArray
+	ret nc
+	xor a
+	ldh [hJoyHeld], a
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld hl, ViridianForestRustleText
+	call PrintText
+	ld b, 1
+	predef PredefShakeScreenHorizontally
+	ld a, BULBASAUR
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, ViridianForestNotABugText
+	call PrintText
+	SetEvent EVENT_HEARD_VIRIDIAN_FOREST_RUSTLE
+	xor a
+	ld [wJoyIgnore], a
+	ret
+
+.RustleTriggerCoords:
+	dbmapcoord 15, 44
+	dbmapcoord 16, 44
+	dbmapcoord 17, 44
+	dbmapcoord 18, 44
+	db -1 ; end
 
 ViridianForest_TextPointers:
 	def_text_pointers
@@ -42,6 +77,14 @@ ViridianForestTrainerHeader2:
 
 ViridianForestYoungster1Text:
 	text_far _ViridianForestYoungster1Text
+	text_end
+
+ViridianForestRustleText:
+	text_far _ViridianForestRustleText
+	text_end
+
+ViridianForestNotABugText:
+	text_far _ViridianForestNotABugText
 	text_end
 
 ViridianForestYoungster2Text:

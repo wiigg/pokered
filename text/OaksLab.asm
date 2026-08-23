@@ -60,6 +60,24 @@ _OaksLabLastMonText::
 	line "last #MON!"
 	done
 
+_OaksLabLastMonEagerText::
+	text "PROF.OAK's last"
+	line "# BALL trembled..."
+
+	para "The #MON inside"
+	line "seems eager."
+	done
+
+_OaksLabLastMonRestingText::
+	text "PROF.OAK's last"
+	line "# BALL rests"
+	cont "quietly."
+
+	para "The #MON inside"
+	line "finally got its"
+	cont "battle."
+	done
+
 _OaksLabOak1WhichPokemonDoYouWantText::
 	text "OAK: Now, <PLAYER>,"
 	line "which #MON do"
@@ -197,6 +215,10 @@ _OaksLabOakChallengeText::
 	para "When I was young,"
 	line "I was a serious"
 	cont "#MON trainer."
+
+	para "One old partner"
+	line "has waited since"
+	cont "the day you left."
 
 	para "Would you care to"
 	line "test your team"

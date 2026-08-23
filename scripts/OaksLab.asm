@@ -989,12 +989,69 @@ OaksLabLastMonScript:
 	ldh [hSpriteDataOffset], a
 	call GetPointerWithinSpriteStateData1
 	ld [hl], SPRITE_FACING_DOWN
+	CheckEvent EVENT_BEAT_PROF_OAK
+	jr nz, .resting
+	CheckEvent EVENT_BATTLED_RIVAL_IN_OAKS_LAB
+	jr z, .ordinary
+	call OaksLabShakeLastPokeBall
+	ld a, [wCurPartySpecies]
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, OaksLabLastMonEagerText
+	jr .print
+.resting
+	ld hl, OaksLabLastMonRestingText
+	jr .print
+.ordinary
 	ld hl, OaksLabLastMonText
+.print
 	call PrintText
 	jp TextScriptEnd
 
+OaksLabShakeLastPokeBall:
+	ld a, [wSpriteIndex]
+	ldh [hSpriteIndex], a
+	ld a, SPRITESTATEDATA1_XPIXELS
+	ldh [hSpriteDataOffset], a
+	call GetPointerWithinSpriteStateData1
+	ld b, 2
+.shake
+	dec [hl]
+	dec [hl]
+	call .redraw
+	inc [hl]
+	inc [hl]
+	inc [hl]
+	inc [hl]
+	call .redraw
+	dec [hl]
+	dec [hl]
+	call .redraw
+	dec b
+	jr nz, .shake
+	ld a, OAKSLAB_OAK1
+	ldh [hSpriteIndex], a
+	ret
+.redraw
+	push bc
+	push hl
+	call UpdateSprites
+	ld c, 2
+	call DelayFrames
+	pop hl
+	pop bc
+	ret
+
 OaksLabLastMonText:
 	text_far _OaksLabLastMonText
+	text_end
+
+OaksLabLastMonEagerText:
+	text_far _OaksLabLastMonEagerText
+	text_end
+
+OaksLabLastMonRestingText:
+	text_far _OaksLabLastMonRestingText
 	text_end
 
 OaksLabOak1Text:
