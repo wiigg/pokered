@@ -191,6 +191,10 @@ _ViridianCityTrainerTips1Text::
 _ViridianCityTrainerTips2Text::
 	text "TRAINER TIPS"
 
+	para "Hold B Button"
+	line "while walking to"
+	cont "run!"
+
 	para "The battle moves"
 	line "of #MON are"
 	cont "limited by their"
