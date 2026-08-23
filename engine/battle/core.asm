@@ -6798,6 +6798,7 @@ _InitBattleCommon:
 	ld b, SET_PAL_BATTLE_BLACK
 	call RunPaletteCommand
 	call SlidePlayerAndEnemySilhouettesOnScreen
+	call RerollWildMonDVs
 	xor a
 	ldh [hAutoBGTransferEnabled], a
 	ld hl, .emptyString
@@ -6834,6 +6835,37 @@ _InitBattleCommon:
 	ret
 .emptyString
 	db "@"
+
+RerollWildMonDVs:
+	ld a, [wIsInBattle]
+	dec a
+	ret nz
+; Generate wild DVs after the player-controlled intro pause so the encounter
+; rolls cannot constrain them.
+	ld a, [wEnemyMonSpecies2]
+	ld [wCurSpecies], a
+	call GetMonHeader
+	call BattleRandom
+	ld b, a
+	call BattleRandom
+	ld hl, wEnemyMonDVs
+	ld [hli], a
+	ld [hl], b
+	ld hl, wEnemyMonHP
+	ld de, wEnemyMonMaxHP
+	ld b, 0
+	call CalcStats
+	ld hl, wEnemyMonMaxHP
+	ld de, wEnemyMonHP
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hl]
+	ld [de], a
+	ld hl, wEnemyMonLevel
+	ld de, wEnemyMonUnmodifiedLevel
+	ld bc, 1 + NUM_STATS * 2
+	jp CopyData
 
 _LoadTrainerPic:
 	ld a, [wTrainerPicPointer]
