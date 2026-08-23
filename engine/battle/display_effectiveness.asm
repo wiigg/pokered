@@ -1,10 +1,14 @@
 DisplayEffectiveness:
 	ld a, [wDamageMultipliers]
-	and $7F
-	cp EFFECTIVE
+	and EFFECTIVENESS_MASK
 	ret z
+	cp TYPE_IMMUNITY
+	ret z
+	cp CANCELLED_EFFECTIVENESS
+	ret z
+	bit BIT_NOT_VERY_EFFECTIVE, a
 	ld hl, SuperEffectiveText
-	jr nc, .done
+	jr z, .done
 	ld hl, NotVeryEffectiveText
 .done
 	jp PrintText

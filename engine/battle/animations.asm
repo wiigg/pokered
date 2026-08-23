@@ -2641,20 +2641,28 @@ PlayApplyingAttackSound:
 ; don't play any sound at all if move is ineffective
 	call WaitForSoundToFinish
 	ld a, [wDamageMultipliers]
-	and $7f
+	and EFFECTIVENESS_MASK
+	cp TYPE_IMMUNITY
 	ret z
-	cp 10
-	ld a, $20
-	ld b, $30
-	ld c, SFX_DAMAGE
-	jr z, .playSound
+	and a
+	jr z, .neutral
+	cp CANCELLED_EFFECTIVENESS
+	jr z, .neutral
+	bit BIT_NOT_VERY_EFFECTIVE, a
+	jr nz, .notVeryEffective
 	ld a, $e0
 	ld b, $ff
 	ld c, SFX_SUPER_EFFECTIVE
-	jr nc, .playSound
+	jr .playSound
+.notVeryEffective
 	ld a, $50
 	ld b, $1
 	ld c, SFX_NOT_VERY_EFFECTIVE
+	jr .playSound
+.neutral
+	ld a, $20
+	ld b, $30
+	ld c, SFX_DAMAGE
 .playSound
 	ld [wFrequencyModifier], a
 	ld a, b

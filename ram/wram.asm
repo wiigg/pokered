@@ -1259,11 +1259,9 @@ wCurOpponent:: db
 ; in safari battle, this is 2
 wBattleType:: db
 
-; bits 0-6: Effectiveness
-   ;  $0 = immune
-   ;  $5 = not very effective
-   ;  $a = neutral
-   ; $14 = super-effective
+; bits 0-1: effectiveness flags
+; both clear = neutral, both set = weakness and resistance cancel
+; bits 0-6 all set = immune
 ; bit 7: STAB
 wDamageMultipliers:: db
 

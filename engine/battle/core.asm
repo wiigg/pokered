@@ -3113,7 +3113,6 @@ ExecutePlayerMove:
 	ld [wMoveMissed], a
 	ld [wMonIsDisobedient], a
 	ld [wMoveDidntMiss], a
-	ld a, EFFECTIVE
 	ld [wDamageMultipliers], a
 	ld a, [wActionResultOrTookBattleTurn]
 	and a ; has the player already used the turn (e.g. by using an item, trying to run or switching pokemon)
@@ -3746,6 +3745,7 @@ PrintMoveFailureText:
 	ld hl, DoesntAffectMonText
 	ld a, [wDamageMultipliers]
 	and EFFECTIVENESS_MASK
+	cp TYPE_IMMUNITY
 	jr z, .gotTextToPrint
 	ld hl, AttackMissedText
 	ld a, [wCriticalHitOrOHKO]
@@ -5193,13 +5193,19 @@ AdjustDamageForMoveType:
 	push hl
 	push bc
 	inc hl
-	ld a, [wDamageMultipliers]
-	and 1 << BIT_STAB_DAMAGE
-	ld b, a
 	ld a, [hl] ; a = damage multiplier
 	ldh [hMultiplier], a
-	add b
-	ld [wDamageMultipliers], a
+	and a
+	jr z, .typeImmunity
+	cp EFFECTIVE
+	ld hl, wDamageMultipliers
+	jr c, .notVeryEffective
+	jr z, .applyTypeMultiplier
+	set BIT_SUPER_EFFECTIVE, [hl]
+	jr .applyTypeMultiplier
+.notVeryEffective
+	set BIT_NOT_VERY_EFFECTIVE, [hl]
+.applyTypeMultiplier
 	xor a
 	ldh [hMultiplicand], a
 	ld hl, wDamage
@@ -5218,18 +5224,28 @@ AdjustDamageForMoveType:
 	ldh a, [hQuotient + 3]
 	ld [hl], a
 	or b ; is damage 0?
-	jr nz, .skipTypeImmunity
+	jr nz, .typeMultiplierApplied
 ; if damage is 0, make the move miss
 ; this only occurs if a move that would do 2 or 3 damage is 0.25x effective against the target
 	inc a
 	ld [wMoveMissed], a
-.skipTypeImmunity
+.typeMultiplierApplied
 	pop bc
 	pop hl
 .nextTypePair
 	inc hl
 	inc hl
 	jp .loop
+.typeImmunity
+	xor a
+	ld [wDamage], a
+	ld [wDamage + 1], a
+	ld a, TYPE_IMMUNITY
+	ld [wDamageMultipliers], a
+	ld a, 1
+	ld [wMoveMissed], a
+	pop bc
+	pop hl
 .done
 	ret
 
@@ -5525,7 +5541,6 @@ ExecuteEnemyMove:
 	xor a
 	ld [wMoveMissed], a
 	ld [wMoveDidntMiss], a
-	ld a, EFFECTIVE
 	ld [wDamageMultipliers], a
 	call CheckEnemyStatusConditions
 	jr nz, .enemyHasNoSpecialConditions
