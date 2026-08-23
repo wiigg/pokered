@@ -447,6 +447,27 @@ _OakLabEmailText::
 	cont "..."
 	done
 
+_OakLabEmailReplyText::
+	text "There's an e-mail"
+	line "reply here!"
+
+	para "..."
+
+	para "To: #MON"
+	line "LEAGUE HQ"
+
+	para "Thank you for the"
+	line "invitation."
+
+	para "I had one last"
+	line "trainer to test."
+
+	para "The future is in"
+	line "good hands."
+
+	para "PROF.OAK"
+	done
+
 _GameCornerCoinCaseText::
 	text "A COIN CASE is"
 	line "required!"

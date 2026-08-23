@@ -73,3 +73,4 @@ TextPredefs::
 	add_tx_pre CeladonHotelLedgerPCText              ; 43
 	add_tx_pre GymStatueRhydonText                  ; 44
 	add_tx_pre AutoBoxRolloverText                   ; 45
+	add_tx_pre OakLabEmailReplyText                  ; 46
