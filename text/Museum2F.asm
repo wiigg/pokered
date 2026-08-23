@@ -43,3 +43,21 @@ _Museum2FMoonStoneSignText::
 	line "fell on MT.MOON."
 	cont "(MOON STONE?)"
 	done
+
+_Museum2FMoonStoneAfterMoonfallText::
+	text "Meteorite that"
+	line "fell on MT.MOON."
+	cont "(MOON STONE?)"
+
+	para "It feels faintly"
+	line "warm..."
+	done
+
+_Museum2FMoonStoneClefairyReactionText::
+	text_ram wNameBuffer
+	text_start
+	line "gazes at it..."
+
+	para "A soft glow pulses"
+	line "from the stone!"
+	done

@@ -36,5 +36,36 @@ Museum2FSpaceShuttleSignText:
 	text_end
 
 Museum2FMoonStoneSignText:
+	text_asm
+	CheckEvent EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	ld hl, .Text
+	jr z, .print_text
+	ld hl, .MoonfallText
+	call PrintText
+	ld a, [wPartySpecies]
+	cp CLEFAIRY
+	jr z, .clefairy_family
+	cp CLEFABLE
+	jp nz, TextScriptEnd
+.clefairy_family
+	call PlayCry
+	call WaitForSoundToFinish
+	xor a
+	ld hl, wPartyMonNicks
+	call GetPartyMonName
+	ld hl, .ClefairyReactionText
+.print_text
+	call PrintText
+	jp TextScriptEnd
+
+.Text:
 	text_far _Museum2FMoonStoneSignText
+	text_end
+
+.MoonfallText:
+	text_far _Museum2FMoonStoneAfterMoonfallText
+	text_end
+
+.ClefairyReactionText:
+	text_far _Museum2FMoonStoneClefairyReactionText
 	text_end
