@@ -100,7 +100,9 @@ OverworldLoopLessDelay::
 	call IsSpriteOrSignInFrontOfPlayer
 	ldh a, [hTextID]
 	and a
-	jp z, OverworldLoop
+	jr nz, .displayDialogue
+	farcall TryFieldMove
+	jp OverworldLoop
 .displayDialogue
 	predef GetTileAndCoordsInFrontOfPlayer
 	call UpdateSprites

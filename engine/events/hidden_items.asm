@@ -9,7 +9,10 @@ HiddenItems:
 	predef FlagActionPredef
 	ld a, c
 	and a
-	ret nz
+	jr z, .notYetFound
+	farcall TryFieldMove
+	ret
+.notYetFound
 	call EnableAutoTextBoxDrawing
 	ld a, 1
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a

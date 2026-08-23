@@ -278,6 +278,11 @@ SECTION "Saffron Guards", ROMX
 INCLUDE "engine/events/saffron_guards.asm"
 
 
+SECTION "Field Move Interactions", ROMX
+
+INCLUDE "engine/overworld/field_move_interactions.asm"
+
+
 SECTION "Starter Dex", ROMX
 
 INCLUDE "engine/events/starter_dex.asm"

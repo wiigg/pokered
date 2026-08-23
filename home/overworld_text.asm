@@ -15,7 +15,8 @@ GroundRoseText::
 
 BoulderText::
 	text_far _BoulderText
-	text_end
+	text_asm
+	farjp TryStrengthFieldMove
 
 MartSignText::
 	text_far _MartSignText
