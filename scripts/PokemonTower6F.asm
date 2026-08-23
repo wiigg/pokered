@@ -145,6 +145,15 @@ PokemonTower6FMarowakDepartedText:
 	call DelayFrames
 	ld hl, PokemonTower6FSoulWasCalmedText
 	call PrintText
+	ld a, [wPartySpecies]
+	cp CUBONE
+	jr nz, .done
+	ld hl, PokemonTower6FCuboneGoodbyeText
+	call PrintText
+	ld a, CUBONE
+	call PlayCry
+	call WaitForSoundToFinish
+.done
 	jp TextScriptEnd
 
 PokemonTower6FGhostWasCubonesMotherText:
@@ -153,6 +162,10 @@ PokemonTower6FGhostWasCubonesMotherText:
 
 PokemonTower6FSoulWasCalmedText:
 	text_far _PokemonTower6FSoulWasCalmedText
+	text_end
+
+PokemonTower6FCuboneGoodbyeText:
+	text_far _PokemonTower6FCuboneGoodbyeText
 	text_end
 
 PokemonTower6FChanneler1BattleText:

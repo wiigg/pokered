@@ -20,6 +20,7 @@ checks the original byte layout and core stored IDs automatically; run
 
 - [x] Make the “Mew under the truck” myth real using the [Vermilion Dock script](scripts/VermilionDock.asm#L1).
 - [x] Make Lavender Town's [“white hand” rumour](scripts/LavenderTown.asm) real with a hidden Haunter encounter.
+- [x] Let a lead [Cubone quietly say goodbye](scripts/PokemonTower6F.asm) when its mother's spirit departs.
 - [x] Set apart a solitary [memorial to Blue's missing Raticate](scripts/PokemonTower2F.asm) in Pokémon Tower.
 - [x] Hint through a torn [Pokémon Mansion diary](text/PokemonMansionB1F.asm) that Ditto may be failed Mew clones.
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).

@@ -12,6 +12,13 @@ _PokemonTower6FSoulWasCalmedText::
 	line "the afterlife!"
 	done
 
+_PokemonTower6FCuboneGoodbyeText::
+	text "CUBONE looks at"
+	line "the empty space."
+
+	para "It bows its head."
+	done
+
 _PokemonTower6FChanneler1BattleText::
 	text "Give...me..."
 	line "blood..."
