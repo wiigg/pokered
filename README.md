@@ -25,6 +25,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Set apart a solitary [memorial to Blue's missing Raticate](scripts/PokemonTower2F.asm) in Pokémon Tower.
 - [x] Hint through a torn [Pokémon Mansion diary](text/PokemonMansionB1F.asm) that Ditto may be failed Mew clones.
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).
+- [x] Restore Silph Co.'s unused [Porygon monitor](scripts/SilphCo11F.asm) and its original Pokédex display.
 - [x] Make [Bill's Secret Garden](scripts/BillsSecretGarden.asm) real as a postgame Eevee-family secret, with a unique Surfing Pikachu and hints of discoveries still to come.
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.

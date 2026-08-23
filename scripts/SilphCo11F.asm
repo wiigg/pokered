@@ -281,6 +281,7 @@ SilphCo11F_TextPointers:
 	dw_const SilphCo11FRocket1Text,                   TEXT_SILPHCO11F_ROCKET1
 	dw_const SilphCo11FRocket2Text,                   TEXT_SILPHCO11F_ROCKET2
 	dw_const SilphCo11FGiovanniYouRuinedOurPlansText, TEXT_SILPHCO11F_GIOVANNI_YOU_RUINED_OUR_PLANS
+	dw_const SilphCo11FPorygonText,                   TEXT_SILPHCO11F_PORYGON
 
 SilphCo11TrainerHeaders:
 	def_trainers 4
@@ -382,7 +383,7 @@ SilphCo11FRocket2AfterBattleText:
 	text_far _SilphCo11FRocket2AfterBattleText
 	text_end
 
-SilphCo11FPorygonText: ; unreferenced
+SilphCo11FPorygonText:
 	text_asm
 	ld hl, .Text
 	call PrintText
