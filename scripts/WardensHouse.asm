@@ -28,7 +28,7 @@ WardensHouseWardenText:
 	ld hl, .Gibberish2Text
 .refused
 	call PrintText
-	jr .done
+	jp .done
 .have_gold_teeth
 	ld hl, .GaveTheGoldTeethText
 	call PrintText
@@ -47,6 +47,36 @@ WardensHouseWardenText:
 	SetEvent EVENT_GOT_HM04
 	jr .done
 .got_item
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .explainHM04
+	CheckEvent EVENT_STARTED_SAFARI_MASTER_CHALLENGE
+	jr z, .startSafariMasterChallenge
+	CheckEvent EVENT_BECAME_SAFARI_MASTER
+	jr nz, .safariMaster
+	ld a, [wEventFlags + EVENT_SAFARI_MASTER_CAUGHT_CHANSEY / 8]
+	and %00011110 ; the four Safari Master photo bits
+	cp %00011110
+	jr z, .becomeSafariMaster
+	ld hl, .SafariMasterProgressText
+	call PrintText
+	jr .done
+.startSafariMasterChallenge
+	ld hl, .SafariMasterIntroText
+	call PrintText
+	ResetEvents EVENT_SAFARI_MASTER_CAUGHT_CHANSEY, EVENT_SAFARI_MASTER_CAUGHT_KANGASKHAN, EVENT_SAFARI_MASTER_CAUGHT_TAUROS, EVENT_SAFARI_MASTER_CAUGHT_SCYTHER_OR_PINSIR, EVENT_BECAME_SAFARI_MASTER
+	SetEvent EVENT_STARTED_SAFARI_MASTER_CHALLENGE
+	jr .done
+.becomeSafariMaster
+	ld hl, .BecameSafariMasterText
+	call PrintText
+	SetEvent EVENT_BECAME_SAFARI_MASTER
+	jr .done
+.safariMaster
+	ld hl, .SafariMasterText
+	call PrintText
+	jr .done
+.explainHM04
 	ld hl, .HM04ExplanationText
 	call PrintText
 	jr .done
@@ -71,8 +101,6 @@ WardensHouseWardenText:
 .GaveTheGoldTeethText:
 	text_far _WardensHouseWardenGaveTheGoldTeethText
 	sound_get_item_1
-
-.PoppedInHisTeethText: ; unreferenced
 	text_far _WardensHouseWardenTeethPoppedInHisTeethText
 	text_end
 
@@ -93,13 +121,62 @@ WardensHouseWardenText:
 	text_far _WardensHouseWardenHM04NoRoomText
 	text_end
 
+.SafariMasterIntroText:
+	text_far _WardensHouseWardenSafariMasterIntroText
+	text_end
+
+.SafariMasterProgressText:
+	text_far _WardensHouseWardenSafariMasterProgressText
+	text_end
+
+.BecameSafariMasterText:
+	text_far _WardensHouseWardenBecameSafariMasterText
+	text_end
+
+.SafariMasterText:
+	text_far _WardensHouseWardenSafariMasterText
+	text_end
+
 WardensHouseDisplayText:
 	text_asm
+	CheckEvent EVENT_STARTED_SAFARI_MASTER_CHALLENGE
+	jr nz, .safariMasterDisplay
 	ldh a, [hTextID]
 	cp TEXT_WARDENSHOUSE_DISPLAY_LEFT
 	ld hl, .MerchandiseText
 	jr nz, .print_text
 	ld hl, .PhotosAndFossilsText
+	jr .print_text
+.safariMasterDisplay
+	ldh a, [hTextID]
+	cp TEXT_WARDENSHOUSE_DISPLAY_LEFT
+	jr nz, .rightDisplay
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_CHANSEY
+	jr z, .leftWithoutChansey
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_KANGASKHAN
+	ld hl, .LeftBothText
+	jr nz, .print_text
+	ld hl, .LeftChanseyText
+	jr .print_text
+.leftWithoutChansey
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_KANGASKHAN
+	ld hl, .LeftKangaskhanText
+	jr nz, .print_text
+	ld hl, .LeftEmptyText
+	jr .print_text
+.rightDisplay
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_TAUROS
+	jr z, .rightWithoutTauros
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_SCYTHER_OR_PINSIR
+	ld hl, .RightBothText
+	jr nz, .print_text
+	ld hl, .RightTaurosText
+	jr .print_text
+.rightWithoutTauros
+	CheckEvent EVENT_SAFARI_MASTER_CAUGHT_SCYTHER_OR_PINSIR
+	ld hl, .RightBugText
+	jr nz, .print_text
+	ld hl, .RightEmptyText
 .print_text
 	call PrintText
 	jp TextScriptEnd
@@ -110,4 +187,36 @@ WardensHouseDisplayText:
 
 .MerchandiseText:
 	text_far _WardensHouseDisplayMerchandiseText
+	text_end
+
+.LeftEmptyText:
+	text_far _WardensHouseDisplayLeftEmptyText
+	text_end
+
+.LeftChanseyText:
+	text_far _WardensHouseDisplayLeftChanseyText
+	text_end
+
+.LeftKangaskhanText:
+	text_far _WardensHouseDisplayLeftKangaskhanText
+	text_end
+
+.LeftBothText:
+	text_far _WardensHouseDisplayLeftBothText
+	text_end
+
+.RightEmptyText:
+	text_far _WardensHouseDisplayRightEmptyText
+	text_end
+
+.RightTaurosText:
+	text_far _WardensHouseDisplayRightTaurosText
+	text_end
+
+.RightBugText:
+	text_far _WardensHouseDisplayRightBugText
+	text_end
+
+.RightBothText:
+	text_far _WardensHouseDisplayRightBothText
 	text_end

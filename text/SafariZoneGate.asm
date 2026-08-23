@@ -13,6 +13,21 @@ _SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText::
 	line "join the hunt?@"
 	text_end
 
+_SafariZoneGateSafariMasterPromptText::
+	text "SAFARI MASTER!"
+	line "Entry is free!"
+
+	para "Ready for another"
+	line "hunt?@"
+	text_end
+
+_SafariZoneGateSafariMasterFreeEntryText::
+	text "Right this way!"
+
+	para "<PLAYER> received"
+	line "30 SAFARI BALLs!@"
+	text_end
+
 _SafariZoneGateSafariZoneWorker1ThatllBe500PleaseText::
 	text "That'll be ¥500"
 	line "please!"

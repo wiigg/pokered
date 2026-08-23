@@ -56,6 +56,14 @@ _ItemUseBallText06::
 	text "!@"
 	text_end
 
+_SafariMasterPhotoRecordedText::
+	text "The SAFARI staff"
+	line "snapped a photo!"
+
+	para "It was sent to"
+	line "the WARDEN."
+	done
+
 _SurfingGotOnText::
 	text "<PLAYER> got on"
 	line "@"

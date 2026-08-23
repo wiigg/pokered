@@ -30,6 +30,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.
 - [x] Help [Erik and Sara](scripts/FuchsiaCity.asm) find each other at Fuchsia City's different gates.
+- [x] Complete the Warden's postgame [Safari Master challenge](scripts/WardensHouse.asm), fill his rare-Pokémon photo display, and earn free Safari entry.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Give a completed 151-species Pokédex a proper epilogue and a framed bedroom diploma.
 - [x] Give the Champion and their original starter a proper [homecoming with Mom](scripts/RedsHouse1F.asm).

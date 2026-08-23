@@ -146,15 +146,25 @@ SafariZoneGateSafariZoneWorker1Text:
 	text_end
 
 SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText:
-	text_far _SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText
 	text_asm
+	CheckEvent EVENT_BECAME_SAFARI_MASTER
+	ld hl, .WouldYouLikeToJoinText
+	jr z, .printPrompt
+	ld hl, .SafariMasterPromptText
+.printPrompt
+	call PrintText
+	CheckEvent EVENT_BECAME_SAFARI_MASTER
+	jr nz, .askToJoin
 	ld a, MONEY_BOX
 	ld [wTextBoxID], a
 	call DisplayTextBoxID
+.askToJoin
 	call YesNoChoice
 	ld a, [wCurrentMenuItem]
 	and a
 	jp nz, .PleaseComeAgain
+	CheckEvent EVENT_BECAME_SAFARI_MASTER
+	jr nz, .freeEntry
 	xor a
 	ldh [hMoney], a
 	ld a, $05
@@ -183,6 +193,7 @@ SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText:
 	call DisplayTextBoxID
 	ld hl, .MakePaymentText
 	call PrintText
+.beginVisit
 	ld a, 30
 	ld [wNumSafariBalls], a
 	ld a, HIGH(502)
@@ -198,6 +209,11 @@ SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText:
 	ld [wSafariZoneGateCurScript], a
 	jr .done
 
+.freeEntry
+	ld hl, .FreeEntryText
+	call PrintText
+	jr .beginVisit
+
 .PleaseComeAgain
 	ld hl, .PleaseComeAgainText
 	call PrintText
@@ -212,6 +228,20 @@ SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText:
 
 .MakePaymentText
 	text_far _SafariZoneGateSafariZoneWorker1ThatllBe500PleaseText
+	sound_get_item_1
+	text_far _SafariZoneGateSafariZoneWorker1CallYouOnThePAText
+	text_end
+
+.WouldYouLikeToJoinText
+	text_far _SafariZoneGateSafariZoneWorker1WouldYouLikeToJoinText
+	text_end
+
+.SafariMasterPromptText
+	text_far _SafariZoneGateSafariMasterPromptText
+	text_end
+
+.FreeEntryText
+	text_far _SafariZoneGateSafariMasterFreeEntryText
 	sound_get_item_1
 	text_far _SafariZoneGateSafariZoneWorker1CallYouOnThePAText
 	text_end

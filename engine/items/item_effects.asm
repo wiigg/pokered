@@ -567,6 +567,7 @@ ItemUseBall:
 	call ClearSprites
 
 .done
+	call RecordSafariMasterCatch
 	ld a, [wBattleType]
 	and a ; is this the old man battle?
 	ret nz ; if so, don't remove a ball from the bag
@@ -576,6 +577,46 @@ ItemUseBall:
 	inc a
 	ld [wItemQuantity], a
 	jp RemoveItemFromInventory
+
+RecordSafariMasterCatch:
+	ld a, [wBattleType]
+	cp BATTLE_TYPE_SAFARI
+	ret nz
+	ld a, [wCapturedMonSpecies]
+	and a
+	ret z
+	CheckEvent EVENT_STARTED_SAFARI_MASTER_CHALLENGE
+	ret z
+	ld a, [wCapturedMonSpecies]
+	cp CHANSEY
+	jr z, .chansey
+	cp KANGASKHAN
+	jr z, .kangaskhan
+	cp TAUROS
+	jr z, .tauros
+	cp SCYTHER
+	jr z, .scytherOrPinsir
+	cp PINSIR
+	ret nz
+.scytherOrPinsir
+	CheckAndSetEvent EVENT_SAFARI_MASTER_CAUGHT_SCYTHER_OR_PINSIR
+	jr .recorded
+.chansey
+	CheckAndSetEvent EVENT_SAFARI_MASTER_CAUGHT_CHANSEY
+	jr .recorded
+.kangaskhan
+	CheckAndSetEvent EVENT_SAFARI_MASTER_CAUGHT_KANGASKHAN
+	jr .recorded
+.tauros
+	CheckAndSetEvent EVENT_SAFARI_MASTER_CAUGHT_TAUROS
+.recorded
+	ret nz
+	ld hl, SafariMasterPhotoRecordedText
+	jp PrintText
+
+SafariMasterPhotoRecordedText:
+	text_far _SafariMasterPhotoRecordedText
+	text_end
 
 ItemUseBallText00:
 ;"It dodged the thrown ball!"
