@@ -78,6 +78,12 @@ _BillsHouseBillWhyDontYouGoInsteadOfMeText::
 	cont "fancy do's. Why"
 	cont "don't you go"
 	cont "instead of me?"
+
+	para "Drop by again when"
+	line "you're a CHAMPION,"
+	cont "bud. My PC may"
+	cont "have more to show"
+	cont "you then."
 	done
 
 _BillsHouseBillCheckOutMyRarePokemonText::
