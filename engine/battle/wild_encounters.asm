@@ -78,6 +78,7 @@ TryDoWildEncounter:
 	ld a, [hl]
 	ld [wCurPartySpecies], a
 	ld [wEnemyMonSpecies2], a
+	call .TryMakeAncientVenusaur
 	ld a, [wRepelRemainingSteps]
 	and a
 	jr z, .willEncounter
@@ -98,7 +99,37 @@ TryDoWildEncounter:
 	and a
 	ret
 .willEncounter
+	ld a, [wCurMap]
+	cp VIRIDIAN_FOREST
+	jr nz, .startBattle
+	ld a, [wEnemyMonSpecies2]
+	cp VENUSAUR
+	jr nz, .startBattle
+	ld a, [wCurEnemyLevel]
+	cp MAX_LEVEL
+	jr nz, .startBattle
+	farcall ViridianForestAncientVenusaurCue
+.startBattle
 	xor a
+	ret
+
+.TryMakeAncientVenusaur
+	ld a, [wCurMap]
+	cp VIRIDIAN_FOREST
+	ret nz
+	CheckEvent EVENT_HEARD_VIRIDIAN_FOREST_RUSTLE
+	ret z
+	call Random
+	and %11 ; two bits of a 10-bit, one-in-1024 roll
+	ret nz
+	call Random
+	and a
+	ret nz
+	ld a, MAX_LEVEL
+	ld [wCurEnemyLevel], a
+	ld a, VENUSAUR
+	ld [wCurPartySpecies], a
+	ld [wEnemyMonSpecies2], a
 	ret
 
 INCLUDE "data/wild/probabilities.asm"

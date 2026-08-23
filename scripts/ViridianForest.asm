@@ -119,6 +119,21 @@ ViridianForestNotABugText:
 	text_far _ViridianForestNotABugText
 	text_end
 
+ViridianForestAncientVenusaurCue::
+	ld a, SFX_STOP_ALL_MUSIC
+	call PlaySound
+	ld c, 30
+	call DelayFrames
+	ld hl, .ForestSilentText
+	call PrintText
+	ld b, 2
+	predef PredefShakeScreenHorizontally
+	ret
+
+.ForestSilentText:
+	text_far _ViridianForestAncientVenusaurText
+	text_end
+
 ViridianForestYoungster2Text:
 	text_asm
 	ld hl, ViridianForestTrainerHeader0

@@ -40,6 +40,11 @@ _ViridianForestNotABugText::
 	cont "BUG..."
 	done
 
+_ViridianForestAncientVenusaurText::
+	text "The whole forest"
+	line "falls silent..."
+	done
+
 _ViridianForestYoungster2BattleText::
 	text "Hey! You have"
 	line "#MON! Come on!"

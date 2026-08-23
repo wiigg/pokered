@@ -164,6 +164,19 @@ ItemUseBall:
 	jp .captured
 
 .notOldManBattle
+; The ancient Venusaur can be fought, but not captured.
+	ld a, [wCurMap]
+	cp VIRIDIAN_FOREST
+	jr nz, .checkGhostMarowak
+	ld a, [wEnemyMonSpecies2]
+	cp VENUSAUR
+	jr nz, .checkGhostMarowak
+	ld a, [wEnemyMonLevel]
+	cp MAX_LEVEL
+	ld b, $10 ; can't be caught value
+	jp z, .setAnimData
+
+.checkGhostMarowak
 ; If the player is fighting the ghost Marowak, set the value that indicates the
 ; Pokémon can't be caught and skip the capture calculations.
 	ld a, [wCurMap]
