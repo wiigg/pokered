@@ -76,8 +76,40 @@ ViridianForestTrainerHeader2:
 	db -1 ; end
 
 ViridianForestYoungster1Text:
+	text_asm
+	CheckEvent EVENT_HEARD_VIRIDIAN_FOREST_RUSTLE
+	jr z, .regular_text
+	call ViridianForestPlayerOwnsBulbasaur
+	ld hl, .SearchingText
+	jr z, .print_text
+	ld hl, .BulbasaurText
+	jr .print_text
+.regular_text
+	ld hl, .Text
+.print_text
+	call PrintText
+	jp TextScriptEnd
+
+.Text:
 	text_far _ViridianForestYoungster1Text
 	text_end
+
+.SearchingText:
+	text_far _ViridianForestYoungster1SearchingText
+	text_end
+
+.BulbasaurText:
+	text_far _ViridianForestYoungster1BulbasaurText
+	text_end
+
+ViridianForestPlayerOwnsBulbasaur:
+	ld hl, wPokedexOwned
+	ld b, FLAG_TEST
+	ld c, DEX_BULBASAUR - 1
+	predef FlagActionPredef
+	ld a, c
+	and a
+	ret
 
 ViridianForestRustleText:
 	text_far _ViridianForestRustleText

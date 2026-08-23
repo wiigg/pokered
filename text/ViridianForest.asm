@@ -6,6 +6,28 @@ _ViridianForestYoungster1Text::
 	line "#MON fights!"
 	done
 
+_ViridianForestYoungster1SearchingText::
+	text "BUG CATCHER: That"
+	line "was no BUG!"
+
+	para "It must still be"
+	line "hiding in the"
+	cont "grass..."
+	done
+
+_ViridianForestYoungster1BulbasaurText::
+	text "BUG CATCHER: Hey!"
+	line "Your #DEX knows"
+	cont "that cry!"
+
+	para "It was a"
+	line "BULBASAUR hiding"
+	cont "in those leaves!"
+
+	para "No wonder it"
+	line "wasn't a BUG!"
+	done
+
 _ViridianForestRustleText::
 	text "The leaves beside"
 	line "you suddenly"
