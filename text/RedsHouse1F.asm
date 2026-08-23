@@ -23,6 +23,31 @@ _RedsHouse1FMomLookingGreatText::
 	cont "Take care now!"
 	done
 
+_RedsHouse1FMomChampionHomeText::
+	text "MOM: <PLAYER>!"
+	line "You really did it!"
+
+	para "The new CHAMPION,"
+	line "home at last!"
+
+	para "Come on, sit down."
+	line "Take a quick rest."
+	prompt
+
+_RedsHouse1FMomStarterHomeText::
+	text "MOM: <PLAYER>!"
+	line "You really did it!"
+
+	para "And @"
+	text_ram wNameBuffer
+	text "..."
+	line "My, how you've"
+	cont "both grown!"
+
+	para "Come on, you two."
+	line "Take a quick rest."
+	prompt
+
 _RedsHouse1FTVStandByMeMovieText::
 	text "There's a movie"
 	line "on TV. Four boys"

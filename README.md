@@ -32,6 +32,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Help [Erik and Sara](scripts/FuchsiaCity.asm) find each other at Fuchsia City's different gates.
 - [x] Add Professor Oak as a postgame superboss.
 - [x] Give a completed 151-species Pokédex a proper epilogue and a framed bedroom diploma.
+- [x] Give the Champion and their original starter a proper [homecoming with Mom](scripts/RedsHouse1F.asm).
 - [x] Add a repeatable [Trial of Three](scripts/FightingDojo.asm) gauntlet with no rest between battles.
 - [x] Let Blue train with his future line-up in the empty [Viridian Gym](scripts/ViridianGym.asm).
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
