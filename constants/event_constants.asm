@@ -120,7 +120,9 @@
 ; Celadon City events
 	const_next $180
 	const EVENT_GOT_TM41
-	const_skip 11
+	const_skip 9
+	const EVENT_BEAT_CELADON_ROOFTOP_GIRL
+	const_skip
 	const EVENT_GOT_TM13
 	const EVENT_GOT_TM48
 	const EVENT_GOT_TM49

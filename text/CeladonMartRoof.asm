@@ -97,6 +97,41 @@ _CeladonMartRoofLittleGirlImNotThirstyText::
 	cont "after all!@"
 	text_end
 
+_CeladonMartRoofLittleGirlBattleOfferText::
+	text "Thank you! I'm"
+	line "not thirsty now!"
+
+	para "My brother says"
+	line "I'm immature..."
+
+	para "But I'm a real"
+	line "TRAINER! Want to"
+	cont "battle?"
+	done
+
+_CeladonMartRoofLittleGirlBattleDeclinedText::
+	text "Aww! Come back"
+	line "when you're ready!"
+	done
+
+_CeladonMartRoofLittleGirlBattleText::
+	text "Okay! My TMs made"
+	line "my team really"
+	cont "strong!"
+	done
+
+_CeladonMartRoofLittleGirlEndBattleText::
+	text "Wow! You really"
+	line "are strong!"
+	prompt
+
+_CeladonMartRoofLittleGirlAfterBattleText::
+	text "That was fun!"
+
+	para "The drinks really"
+	line "hit the spot!"
+	done
+
 _CeladonMartRoofSuperNerdText::
 	text "My sister is a"
 	line "trainer, believe"
@@ -105,6 +140,17 @@ _CeladonMartRoofSuperNerdText::
 	para "But, she's so"
 	line "immature, she"
 	cont "drives me nuts!"
+	done
+
+_CeladonMartRoofSuperNerdAfterBattleText::
+	text "She really battled"
+	line "you?"
+
+	para "See? I told you"
+	line "she was a TRAINER!"
+
+	para "She still drives"
+	line "me nuts, though."
 	done
 
 _CeladonMartRoofLittleGirlImThirstyText::

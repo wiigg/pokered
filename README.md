@@ -33,6 +33,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Let one [Pokémon Mansion statue](scripts/PokemonMansionB1F.asm) reveal itself as a catchable Ditto from those failed experiments.
 - [x] Give [Copycat](scripts/CopycatsHouse2F.asm) a mirror battle with the player's appearance and a level-matched Ditto.
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).
+- [x] Let Celadon Mart's [thirsty rooftop girl](scripts/CeladonMartRoof.asm) prove she really is a trainer after earning all three drink TMs.
 - [x] Restore Silph Co.'s unused [Porygon monitor](scripts/SilphCo11F.asm) and its original Pokédex display.
 - [x] Let the [Silph employee](scripts/SilphCo7F.asm) recognise the Lapras he entrusted to you when it returns at the head of the party.
 - [x] Hide an [Aerodactyl fossil imprint](scripts/RockTunnelB1F.asm) in Rock Tunnel that answers the Old Amber or a lead Aerodactyl.

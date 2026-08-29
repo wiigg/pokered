@@ -1,5 +1,51 @@
 CeladonMartRoof_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ld hl, CeladonMartRoofTrainerHeaders
+	ld de, CeladonMartRoof_ScriptPointers
+	ld a, [wCeladonMartRoofCurScript]
+	call ExecuteCurMapScriptInTable
+	ld [wCeladonMartRoofCurScript], a
+	ret
+
+CeladonMartRoof_ScriptPointers:
+	def_script_pointers
+	dw_const CheckFightingMapTrainers,              SCRIPT_CELADONMARTROOF_DEFAULT
+	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_CELADONMARTROOF_START_BATTLE
+	dw_const EndTrainerBattle,                       SCRIPT_CELADONMARTROOF_END_BATTLE
+
+CeladonMartRoofScript_HasAllDrinkTMs:
+	CheckEvent EVENT_GOT_TM13
+	ret z
+	CheckEvent EVENT_GOT_TM48
+	ret z
+	CheckEvent EVENT_GOT_TM49
+	ret
+
+CeladonMartRoofScript_OfferBattleIfReady:
+	CheckEvent EVENT_BEAT_CELADON_ROOFTOP_GIRL
+	ret nz
+	call CeladonMartRoofScript_HasAllDrinkTMs
+	ret z
+
+CeladonMartRoofScript_OfferBattle:
+	xor a
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	ld hl, CeladonMartRoofLittleGirlBattleOfferText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined
+	ld a, CELADONMARTROOF_LITTLE_GIRL
+	ld [wSpriteIndex], a
+	ld hl, CeladonMartRoofLittleGirlTrainerHeader
+	call TalkToTrainer
+	ld a, [wCurMapScript]
+	ld [wCeladonMartRoofCurScript], a
+	ret
+.declined
+	ld hl, CeladonMartRoofLittleGirlBattleDeclinedText
+	jp PrintText
 
 CeladonMartRoofScript_GetDrinksInBag:
 ; construct a list of all drinks in the player's bag
@@ -97,7 +143,7 @@ CeladonMartRoofScript_GiveDrinkToGirl:
 	ld hl, CeladonMartRoofLittleGirlReceivedTM49Text
 	call PrintText
 	SetEvent EVENT_GOT_TM49
-	ret
+	jp CeladonMartRoofScript_OfferBattleIfReady
 .gaveSodaPop
 	CheckEvent EVENT_GOT_TM48
 	jr nz, .alreadyGaveDrink
@@ -110,7 +156,7 @@ CeladonMartRoofScript_GiveDrinkToGirl:
 	ld hl, CeladonMartRoofLittleGirlReceivedTM48Text
 	call PrintText
 	SetEvent EVENT_GOT_TM48
-	ret
+	jp CeladonMartRoofScript_OfferBattleIfReady
 .gaveFreshWater
 	CheckEvent EVENT_GOT_TM13
 	jr nz, .alreadyGaveDrink
@@ -123,7 +169,7 @@ CeladonMartRoofScript_GiveDrinkToGirl:
 	ld hl, CeladonMartRoofLittleGirlReceivedTM13Text
 	call PrintText
 	SetEvent EVENT_GOT_TM13
-	ret
+	jp CeladonMartRoofScript_OfferBattleIfReady
 .bagFull
 	ld hl, CeladonMartRoofLittleGirlNoRoomText
 	jp PrintText
@@ -216,11 +262,29 @@ CeladonMartRoof_TextPointers:
 	dw_const CeladonMartRoofCurrentFloorSignText, TEXT_CELADONMARTROOF_CURRENT_FLOOR_SIGN
 
 CeladonMartRoofSuperNerdText:
+	text_asm
+	CheckEvent EVENT_BEAT_CELADON_ROOFTOP_GIRL
+	ld hl, .OriginalText
+	jr z, .print
+	ld hl, .AfterBattleText
+.print
+	call PrintText
+	jp TextScriptEnd
+
+.OriginalText:
 	text_far _CeladonMartRoofSuperNerdText
+	text_end
+
+.AfterBattleText:
+	text_far _CeladonMartRoofSuperNerdAfterBattleText
 	text_end
 
 CeladonMartRoofLittleGirlText:
 	text_asm
+	CheckEvent EVENT_BEAT_CELADON_ROOFTOP_GIRL
+	jr nz, .afterBattle
+	call CeladonMartRoofScript_HasAllDrinkTMs
+	jr nz, .offerBattle
 	call CeladonMartRoofScript_GetDrinksInBag
 	ld a, [wFilteredBagItemsCount]
 	and a
@@ -235,6 +299,13 @@ CeladonMartRoofLittleGirlText:
 	jr nz, .done
 	call CeladonMartRoofScript_GiveDrinkToGirl
 	jr .done
+.offerBattle
+	call CeladonMartRoofScript_OfferBattle
+	jr .done
+.afterBattle
+	ld hl, CeladonMartRoofLittleGirlTrainerHeader
+	call TalkToTrainer
+	jr .done
 .noDrinksInBag
 	ld hl, .ImThirstyText
 	call PrintText
@@ -247,6 +318,32 @@ CeladonMartRoofLittleGirlText:
 
 .GiveHerADrinkText:
 	text_far _CeladonMartRoofLittleGirlGiveHerADrinkText
+	text_end
+
+CeladonMartRoofTrainerHeaders:
+	def_trainers 2
+CeladonMartRoofLittleGirlTrainerHeader:
+	trainer EVENT_BEAT_CELADON_ROOFTOP_GIRL, 0, CeladonMartRoofLittleGirlBattleText, CeladonMartRoofLittleGirlEndBattleText, CeladonMartRoofLittleGirlAfterBattleText
+	db -1 ; end
+
+CeladonMartRoofLittleGirlBattleOfferText:
+	text_far _CeladonMartRoofLittleGirlBattleOfferText
+	text_end
+
+CeladonMartRoofLittleGirlBattleDeclinedText:
+	text_far _CeladonMartRoofLittleGirlBattleDeclinedText
+	text_end
+
+CeladonMartRoofLittleGirlBattleText:
+	text_far _CeladonMartRoofLittleGirlBattleText
+	text_end
+
+CeladonMartRoofLittleGirlEndBattleText:
+	text_far _CeladonMartRoofLittleGirlEndBattleText
+	text_end
+
+CeladonMartRoofLittleGirlAfterBattleText:
+	text_far _CeladonMartRoofLittleGirlAfterBattleText
 	text_end
 
 CeladonMartRoofVendingMachineText:

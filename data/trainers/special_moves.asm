@@ -102,6 +102,13 @@ GhostSailorMoveSets:
 GhostSailorMoveSetsEnd:
 	assert GhostSailorMoveSetsEnd - GhostSailorMoveSets == SAILOR_GHOST_PARTY_LENGTH * NUM_MOVES
 
+CeladonRooftopGirlMoveSets:
+	db SURF,       ICE_BEAM,    BODY_SLAM,    REST         ; Dewgong
+	db ROCK_SLIDE, EARTHQUAKE,  BODY_SLAM,    SELFDESTRUCT ; Graveler
+	db TRI_ATTACK, PSYCHIC_M,   THUNDER_WAVE, RECOVER      ; Porygon
+CeladonRooftopGirlMoveSetsEnd:
+	assert CeladonRooftopGirlMoveSetsEnd - CeladonRooftopGirlMoveSets == LASS_CELADON_ROOFTOP_PARTY_LENGTH * NUM_MOVES
+
 ProfOakMoveSets:
 ; Blastoise team
 	db TRI_ATTACK, SHARPEN, ICE_BEAM, THUNDERBOLT

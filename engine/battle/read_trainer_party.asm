@@ -129,6 +129,8 @@ ReadTrainer:
 	ld a, [wCurOpponent]
 	sub OPP_ID_OFFSET
 	ld b, a
+	cp LASS
+	jp z, .GiveCeladonRooftopGirlMoves
 	cp SAILOR
 	jp z, .GiveGhostSailorMoves
 	cp BLACKBELT
@@ -144,7 +146,7 @@ ReadTrainer:
 	cp YOUNGSTER
 	jr z, .GiveShortsYoungsterMoves
 	cp GENTLEMAN
-	jr z, .GiveViridianOldManMoves
+	jp z, .GiveViridianOldManMoves
 	cp RIVAL3
 	jr z, .GiveBossMoves
 	cp LORELEI
@@ -156,6 +158,13 @@ ReadTrainer:
 	cp LANCE
 	jr z, .GiveBossMoves
 	jp .FinishUp
+.GiveCeladonRooftopGirlMoves
+	ld a, [wTrainerNo]
+	cp LASS_CELADON_ROOFTOP_TEAM
+	jp nz, .FinishUp
+	ld hl, CeladonRooftopGirlMoveSets
+	ld b, LASS_CELADON_ROOFTOP_PARTY_LENGTH
+	jp .GiveFullTeamMoves
 .GiveFightingDojoTrialMoves
 	ld a, [wTrainerNo]
 	sub FIGHTING_DOJO_TRIAL_SWIFTNESS_TEAM

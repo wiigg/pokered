@@ -138,6 +138,8 @@ LassData:
 ; Celadon Gym
 	db 23, BELLSPROUT, WEEPINBELL, 0
 	db 23, ODDISH, GLOOM, 0
+; Celadon Mart rooftop
+	db $FF, 34, DEWGONG, 35, GRAVELER, 36, PORYGON, 0
 
 SailorData:
 ; SS Anne Stern
