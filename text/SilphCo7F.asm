@@ -39,6 +39,20 @@ _SilphCo7FSilphWorkerM1SavedText::
 	line "Thank you!"
 	done
 
+_SilphCo7FSilphWorkerM1LaprasReturnsText::
+	text "LAPRAS! You came"
+	line "back to visit!"
+	prompt
+
+_SilphCo7FSilphWorkerM1LaprasIsHappyText::
+	text "It looks happy"
+	line "travelling with"
+	cont "you."
+
+	para "I knew you were"
+	line "the right trainer!"
+	done
+
 _SilphCo7FSilphWorkerM2AfterTheMasterBallText::
 	text "TEAM ROCKET was"
 	line "after the MASTER"

@@ -320,6 +320,18 @@ SilphCo7FSilphWorkerM1Text:
 	set BIT_GOT_LAPRAS, [hl]
 	jr .done
 .saved_silph
+	ld a, [wPartySpecies]
+	cp LAPRAS
+	jr nz, .saved_silph_normal
+	ld hl, .LaprasReturnsText
+	call PrintText
+	ld a, LAPRAS
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, .LaprasIsHappyText
+	call PrintText
+	jr .done
+.saved_silph_normal
 	ld hl, .SavedText
 	call PrintText
 .done
@@ -339,6 +351,14 @@ SilphCo7FSilphWorkerM1Text:
 
 .SavedText
 	text_far _SilphCo7FSilphWorkerM1SavedText
+	text_end
+
+.LaprasReturnsText
+	text_far _SilphCo7FSilphWorkerM1LaprasReturnsText
+	text_end
+
+.LaprasIsHappyText
+	text_far _SilphCo7FSilphWorkerM1LaprasIsHappyText
 	text_end
 
 SilphCo7FSilphWorkerM2Text:
