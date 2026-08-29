@@ -1936,7 +1936,10 @@ INCLUDE "data/wild/good_rod.asm"
 ItemUseSuperRod:
 	call FishingInit
 	jp c, ItemUseNotTime
+	call CheckSeafoamWhirlpoolFishingSpot
+	jr c, .gotFishingData
 	call ReadSuperRodData
+.gotFishingData
 	ld a, e
 RodResponse:
 	ld [wRodResponse], a
@@ -1961,6 +1964,30 @@ RodResponse:
 	pop hl
 	pop af
 	ld [hl], a
+	ret
+
+CheckSeafoamWhirlpoolFishingSpot:
+	ld a, [wCurMap]
+	cp SEAFOAM_ISLANDS_B4F
+	jr nz, .notWhirlpool
+	CheckEvent EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS
+	jr nz, .notWhirlpool
+	predef GetTileAndCoordsInFrontOfPlayer
+	ld a, d
+	cp 6
+	jr nz, .notWhirlpool
+	ld a, e
+	cp 23
+	jr nz, .notWhirlpool
+	lb bc, 70, GYARADOS
+	ld e, 1
+	ld a, SCRIPT_SEAFOAMISLANDSB4F_GYARADOS_POST_BATTLE
+	ld [wSeafoamIslandsB4FCurScript], a
+	ld [wCurMapScript], a
+	scf
+	ret
+.notWhirlpool
+	and a
 	ret
 
 ; checks if fishing is possible and if so, runs initialization code common to all rods

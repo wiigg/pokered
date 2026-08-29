@@ -7,6 +7,7 @@ SeafoamIslandsB4F_Script:
 SeafoamIslandsB4FResetScript:
 	xor a
 	ld [wSeafoamIslandsB4FCurScript], a
+	ld [wCurMapScript], a
 	ld [wJoyIgnore], a
 	ret
 
@@ -17,7 +18,28 @@ SeafoamIslandsB4F_ScriptPointers:
 	dw_const SeafoamIslandsB4FMoveObjectScript,    SCRIPT_SEAFOAMISLANDSB4F_MOVE_OBJECT
 	dw_const SeafoamIslandsB4FObjectMoving2Script, SCRIPT_SEAFOAMISLANDSB4F_OBJECT_MOVING2
 	dw_const SeafoamIslandsB4FObjectMoving3Script, SCRIPT_SEAFOAMISLANDSB4F_OBJECT_MOVING3
+	dw_const SeafoamIslandsB4FGyaradosPostBattleScript, SCRIPT_SEAFOAMISLANDSB4F_GYARADOS_POST_BATTLE
 	EXPORT SCRIPT_SEAFOAMISLANDSB4F_MOVE_OBJECT ; used by engine/overworld/player_state.asm
+	EXPORT SCRIPT_SEAFOAMISLANDSB4F_GYARADOS_POST_BATTLE ; used by engine/items/item_effects.asm
+
+SeafoamIslandsB4FGyaradosPostBattleScript:
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, SeafoamIslandsB4FResetScript
+	ld a, [wBattleWasEscaped]
+	and a
+	jr nz, SeafoamIslandsB4FResetScript
+	ld a, [wBattleResult]
+	and a
+	jr z, .resolved
+	ld a, [wBattleWasCaptured]
+	and a
+	jr z, SeafoamIslandsB4FResetScript
+.resolved
+	SetEvent EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS
+	ld hl, SeafoamIslandsB4FWhirlpoolCalmedText
+	call PrintText
+	jr SeafoamIslandsB4FResetScript
 
 SeafoamIslandsB4FObjectMoving3Script:
 	ld a, [wIsInBattle]
@@ -170,4 +192,8 @@ SeafoamIslandsB4FBouldersSignText:
 
 SeafoamIslandsB4FDangerSignText:
 	text_far _SeafoamIslandsB4FDangerSignText
+	text_end
+
+SeafoamIslandsB4FWhirlpoolCalmedText:
+	text_far _SeafoamIslandsB4FWhirlpoolCalmedText
 	text_end

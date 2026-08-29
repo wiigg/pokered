@@ -10,5 +10,19 @@ _SeafoamIslandsB4FBouldersSignText::
 
 _SeafoamIslandsB4FDangerSignText::
 	text "DANGER"
-	line "Fast current!"
+	line "A dark whirlpool"
+	cont "turns below!"
+	done
+
+_SeafoamIslandsB4FWhirlpoolBiteText::
+	text "The current seized"
+	line "the line!"
+	done
+
+_SeafoamIslandsB4FWhirlpoolCalmedText::
+	text "The whirlpool"
+	line "slows..."
+
+	para "The deep water is"
+	line "still."
 	done

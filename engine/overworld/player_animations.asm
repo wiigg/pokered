@@ -442,6 +442,16 @@ FishingAnim:
 
 .skipUnhidingFishingRod
 	ld hl, ItsABiteText
+	ld a, [wCurMap]
+	cp SEAFOAM_ISLANDS_B4F
+	jr nz, .done
+	ld a, [wCurOpponent]
+	cp GYARADOS
+	jr nz, .done
+	ld a, [wCurEnemyLevel]
+	cp 70
+	jr nz, .done
+	ld hl, SeafoamWhirlpoolBiteText
 
 .done
 	call PrintText
@@ -455,6 +465,10 @@ FishingAnim:
 	xor $1
 	ld [hl], a
 	ret
+
+SeafoamWhirlpoolBiteText:
+	text_far _SeafoamIslandsB4FWhirlpoolBiteText
+	text_end
 
 NoNibbleText:
 	text_far _NoNibbleText

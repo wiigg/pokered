@@ -6153,6 +6153,7 @@ LoadEnemyMonData:
 	xor a
 	ld [wLearningMovesFromDayCare], a
 	predef WriteMonMoves ; get moves based on current level
+	call LoadSeafoamWhirlpoolGyaradosMoves
 .loadMovePPs
 	ld hl, wEnemyMonMoves
 	ld de, wEnemyMonPP - 1
@@ -6200,6 +6201,24 @@ LoadEnemyMonData:
 	dec b
 	jr nz, .statModLoop
 	ret
+
+LoadSeafoamWhirlpoolGyaradosMoves:
+	ld a, [wCurMap]
+	cp SEAFOAM_ISLANDS_B4F
+	ret nz
+	ld a, [wEnemyMonSpecies2]
+	cp GYARADOS
+	ret nz
+	ld a, [wCurEnemyLevel]
+	cp 70
+	ret nz
+	ld hl, SeafoamWhirlpoolGyaradosMoves
+	ld de, wEnemyMonMoves
+	ld bc, NUM_MOVES
+	jp CopyData
+
+SeafoamWhirlpoolGyaradosMoves:
+	db HYDRO_PUMP, BLIZZARD, THUNDER, HYPER_BEAM
 
 ; calls BattleTransition to show the battle transition animation and initializes some battle variables
 DoBattleTransitionAndInitBattleVariables:
