@@ -3,6 +3,43 @@ _Route12SnorlaxText::
 	line "blocks the way!"
 	done
 
+_SnorlaxDreamLinkText::
+	text "A sleeping #MON"
+	line "blocks the way!"
+
+	para "@"
+	text_ram wNameBuffer
+	text_start
+	line "closes its eyes..."
+	prompt
+
+_SnorlaxDreamText::
+	text "An endless table"
+	line "floats beneath a"
+	cont "violet sky..."
+
+	para "Food vanishes..."
+	line "More tumbles from"
+	cont "the sky."
+
+	para "Far away, a"
+	line "# FLUTE plays"
+	cont "all by itself..."
+	prompt
+
+_SnorlaxDreamEndedText::
+	text_ram wNameBuffer
+	text_start
+	line "opens its eyes."
+
+	para "The dream snaps"
+	line "shut!"
+
+	para "SNORLAX stirs..."
+	line "It is still fast"
+	cont "asleep."
+	done
+
 _Route12SnorlaxWokeUpText::
 	text "SNORLAX woke up!"
 

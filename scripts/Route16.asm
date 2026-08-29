@@ -201,6 +201,11 @@ Route16Biker6AfterBattleText:
 	text_end
 
 Route16SnorlaxText:
+	text_asm
+	ld hl, .SleepingText
+	jp SnorlaxDreamGlimpse
+
+.SleepingText:
 	text_far _Route16Text7
 	text_end
 

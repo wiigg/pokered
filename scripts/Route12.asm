@@ -97,7 +97,92 @@ Route12TrainerHeader6:
 	db -1 ; end
 
 Route12SnorlaxText:
+	text_asm
+	ld hl, .SleepingText
+	jp SnorlaxDreamGlimpse
+
+.SleepingText:
 	text_far _Route12SnorlaxText
+	text_end
+
+SnorlaxDreamGlimpse:
+	ld a, [wPartyCount]
+	and a
+	jp z, .ordinary
+	ld a, [wPartySpecies]
+	cp DROWZEE
+	jr z, .dream
+	cp HYPNO
+	jp nz, .ordinary
+.dream
+	xor a
+	ld hl, wPartyMonNicks
+	call GetPartyMonName
+	ld hl, SnorlaxDreamLinkText
+	call PrintText
+
+	ld a, SFX_STOP_ALL_MUSIC
+	call PlaySound
+	ld a, SFX_TELEPORT_ENTER_1
+	call PlaySound
+	call GBFadeOutToWhite
+
+	ld a, [wUpdateSpritesEnabled]
+	push af
+	ldh a, [hTileAnimations]
+	push af
+	xor a
+	ld [wUpdateSpritesEnabled], a
+	ldh [hTileAnimations], a
+	call ClearSprites
+	call ClearScreen
+
+	ld de, SnorlaxPicFront
+	lb bc, BANK(SnorlaxPicFront), 0
+	predef DisplayPicCenteredOrUpperRight
+	ld a, SNORLAX
+	ld [wWholeScreenPaletteMonSpecies], a
+	ld b, SET_PAL_POKEMON_WHOLE_SCREEN
+	ld c, 0
+	call RunPaletteCommand
+	call GBFadeInFromWhite
+	ld b, 1
+	predef ChangeBGPalColor0_4Frames
+	ld b, 2
+	predef ChangeBGPalColor0_4Frames
+	ld b, 3
+	predef ChangeBGPalColor0_4Frames
+	ld hl, SnorlaxDreamText
+	call PrintText
+
+	call GBFadeOutToWhite
+	call ReloadMapData
+	pop af
+	ldh [hTileAnimations], a
+	pop af
+	ld [wUpdateSpritesEnabled], a
+	call ReloadMapSpriteTilePatterns
+	call RunDefaultPaletteCommand
+	call PlayDefaultMusic
+	call GBFadeInFromWhite
+	ld hl, SnorlaxDreamEndedText
+	call PrintText
+	jp TextScriptEnd
+
+.ordinary
+	call PrintText
+	jp TextScriptEnd
+
+SnorlaxDreamLinkText:
+	text_far _SnorlaxDreamLinkText
+	text_end
+
+SnorlaxDreamText:
+	text_far _SnorlaxDreamText
+	text_end
+
+SnorlaxDreamEndedText:
+	text_far _SnorlaxDreamEndedText
 	text_end
 
 Route12SnorlaxWokeUpText:
