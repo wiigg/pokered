@@ -46,3 +46,34 @@ _VermilionDockWandererText::
 	cont "look beneath what"
 	cont "could never move."
 	done
+
+_VermilionDockGhostSailorBeforeBattleText::
+	text "SAILOR: You saw"
+	line "S.S.ANNE leave?"
+	cont "Funny thing..."
+
+	para "She never reached"
+	line "her next port."
+	cont "Neither did we."
+	done
+
+_VermilionDockGhostSailorDefeatedText::
+	text "A ship may leave"
+	line "the harbour..."
+	cont "and still never"
+	cont "arrive."
+	prompt
+
+_VermilionDockGhostSailorVictoryText::
+	text "The tide takes"
+	line "every name in"
+	cont "time."
+	prompt
+
+_VermilionDockGhostSailorVanishedText::
+	text "The sailor is"
+	line "gone."
+
+	para "Only salt wind"
+	line "remains."
+	done

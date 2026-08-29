@@ -1,5 +1,6 @@
 object_const_def
 	const_export VERMILIONDOCK_WANDERER
+	const_export VERMILIONDOCK_GHOST_SAILOR
 
 VermilionDock_Object:
 	db $f ; border block
@@ -14,5 +15,6 @@ VermilionDock_Object:
 
 	def_object_events
 	object_event 14,  1, SPRITE_WANDERER, STAY, UP, TEXT_VERMILIONDOCK_WANDERER
+	object_event 24,  1, SPRITE_SAILOR, STAY, LEFT, TEXT_VERMILIONDOCK_GHOST_SAILOR
 
 	def_warps_to VERMILION_DOCK

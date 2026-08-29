@@ -9,6 +9,7 @@ VermilionDock_ScriptPointers:
 	def_script_pointers
 	dw_const VermilionDockDefaultScript,       SCRIPT_VERMILIONDOCK_DEFAULT
 	dw_const VermilionDockMewPostBattleScript, SCRIPT_VERMILIONDOCK_MEW_POST_BATTLE
+	dw_const VermilionDockGhostSailorPostBattleScript, SCRIPT_VERMILIONDOCK_GHOST_SAILOR_POST_BATTLE
 
 VermilionDockLoadMap:
 	ld hl, wCurrentMapScriptFlags
@@ -41,7 +42,29 @@ VermilionDockLoadMap:
 	ld [hli], a
 	ld [hl], $3 ; truck block, shifted right
 .redraw
+	call VermilionDockUpdateGhostSailor
 	farjp RedrawMapView
+
+VermilionDockUpdateGhostSailor:
+	CheckEvent EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR
+	jr nz, .hide
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	jr z, .hide
+	ld a, [wXCoord]
+	cp 24
+	jr nz, .show
+	ld a, [wYCoord]
+	cp 1
+	jr z, .hide
+.show
+	ld a, TOGGLE_VERMILION_DOCK_GHOST_SAILOR
+	ld [wToggleableObjectIndex], a
+	predef_jump ShowObject
+.hide
+	ld a, TOGGLE_VERMILION_DOCK_GHOST_SAILOR
+	ld [wToggleableObjectIndex], a
+	predef_jump HideObject
 
 VermilionDockDefaultScript:
 	CheckEventHL EVENT_STARTED_WALKING_OUT_OF_DOCK
@@ -99,7 +122,33 @@ VermilionDockMewPostBattleScript:
 	SetEvent EVENT_BEAT_VERMILION_DOCK_MEW
 	ld hl, VermilionDockMewVanishedText
 	call PrintText
-	; fall through
+	jr VermilionDockResetScripts
+
+VermilionDockGhostSailorPostBattleScript:
+	ld hl, wStatusFlags3
+	res BIT_PRINT_END_BATTLE_TEXT, [hl]
+	ld a, [wIsInBattle]
+	cp $ff
+	jr z, VermilionDockResetScripts
+	ld hl, wStatusFlags7
+	res BIT_NO_MAP_MUSIC, [hl]
+	call PlayDefaultMusic
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	SetEvent EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR
+	ld a, SFX_SS_ANNE_HORN
+	call PlaySound
+	call WaitForSoundToFinish
+	call GBFadeOutToBlack
+	ld a, TOGGLE_VERMILION_DOCK_GHOST_SAILOR
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromBlack
+	ld hl, VermilionDockGhostSailorVanishedText
+	call PrintText
+	jr VermilionDockResetScripts
 
 VermilionDockResetScripts:
 	xor a
@@ -376,4 +425,50 @@ VermilionDockMoveTruck:
 VermilionDock_TextPointers:
 	def_text_pointers
 	dw_const VermilionDockWandererText, TEXT_VERMILIONDOCK_WANDERER
+	dw_const VermilionDockGhostSailorText, TEXT_VERMILIONDOCK_GHOST_SAILOR
 	dw_const VermilionDockTruckText, TEXT_VERMILIONDOCK_TRUCK
+
+VermilionDockGhostSailorText:
+	text_asm
+	ld hl, .BeforeBattleText
+	call PrintText
+	ld a, VERMILIONDOCK_GHOST_SAILOR
+	ld [wSpriteIndex], a
+	call GetSpritePosition1
+	ld hl, .DefeatedText
+	ld de, .VictoryText
+	call SaveEndBattleTextPointers
+	ld hl, wStatusFlags3
+	set BIT_TALKED_TO_TRAINER, [hl]
+	set BIT_PRINT_END_BATTLE_TEXT, [hl]
+	xor a
+	ld [wGymLeaderNo], a
+	ld a, OPP_SAILOR
+	ld [wCurOpponent], a
+	ld a, SAILOR_GHOST_TEAM
+	ld [wTrainerNo], a
+	ld a, SCRIPT_VERMILIONDOCK_GHOST_SAILOR_POST_BATTLE
+	ld [wVermilionDockCurScript], a
+	ld [wCurMapScript], a
+	xor a
+	ld [wJoyIgnore], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
+	ldh [hJoyReleased], a
+	jp TextScriptEnd
+
+.BeforeBattleText:
+	text_far _VermilionDockGhostSailorBeforeBattleText
+	text_end
+
+.DefeatedText:
+	text_far _VermilionDockGhostSailorDefeatedText
+	text_end
+
+.VictoryText:
+	text_far _VermilionDockGhostSailorVictoryText
+	text_end
+
+VermilionDockGhostSailorVanishedText:
+	text_far _VermilionDockGhostSailorVanishedText
+	text_end

@@ -93,6 +93,15 @@ ShortsYoungsterMoveSets:
 ShortsYoungsterMoveSetsEnd:
 	assert ShortsYoungsterMoveSetsEnd - ShortsYoungsterMoveSets == SHORTS_YOUNGSTER_PARTY_LENGTH * NUM_MOVES
 
+GhostSailorMoveSets:
+	db SURF,       BLIZZARD,    TOXIC,       WRAP        ; Tentacruel
+	db CLAMP,      ICE_BEAM,    SURF,        EXPLOSION   ; Cloyster
+	db SURF,       PSYCHIC_M,   THUNDERBOLT, RECOVER     ; Starmie
+	db HYPNOSIS,   DREAM_EATER, THUNDERBOLT, NIGHT_SHADE ; Gengar
+	db SURF,       BLIZZARD,    THUNDERBOLT, BODY_SLAM   ; Lapras
+GhostSailorMoveSetsEnd:
+	assert GhostSailorMoveSetsEnd - GhostSailorMoveSets == SAILOR_GHOST_PARTY_LENGTH * NUM_MOVES
+
 ProfOakMoveSets:
 ; Blastoise team
 	db TRI_ATTACK, SHARPEN, ICE_BEAM, THUNDERBOLT

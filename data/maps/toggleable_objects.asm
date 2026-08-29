@@ -436,6 +436,9 @@ SupplementalToggleableObjectStates:
 	db ROUTE_10,            ROUTE10_VISITING_ZAPDOS,      ON
 	db CINNABAR_ISLAND,     CINNABARISLAND_VISITING_MOLTRES, ON
 
+	toggleable_objects_for VERMILION_DOCK
+	toggle_object_state VERMILIONDOCK_GHOST_SAILOR, OFF
+
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 
 	db -1, 1, ON ; end

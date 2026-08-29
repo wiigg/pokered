@@ -129,6 +129,8 @@ ReadTrainer:
 	ld a, [wCurOpponent]
 	sub OPP_ID_OFFSET
 	ld b, a
+	cp SAILOR
+	jp z, .GiveGhostSailorMoves
 	cp BLACKBELT
 	jr z, .GiveFightingDojoTrialMoves
 	cp RIVAL1
@@ -202,6 +204,13 @@ ReadTrainer:
 	jr nz, .FinishUp
 	ld hl, ViridianOldManMoveSet
 	ld b, VIRIDIAN_OLD_MAN_PARTY_LENGTH
+	jr .GiveFullTeamMoves
+.GiveGhostSailorMoves
+	ld a, [wTrainerNo]
+	cp SAILOR_GHOST_TEAM
+	jr nz, .FinishUp
+	ld hl, GhostSailorMoveSets
+	ld b, SAILOR_GHOST_PARTY_LENGTH
 .GiveFullTeamMoves
 	push bc
 	ld de, wEnemyMon1Moves

@@ -151,6 +151,14 @@ SailorData:
 	db 20, MACHOP, 0
 ; Vermilion Gym
 	db 21, PIKACHU, PIKACHU, 0
+; Vermilion Dock ghost sailor
+	db $FF
+	db 58, TENTACRUEL
+	db 59, CLOYSTER
+	db 60, STARMIE
+	db 62, GENGAR
+	db 64, LAPRAS
+	db 0
 
 JrTrainerMData:
 ; Pewter Gym
