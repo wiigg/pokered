@@ -32,6 +32,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Turn Celadon Hotel's [invisible PC](scripts/CeladonHotel.asm) into a Rocket shipment mystery ending in a hidden [Chief battle](scripts/CeladonChiefHouse.asm).
 - [x] Restore Silph Co.'s unused [Porygon monitor](scripts/SilphCo11F.asm) and its original Pokédex display.
 - [x] Let the [Silph employee](scripts/SilphCo7F.asm) recognise the Lapras he entrusted to you when it returns at the head of the party.
+- [x] Hide an [Aerodactyl fossil imprint](scripts/RockTunnelB1F.asm) in Rock Tunnel that answers the Old Amber or a lead Aerodactyl.
 - [x] Make [Bill's Secret Garden](scripts/BillsSecretGarden.asm) real as a postgame Eevee-family secret foreshadowed by Bill, with a unique Surfing Pikachu and hints of discoveries still to come.
 - [x] Add a [Clefairy Moonfall Ceremony](scripts/MtMoon1F.asm) at Mt. Moon's original Moon Stone landing site, echoed by Pewter Museum's meteorite.
 - [x] Give Mt. Moon's [Magikarp salesman](scripts/MtMoonPokecenter.asm) a “no refunds” challenge after discovering Gyarados's potential.

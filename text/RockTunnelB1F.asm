@@ -75,9 +75,9 @@ _RockTunnelB1FHiker2EndBattleText::
 	prompt
 
 _RockTunnelB1FHiker2AfterBattleText::
-	text "In mountains,"
-	line "you'll often find"
-	cont "rock-type #MON."
+	text "Farther south, the"
+	line "east wall has a"
+	cont "huge winged mark."
 	done
 
 _RockTunnelB1FCooltrainerF2BattleText::

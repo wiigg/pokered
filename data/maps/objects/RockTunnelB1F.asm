@@ -18,6 +18,7 @@ RockTunnelB1F_Object:
 	warp_event  3,  3, ROCK_TUNNEL_1F, 8
 
 	def_bg_events
+	bg_event 39, 18, TEXT_ROCKTUNNELB1F_FOSSIL_IMPRINT
 
 	def_object_events
 	object_event 11, 13, SPRITE_COOLTRAINER_F, STAY, DOWN, TEXT_ROCKTUNNELB1F_COOLTRAINER_F1, OPP_JR_TRAINER_F, 9

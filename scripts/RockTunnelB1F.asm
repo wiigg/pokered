@@ -23,6 +23,55 @@ RockTunnelB1F_TextPointers:
 	dw_const RockTunnelB1FCooltrainerF2Text, TEXT_ROCKTUNNELB1F_COOLTRAINER_F2
 	dw_const RockTunnelB1FHiker3Text,        TEXT_ROCKTUNNELB1F_HIKER3
 	dw_const RockTunnelB1FSuperNerd3Text,    TEXT_ROCKTUNNELB1F_SUPER_NERD3
+	dw_const RockTunnelB1FFossilImprintText, TEXT_ROCKTUNNELB1F_FOSSIL_IMPRINT
+
+RockTunnelB1FFossilImprintText:
+	text_asm
+	ld hl, .ImprintText
+	call PrintText
+	ld a, [wPartySpecies]
+	cp AERODACTYL
+	jr z, .aerodactyl
+	ld b, OLD_AMBER
+	call IsItemInBag
+	jp z, TextScriptEnd
+	ld hl, .AmberText
+	jr .react
+.aerodactyl
+	ld hl, .AerodactylText
+.react
+	call PrintText
+	ld a, SFX_PUSH_BOULDER
+	call PlaySound
+	ld b, 2
+	predef PredefShakeScreenHorizontally
+	ld c, 15
+	call DelayFrames
+	ld a, $33
+	ldh [rAUDVOL], a
+	ld a, AERODACTYL
+	call PlayCry
+	ld a, $77
+	ldh [rAUDVOL], a
+	ld hl, .EchoText
+	call PrintText
+	jp TextScriptEnd
+
+.ImprintText:
+	text_far _RockTunnelB1FFossilImprintText
+	text_end
+
+.AerodactylText:
+	text_far _RockTunnelB1FAerodactylImprintText
+	text_end
+
+.AmberText:
+	text_far _RockTunnelB1FOldAmberImprintText
+	text_end
+
+.EchoText:
+	text_far _RockTunnelB1FFossilEchoText
+	text_end
 
 RockTunnel2TrainerHeaders:
 	def_trainers
