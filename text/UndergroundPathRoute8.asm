@@ -21,6 +21,40 @@ _UndergroundPathRoute8GirlAfterPhantomTrainText::
 	cont "down there..."
 	done
 
+_UndergroundPathWestEastRocketDeserterBattleText::
+	text "Y-you're the kid"
+	line "from CELADON!"
+
+	para "Stay back! If they"
+	line "think I talked,"
+	cont "I'm finished!"
+	done
+
+_UndergroundPathWestEastRocketDeserterEndBattleText::
+	text "I can't keep"
+	line "running..."
+	prompt
+
+_UndergroundPathWestEastRocketDeserterWarningText::
+	text "Listen! GIOVANNI"
+	line "went to SAFFRON!"
+
+	para "TEAM ROCKET is"
+	line "seizing SILPH CO.!"
+
+	para "I won't follow."
+	line "Not anymore."
+
+	para "He leaves his"
+	line "uniform behind..."
+	cont "and runs."
+	done
+
+_UndergroundPathWestEastRocketDeserterAfterBattleText::
+	text "The tunnel is"
+	line "empty."
+	done
+
 _UndergroundPathWestEastPhantomTrainText::
 	text "A roaring wind"
 	line "sweeps through the"

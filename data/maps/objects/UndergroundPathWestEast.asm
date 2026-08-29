@@ -1,3 +1,6 @@
+object_const_def
+	const_export UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER
+
 UndergroundPathWestEast_Object:
 	db $1 ; border block
 
@@ -8,5 +11,6 @@ UndergroundPathWestEast_Object:
 	def_bg_events
 
 	def_object_events
+	object_event 34, 1, SPRITE_ROCKET, STAY, DOWN, TEXT_UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER, OPP_ROCKET, ROCKET_DESERTER_TEAM
 
 	def_warps_to UNDERGROUND_PATH_WEST_EAST

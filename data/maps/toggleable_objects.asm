@@ -443,6 +443,9 @@ SupplementalToggleableObjectStates:
 	toggle_object_state FUCHSIACITY_ESCAPED_RHYHORN, OFF
 	toggle_object_state FUCHSIACITY_CHASING_WARDEN,  OFF
 
+	toggleable_objects_for UNDERGROUND_PATH_WEST_EAST
+	toggle_object_state UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER, OFF
+
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 
 	db -1, 1, ON ; end

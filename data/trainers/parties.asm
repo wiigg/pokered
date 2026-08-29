@@ -649,6 +649,8 @@ RocketData:
 ; Silph Co. 11F
 	db 25, RATTATA, RATTATA, ZUBAT, RATTATA, EKANS, 0
 	db 32, CUBONE, DROWZEE, MAROWAK, 0
+; Underground Path deserter
+	db $FF, 30, RATICATE, 30, GOLBAT, 31, WEEZING, 32, HYPNO, 0
 
 CooltrainerMData:
 ; Viridian Gym

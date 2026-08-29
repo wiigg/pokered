@@ -50,6 +50,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Give the Champion and their original starter a proper [homecoming with Mom](scripts/RedsHouse1F.asm).
 - [x] Restore the abandoned [Power Plant](scripts/PowerPlant.asm) after the League and uncover a blueprint for Kanto's future electric rail.
 - [x] Let a [phantom train](scripts/UndergroundPathWestEast.asm) thunder beneath Saffron years before that electric rail is built.
+- [x] Meet a frightened [Rocket deserter](scripts/UndergroundPathWestEast.asm) between Giovanni's Celadon retreat and the Silph takeover.
 - [x] Add a repeatable [Trial of Three](scripts/FightingDojo.asm) gauntlet with no rest between battles.
 - [x] Let Blue train with his future line-up in the empty [Viridian Gym](scripts/ViridianGym.asm).
 - [x] Make all 151 Pokémon obtainable on one cartridge, with former trade evolutions occurring at level 40.
