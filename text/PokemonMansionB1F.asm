@@ -23,9 +23,11 @@ _PokemonMansionB1FScientistEndBattleText::
 	prompt
 
 _PokemonMansionB1FScientistAfterBattleText::
-	text "I like it here!"
-	line "It's conducive to"
-	cont "my studies!"
+	text "One statue's"
+	line "readings keep"
+	cont "changing."
+
+	para "Curious..."
 	done
 
 _PokemonMansionB1FDiaryText::
@@ -44,6 +46,36 @@ _PokemonMansionB1FDiaryText::
 	para "But all return to"
 	line "the same blank"
 	cont "face..."
+	done
+
+_PokemonMansionB1FDittoStatueDistortsText::
+	text "The statue's face"
+	line "begins to ripple!"
+
+	para "It's melting!"
+	done
+
+_PokemonMansionB1FBareSwitchText::
+	text "Only a switch is"
+	line "left on the bare"
+	cont "pedestal."
+
+	para "Press it?"
+	done
+
+_PokemonMansionB1FDittoReformedText::
+	text "DITTO stiffens..."
+
+	para "It became a statue"
+	line "again!"
+	done
+
+_PokemonMansionB1FDittoGoneText::
+	text "The false statue"
+	line "is gone."
+
+	para "Only its switch"
+	line "remains."
 	done
 
 _WandererMansionText::

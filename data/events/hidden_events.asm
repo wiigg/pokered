@@ -466,7 +466,7 @@ DEF ANY_FACING EQU $d0
 	hidden_events_for POKEMON_MANSION_B1F
 	hidden_event  1,  9, HiddenItems, RARE_CANDY
 	hidden_event 20,  3, Mansion4Script_Switches, SPRITE_FACING_UP
-	hidden_event 18, 25, Mansion4Script_Switches, SPRITE_FACING_UP
+	hidden_event 18, 25, Mansion4DittoStatueScript, SPRITE_FACING_UP
 	db -1 ; end
 
 	hidden_events_for ROUTE_23
