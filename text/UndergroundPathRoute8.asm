@@ -45,9 +45,18 @@ _UndergroundPathWestEastRocketDeserterWarningText::
 	para "I won't follow."
 	line "Not anymore."
 
-	para "He leaves his"
-	line "uniform behind..."
-	cont "and runs."
+	para "He tears off his"
+	line "uniform..."
+
+	para "He throws a small"
+	line "capsule and runs!"
+	done
+
+_UndergroundPathWestEastRocketDeserterVanishedText::
+	text "The flash fades..."
+
+	para "Only his uniform"
+	line "remains."
 	done
 
 _UndergroundPathWestEastRocketDeserterAfterBattleText::

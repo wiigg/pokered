@@ -102,9 +102,18 @@ UndergroundPathWestEastRocketDeserterPostBattleScript:
 	ld a, TEXT_UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER_WARNING
 	ldh [hTextID], a
 	call DisplayTextID
+	ld a, SFX_RUN
+	call PlaySound
+	call GBFadeOutToWhite
 	ld a, TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromWhite
+	call WaitForSoundToFinish
+	ld hl, UndergroundPathWestEastRocketDeserterVanishedText
+	call PrintText
 	; fall through
 
 UndergroundPathWestEastResetScript:
@@ -128,6 +137,10 @@ UndergroundPathWestEastRocketDeserterText:
 
 UndergroundPathWestEastRocketDeserterWarningText:
 	text_far _UndergroundPathWestEastRocketDeserterWarningText
+	text_end
+
+UndergroundPathWestEastRocketDeserterVanishedText:
+	text_far _UndergroundPathWestEastRocketDeserterVanishedText
 	text_end
 
 UndergroundPathWestEastPhantomTrainText:
