@@ -170,10 +170,17 @@ MtMoonPokecenterWandererText:
 	text_asm
 	ld hl, .Text
 	call PrintText
+	ld a, SFX_TELEPORT_ENTER_1
+	call PlaySound
+	call GBFadeOutToWhite
 	SetEvent EVENT_MET_WANDERER_MT_MOON
 	ld a, TOGGLE_MT_MOON_POKECENTER_WANDERER
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromWhite
+	call WaitForSoundToFinish
 	jp TextScriptEnd
 
 .Text:

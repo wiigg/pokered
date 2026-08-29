@@ -99,10 +99,17 @@ CeruleanCaveB1FWandererText:
 	ld hl, .AfterMewtwoText
 .printEnding
 	call PrintText
+	ld a, SFX_TELEPORT_ENTER_1
+	call PlaySound
+	call GBFadeOutToWhite
 	SetEvent EVENT_MET_WANDERER_CERULEAN_CAVE
 	ld a, TOGGLE_CERULEAN_CAVE_B1F_WANDERER
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromWhite
+	call WaitForSoundToFinish
 	jp TextScriptEnd
 
 .Text:

@@ -34,10 +34,17 @@ PokemonTower1FWandererText:
 	text_asm
 	ld hl, .Text
 	call PrintText
+	ld a, SFX_TELEPORT_ENTER_1
+	call PlaySound
+	call GBFadeOutToWhite
 	SetEvent EVENT_MET_WANDERER_POKEMON_TOWER
 	ld a, TOGGLE_POKEMON_TOWER_1F_WANDERER
 	ld [wToggleableObjectIndex], a
 	predef HideObject
+	call UpdateSprites
+	call Delay3
+	call GBFadeInFromWhite
+	call WaitForSoundToFinish
 	jp TextScriptEnd
 
 .Text:

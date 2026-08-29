@@ -39,6 +39,6 @@ _PokemonTower1FWandererText::
 	line "have teeth."
 
 	para "And some shadows"
-	line "reach farther than"
-	cont "they should."
+	line "reach farther"
+	cont "than they should."
 	done
