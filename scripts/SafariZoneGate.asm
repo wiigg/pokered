@@ -79,6 +79,7 @@ SafariZoneGateLeavingSafariScript:
 	CheckAndResetEvent EVENT_SAFARI_GAME_OVER
 	jr z, .leaving_early
 	ResetEventReuseHL EVENT_IN_SAFARI_ZONE
+	call SafariZoneGateReleaseRhyhorn
 	call UpdateSprites
 	ld a, PAD_CTRL_PAD
 	ld [wJoyIgnore], a
@@ -130,6 +131,12 @@ SafariZoneEntranceAutoWalk:
 SafariZoneGateReturnSimulatedJoypadStateScript:
 	ld a, [wSimulatedJoypadStatesIndex]
 	and a
+	ret
+
+SafariZoneGateReleaseRhyhorn:
+	CheckEvent EVENT_BEAT_FUCHSIA_ESCAPED_RHYHORN
+	ret nz
+	SetEvent EVENT_FUCHSIA_RHYHORN_ESCAPED
 	ret
 
 SafariZoneGate_TextPointers:
@@ -269,6 +276,7 @@ SafariZoneGateSafariZoneWorker1LeavingEarlyText:
 	ld c, 3
 	call SafariZoneEntranceAutoWalk
 	ResetEvents EVENT_SAFARI_GAME_OVER, EVENT_IN_SAFARI_ZONE
+	call SafariZoneGateReleaseRhyhorn
 	ld a, SCRIPT_SAFARIZONEGATE_DEFAULT
 	ld [wNextSafariZoneGateScript], a
 	jr .set_current_script

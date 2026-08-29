@@ -1908,6 +1908,7 @@ wCurrentBoxNum:: db
 ; number of HOF teams
 wNumHoFTeams:: db
 
+wFuchsiaCityCurScript:: ; overload
 wUnusedMapVariable:: db
 
 wPlayerCoins:: dw ; BCD

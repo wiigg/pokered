@@ -73,7 +73,7 @@ LoadSupplementalToggleableObject:
 	ld b, a
 .findMap
 	ld a, c
-	cp NUM_TOGGLEABLE_OBJECTS
+	cp TOGGLE_VERMILION_DOCK_GHOST_SAILOR ; later IDs use the normal map table
 	ret z
 	ld a, [hli]
 	cp b

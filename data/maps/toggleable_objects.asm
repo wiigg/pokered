@@ -439,6 +439,10 @@ SupplementalToggleableObjectStates:
 	toggleable_objects_for VERMILION_DOCK
 	toggle_object_state VERMILIONDOCK_GHOST_SAILOR, OFF
 
+	toggleable_objects_for FUCHSIA_CITY
+	toggle_object_state FUCHSIACITY_ESCAPED_RHYHORN, OFF
+	toggle_object_state FUCHSIACITY_CHASING_WARDEN,  OFF
+
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 
 	db -1, 1, ON ; end

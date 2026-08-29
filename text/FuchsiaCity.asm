@@ -53,6 +53,33 @@ _FuchsiaCitySaraText::
 	line "passing the word."
 	done
 
+_FuchsiaCityRhyhornEscapeIntroText::
+	text "WARDEN: LOOK OUT!"
+
+	para "A RHYHORN broke"
+	line "loose!"
+	done
+
+_FuchsiaCityEscapedRhyhornTurnsText::
+	text "RHYHORN wheels"
+	line "around!"
+	done
+
+_FuchsiaCityChasingWardenText::
+	text "WARDEN: Head it"
+	line "off!"
+
+	para "It'll flatten half"
+	line "of FUCHSIA!"
+	done
+
+_FuchsiaCityWardenThanksText::
+	text "WARDEN: Whew!"
+	line "You stopped it!"
+
+	para "I owe you one!"
+	done
+
 _FuchsiaCityYoungster2Text::
 	text "That item ball in"
 	line "there is really a"

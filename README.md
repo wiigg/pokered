@@ -43,6 +43,7 @@ checks the original byte layout and core stored IDs automatically; run
 - [x] Let something enormous pass beneath the [S.S. Anne](scripts/SSAnneBow.asm) when the player returns to its bow after helping the Captain.
 - [x] Let a solitary [ghost sailor](scripts/VermilionDock.asm) wait on the empty dock with a troubling claim about the S.S. Anne's final voyage.
 - [x] Help [Erik and Sara](scripts/FuchsiaCity.asm) find each other at Fuchsia City's different gates.
+- [x] Let an escaped [Safari Rhyhorn charge through Fuchsia](scripts/FuchsiaCity.asm), with the Warden in pursuit and a normal chance to catch it.
 - [x] Complete the Warden's postgame [Safari Master challenge](scripts/WardensHouse.asm), fill his rare-Pokémon photo display, and earn free Safari entry.
 - [x] Add Professor Oak as a postgame superboss, then let him finally answer the League's old invitation.
 - [x] Give a completed 151-species Pokédex a proper epilogue and a framed bedroom diploma.
