@@ -16,7 +16,7 @@ TrainerAIPointers:
 	dbw 3, GenericAI ; BIKER
 	dbw 3, GenericAI ; BURGLAR
 	dbw 3, GenericAI ; ENGINEER
-	dbw 3, JugglerAI ; UNUSED_JUGGLER
+	dbw 3, GenericAI ; COPYCAT
 	dbw 3, GenericAI ; FISHER
 	dbw 3, GenericAI ; SWIMMER
 	dbw 3, GenericAI ; CUE_BALL

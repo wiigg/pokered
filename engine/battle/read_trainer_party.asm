@@ -47,6 +47,8 @@ ReadTrainer:
 ; else the first byte is the level of every pokemon on the team
 .IterateTrainer
 	ld a, [hli]
+	cp TRAINER_LEVEL_MATCH_PLAYER
+	jr z, .MatchPlayerLevel
 	cp $FF ; is the trainer special?
 	jr z, .SpecialTrainer ; if so, check for special moves
 	ld [wCurEnemyLevel], a
@@ -59,6 +61,33 @@ ReadTrainer:
 	ld [wMonDataLocation], a
 	push hl
 	call AddPartyMon
+	pop hl
+	jr .LoopTrainerData
+.MatchPlayerLevel
+	push hl
+	ld a, [wPartyCount]
+	and a
+	jr z, .noConsciousMon
+	ld b, a
+	ld hl, wPartyMon1HP
+.findConsciousMon
+	ld a, [hli]
+	or [hl]
+	jr nz, .foundConsciousMon
+	dec b
+	jr z, .noConsciousMon
+	ld de, PARTYMON_STRUCT_LENGTH - 1
+	add hl, de
+	jr .findConsciousMon
+.foundConsciousMon
+	ld de, MON_LEVEL - (MON_HP + 1)
+	add hl, de
+	ld a, [hl]
+	jr .storeMatchedLevel
+.noConsciousMon
+	ld a, 1
+.storeMatchedLevel
+	ld [wCurEnemyLevel], a
 	pop hl
 	jr .LoopTrainerData
 .SpecialTrainer

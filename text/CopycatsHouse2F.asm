@@ -62,6 +62,46 @@ _CopycatsHouse2FCopycatTM31NoRoomText::
 	line "this?@"
 	text_end
 
+_CopycatsHouse2FMirrorChallengeText::
+	text "COPYCAT: Wait!"
+	line "Let's play a"
+	cont "mirror game!"
+
+	para "Will you battle"
+	line "yourself?"
+	done
+
+_CopycatsHouse2FMirrorDeclinedText::
+	text "COPYCAT: Aw!"
+	line "Maybe later!"
+	done
+
+_CopycatsHouse2FMirrorTransformText::
+	text "COPYCAT: Mirror,"
+	line "mirror..."
+
+	para "Now I'm you!"
+	done
+
+_CopycatsHouse2FCopycatBattleText::
+	text "My DITTO will"
+	line "copy your #MON"
+	cont "too!"
+	done
+
+_CopycatsHouse2FCopycatEndBattleText::
+	text "Eek!"
+	line "You beat yourself!"
+	prompt
+
+_CopycatsHouse2FCopycatAfterBattleText::
+	text "COPYCAT: That was"
+	line "fun!"
+
+	para "DITTO and I still"
+	line "need practice."
+	done
+
 _CopycatsHouse2FDoduoText::
 	text "DODUO: Giiih!"
 

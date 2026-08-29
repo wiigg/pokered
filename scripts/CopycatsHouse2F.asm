@@ -1,5 +1,25 @@
 CopycatsHouse2F_Script:
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ld hl, CopycatsHouse2FTrainerHeaders
+	ld de, CopycatsHouse2F_ScriptPointers
+	ld a, [wCopycatsHouse2FCurScript]
+	call ExecuteCurMapScriptInTable
+	ld [wCopycatsHouse2FCurScript], a
+	ret
+
+CopycatsHouse2F_ScriptPointers:
+	def_script_pointers
+	dw_const CheckFightingMapTrainers,              SCRIPT_COPYCATSHOUSE2F_DEFAULT
+	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_COPYCATSHOUSE2F_START_BATTLE
+	dw_const CopycatsHouse2FEndBattleScript,         SCRIPT_COPYCATSHOUSE2F_END_BATTLE
+
+CopycatsHouse2FEndBattleScript:
+	call EndTrainerBattle
+	call CopycatsHouse2FRestoreCopycatSprite
+	xor a
+	ld [wCopycatsHouse2FCurScript], a
+	ld [wCurMapScript], a
+	ret
 
 CopycatsHouse2F_TextPointers:
 	def_text_pointers
@@ -13,8 +33,10 @@ CopycatsHouse2F_TextPointers:
 
 CopycatsHouse2FCopycatText:
 	text_asm
+	CheckEvent EVENT_BEAT_COPYCAT
+	jp nz, .afterBattle
 	CheckEvent EVENT_GOT_TM31
-	jr nz, .got_item
+	jr nz, .gotItem
 	ld a, TRUE
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
 	ld hl, .DoYouLikePokemonText
@@ -33,14 +55,43 @@ CopycatsHouse2FCopycatText:
 	ldh [hItemToRemoveID], a
 	farcall RemoveItemByID
 	SetEvent EVENT_GOT_TM31
-	jr .done
+	jr .offerMirrorBattle
 .bag_full
 	ld hl, .TM31NoRoomText
 	call PrintText
 	jr .done
-.got_item
+.gotItem
 	ld hl, .TM31Explanation2Text
 	call PrintText
+.offerMirrorBattle
+	xor a
+	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
+	ld hl, .MirrorChallengeText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .declined
+	ld hl, .MirrorTransformText
+	call PrintText
+	ld a, SFX_SHRINK
+	call PlaySound
+	call WaitForSoundToFinish
+	call CopycatsHouse2FTransformCopycatSprite
+	ld a, COPYCATSHOUSE2F_COPYCAT
+	ld [wSpriteIndex], a
+	ld hl, CopycatsHouse2FTrainerHeader
+	call TalkToTrainer
+	ld a, [wCurMapScript]
+	ld [wCopycatsHouse2FCurScript], a
+	jr .done
+.declined
+	ld hl, .MirrorDeclinedText
+	call PrintText
+	jr .done
+.afterBattle
+	ld hl, CopycatsHouse2FTrainerHeader
+	call TalkToTrainer
 .done
 	jp TextScriptEnd
 
@@ -67,6 +118,54 @@ CopycatsHouse2FCopycatText:
 .TM31NoRoomText:
 	text_far _CopycatsHouse2FCopycatTM31NoRoomText
 	text_waitbutton
+	text_end
+
+.MirrorChallengeText:
+	text_far _CopycatsHouse2FMirrorChallengeText
+	text_end
+
+.MirrorDeclinedText:
+	text_far _CopycatsHouse2FMirrorDeclinedText
+	text_end
+
+.MirrorTransformText:
+	text_far _CopycatsHouse2FMirrorTransformText
+	text_end
+
+CopycatsHouse2FTransformCopycatSprite:
+	ld a, SPRITE_RED
+	jr CopycatsHouse2FSetCopycatSprite
+
+CopycatsHouse2FRestoreCopycatSprite:
+	ld a, SPRITE_BRUNETTE_GIRL
+
+CopycatsHouse2FSetCopycatSprite:
+	push af
+	ld a, COPYCATSHOUSE2F_COPYCAT
+	ldh [hSpriteIndex], a
+	ld a, SPRITESTATEDATA1_PICTUREID
+	ldh [hSpriteDataOffset], a
+	call GetPointerWithinSpriteStateData1
+	pop af
+	ld [hl], a
+	jp ReloadMapSpriteTilePatterns
+
+CopycatsHouse2FTrainerHeaders:
+	def_trainers
+CopycatsHouse2FTrainerHeader:
+	trainer EVENT_BEAT_COPYCAT, 0, CopycatsHouse2FCopycatBattleText, CopycatsHouse2FCopycatEndBattleText, CopycatsHouse2FCopycatAfterBattleText
+	db -1 ; end
+
+CopycatsHouse2FCopycatBattleText:
+	text_far _CopycatsHouse2FCopycatBattleText
+	text_end
+
+CopycatsHouse2FCopycatEndBattleText:
+	text_far _CopycatsHouse2FCopycatEndBattleText
+	text_end
+
+CopycatsHouse2FCopycatAfterBattleText:
+	text_far _CopycatsHouse2FCopycatAfterBattleText
 	text_end
 
 CopycatsHouse2FDoduoText:
