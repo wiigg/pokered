@@ -219,6 +219,8 @@ Each future gameplay feature or fix should update this file in the same commit.
 - **Ghost versus Psychic:** Ghost attacks are super effective against Psychic.
 - **Reliable healing:** Recover, Softboiled, and Rest correctly compare both HP
   bytes, including when exactly 255 or 511 HP is missing.
+- **Safe Substitute cost:** Substitute requires enough HP to leave its user
+  with at least 1 HP after paying the cost.
 - **Zero-Defence damage:** damage calculation handles a zero Defence value and
   avoids the original battle freeze.
 - **Mirrored trapping moves:** link battles synchronise trapping effects copied

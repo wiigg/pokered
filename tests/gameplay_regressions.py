@@ -184,6 +184,32 @@ class GameplayTests(unittest.TestCase):
 
 
 
+    def test_substitute_requires_surviving_hp(self):
+        self.stub("DelayFrames", "PrintText", "PlayCurrentMoveAnimation",
+                  "AnimationSubstitute", "DrawHUDsAndHPBars")
+        mask = 1 << self.const("HAS_SUBSTITUTE_UP")
+        for turn in (0, 1):
+            side = "Enemy" if turn else "Player"
+            mon = "wEnemyMon" if turn else "wBattleMon"
+            for maximum in (100, 101, 255, 256, 599, 703):
+                cost = maximum // 4
+                for current in (cost - 1, cost, cost + 1, maximum):
+                    with self.subTest(turn=turn, hp=(current, maximum)):
+                        self.put("hWhoseTurn", turn)
+                        self.put_hp(mon + "HP", current)
+                        self.put_hp(mon + "MaxHP", maximum)
+                        self.put(f"w{side}BattleStatus2", 0)
+                        self.call("SubstituteEffect_")
+                        self.assertEqual(self.hp(mon + "HP"), current - cost if current > cost else current)
+                        self.assertEqual(bool(self.get(f"w{side}BattleStatus2") & mask), current > cost)
+                self.put_hp(mon + "HP", maximum)
+                self.put(f"w{side}BattleStatus2", mask)
+                self.put(f"w{side}SubstituteHP", 17)
+                self.call("SubstituteEffect_")
+                self.assertEqual(self.hp(mon + "HP"), maximum)
+                self.assertEqual(self.get(f"w{side}SubstituteHP"), 17)
+
+
 if __name__ == "__main__":
     GameplayTests.constants = read_constants()
     passed = True
