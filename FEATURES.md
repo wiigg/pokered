@@ -24,6 +24,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   evolution or when the Pikachu was received in an earlier build.
   The eastern mountain passage aligns with the arrival and exit coordinates;
   regression checks validate both ends against compiled map collision data.
+  Staggered grass and flower patches border an encounter-free walk to the
+  notebook and pond, within a single continuous mountain rim.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;

@@ -66,12 +66,14 @@ class GameplayTests(unittest.TestCase):
         bank, address = self.symbols[name]
         return [self.gb.memory[bank, address + offset + i] for i in range(count)]
 
-    def overworld_walkable(self, name):
+    def overworld_walkable(self, name, avoid_grass=False):
         tileset, height, width = self.rom_bytes(name + "_h", 3)
         self.assertEqual(tileset, self.const("OVERWORLD"))
         layout = self.rom_bytes(name + "_Blocks", width * height)
         collision = self.rom_bytes("Overworld_Coll", 64)
         collision = set(collision[:collision.index(255)])
+        if avoid_grass:
+            collision.discard(0x52)  # OVERWORLD's tall-grass collision tile.
         walkable = set()
         for y in range(height * 2):
             for x in range(width * 2):
@@ -171,6 +173,21 @@ class GameplayTests(unittest.TestCase):
         _, _, y, x = self.rom_bytes("Route25_GardenReturn", 4)
         self.assertIn((x, y), self.overworld_walkable("Route25"))
         self.assertEqual((x, y), (51, 4))
+
+    def test_garden_landmarks_have_an_encounter_free_approach(self):
+        walkable = self.overworld_walkable("BillsSecretGarden", avoid_grass=True)
+        walkable -= {(11, 3), (14, 6), (14, 7)}  # Pikachu, notebook, chair.
+        _, _, y, x = self.rom_bytes("BillsSecretGarden_Entrance", 4)
+        reachable = {(x, y)}
+        pending = [(x, y)]
+        while pending:
+            x, y = pending.pop()
+            for next_pos in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                if next_pos in walkable and next_pos not in reachable:
+                    reachable.add(next_pos)
+                    pending.append(next_pos)
+        for position in ((10, 3), (13, 6), (15, 6)):
+            self.assertIn(position, reachable)
 
     def test_garden_route25_gate_preserves_unlock_and_arrival(self):
         self.stub("PrintText", "PlaySound", "TextScriptEnd")
