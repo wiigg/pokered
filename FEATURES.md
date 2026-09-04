@@ -30,6 +30,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   the original tiles. Its reflection can still be examined from the bank.
   On the first approach, Pikachu visibly skims across the pond and returns to
   its bank before joining the party. The brief scene plays once per save.
+  Afterwards, a wandering Butterfree visits the western flowers and answers
+  with its cry, keeping the garden lively without adding another gift or battle.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;

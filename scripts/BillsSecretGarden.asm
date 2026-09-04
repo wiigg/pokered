@@ -136,6 +136,7 @@ BillsSecretGarden_TextPointers:
 	dw_const BillsSecretGardenPikachuText, TEXT_BILLSSECRETGARDEN_PIKACHU
 	dw_const BillsSecretGardenNotebookText, TEXT_BILLSSECRETGARDEN_NOTEBOOK
 	dw_const BillsSecretGardenChairText, TEXT_BILLSSECRETGARDEN_CHAIR
+	dw_const BillsSecretGardenButterfreeText, TEXT_BILLSSECRETGARDEN_BUTTERFREE
 	dw_const BillsSecretGardenPondText, TEXT_BILLSSECRETGARDEN_POND
 
 BillsSecretGardenPikachuText:
@@ -192,6 +193,20 @@ BillsSecretGardenChairText:
 	text_asm
 	call DisableWaitingAfterTextDisplay
 	jp TextScriptEnd
+
+BillsSecretGardenButterfreeText:
+	text_asm
+	ld a, BUTTERFREE
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, .FlowersText
+	call PrintText
+	jp TextScriptEnd
+
+.FlowersText:
+	text "BUTTERFREE flits"
+	line "between flowers."
+	done
 
 BillsSecretGardenPondText:
 	text_asm

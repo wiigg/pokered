@@ -14,6 +14,8 @@ Coverage includes:
   existing boxed Pokémon, move recovery and visibility on map re-entry.
 - Pikachu's pond-crossing route, first-approach gates, one-time scene flag and
   input/position cleanup after either completed movement or a timeout.
+- The garden's wandering Butterfree appears only after Pikachu joins, stays
+  clear of an overlapping player, and offers a cry without a battle or reward.
 - Moonfall's full-bag failure, successful retry and one-time reward.
 - Capture, defeat, escape, unresolved battle and blackout outcomes for Mew,
   White Hand, the Mansion Ditto, Seafoam Gyarados and escaped Fuchsia Rhyhorn.

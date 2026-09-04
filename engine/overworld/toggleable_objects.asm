@@ -239,6 +239,14 @@ IsObjectHidden:
 	swap a
 	ld b, a
 	ld a, [wCurMap]
+	cp BILLS_SECRET_GARDEN
+	jr nz, .checkViridianGym
+	ld a, b
+	cp BILLSSECRETGARDEN_BUTTERFREE
+	jp nz, .loop
+	call IsBillsGardenButterfreeHidden
+	jp .done
+.checkViridianGym
 	cp VIRIDIAN_GYM
 	jr nz, .checkFuchsiaCity
 	ld a, b
@@ -317,6 +325,30 @@ IsObjectHidden:
 .hidden
 .done
 	ldh [hIsToggleableObjectOff], a
+	ret
+
+IsBillsGardenButterfreeHidden:
+	CheckEvent EVENT_GOT_BILLS_GARDEN_PIKACHU
+	jr z, .hidden
+	; A player loaded onto the new visitor's tile can step away safely.
+	assert BILLSSECRETGARDEN_BUTTERFREE == 4
+	ld a, [wYCoord]
+	add 4
+	ld b, a
+	ld a, [wSprite04StateData2MapY]
+	cp b
+	jr nz, .visible
+	ld a, [wXCoord]
+	add 4
+	ld b, a
+	ld a, [wSprite04StateData2MapX]
+	cp b
+	jr z, .hidden
+.visible
+	xor a
+	ret
+.hidden
+	ld a, 1
 	ret
 
 IsViridianGymBlueHidden:

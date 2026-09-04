@@ -8,6 +8,7 @@ ENDM
 	test_constant THUNDER_WAVE
 	test_constant QUICK_ATTACK
 	test_constant PIKACHU
+	test_constant BUTTERFREE
 	test_constant RAICHU
 	test_constant EEVEE
 	test_constant PARTYMON_STRUCT_LENGTH
@@ -102,6 +103,14 @@ ENDM
 	test_constant BIT_WARP_FROM_CUR_SCRIPT
 
 SECTION "Test map object constants", ROMX
+INCLUDE "data/maps/objects/BillsSecretGarden.asm"
+	test_constant BILLSSECRETGARDEN_BUTTERFREE
+	test_constant BILLSSECRETGARDEN_PIKACHU
+	test_constant BILLSSECRETGARDEN_NOTEBOOK
+	test_constant BILLSSECRETGARDEN_CHAIR
+	test_constant ANY_DIR
+	test_constant SPRITE_BIRD
+
 INCLUDE "data/maps/objects/Route12.asm"
 	test_constant ROUTE12_REFORMED_FISHER
 	test_constant ROUTE12_RATICATE

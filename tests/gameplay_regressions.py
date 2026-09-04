@@ -239,6 +239,44 @@ class GameplayTests(unittest.TestCase):
                 self.assertEqual(self.gb.memory[start - 1], 0xA5)
                 self.assertEqual(self.gb.memory[start + size], 0xA5)
 
+    def test_garden_butterfree_is_a_safe_post_gift_visitor(self):
+        self.put("wCurMap", self.const("BILLS_SECRET_GARDEN"))
+        self.call("MarkTownVisitedAndLoadToggleableObjects")
+        original_toggles = self.get("wToggleableObjectList", 3)
+        self.assertEqual([self.const("BILLSSECRETGARDEN_" + name) for name in
+                          ("PIKACHU", "NOTEBOOK", "CHAIR", "BUTTERFREE")], [1, 2, 3, 4])
+        data = self.rom_bytes("BillsSecretGarden_Object", 37)
+        self.assertEqual(data[12], 4)
+        self.assertEqual(data[31:37], [self.const("SPRITE_BIRD"), 13, 8,
+                                      self.const("WALK"), self.const("ANY_DIR"),
+                                      4])
+        self.assertEqual(int.from_bytes(self.rom_bytes("BillsSecretGarden_TextPointers", 2, 6), "little"),
+                         self.address("BillsSecretGardenButterfreeText"))
+        self.assertIn((4, 9), self.overworld_walkable("BillsSecretGarden", avoid_grass=True))
+        for received in (False, True):
+            self.set_event("EVENT_GOT_BILLS_GARDEN_PIKACHU", received)
+            for butterfly in ((4, 9), (5, 8)):
+                self.put("wSprite04StateData2MapX", butterfly[0] + 4)
+                self.put("wSprite04StateData2MapY", butterfly[1] + 4)
+                for position in (butterfly, (15, 16), (4, 8)):
+                    self.put("wXCoord", position[0])
+                    self.put("wYCoord", position[1])
+                    self.put("hCurrentSpriteOffset", self.const("BILLSSECRETGARDEN_BUTTERFREE") * 16)
+                    self.call("IsObjectHidden")
+                    self.assertEqual(bool(self.get("hIsToggleableObjectOff")),
+                                     not received or position == butterfly)
+        self.assertEqual(self.get("wToggleableObjectList", 3), original_toggles)
+        printed = self.record_dialogue()
+        self.stub("PlayCry", "WaitForSoundToFinish")
+        cries = []
+        self.gb.hook_register(*self.symbols["PlayCry"],
+                              lambda _: cries.append(self.gb.register_file.A), None)
+        self.call("BillsSecretGardenButterfreeText", offset=1)
+        self.assertEqual(cries, [self.const("BUTTERFREE")])
+        self.assertEqual(printed, [self.address("BillsSecretGardenButterfreeText.FlowersText")])
+        self.assertEqual(self.get("wCurOpponent"), 0)
+        self.assertEqual(self.get("wPartyCount"), 0)
+
     def test_garden_skim_waits_for_a_visible_idle_approach(self):
         self.stub("PlayCry", "UpdateSprites", "DelayFrame")
         started = []
