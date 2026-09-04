@@ -59,8 +59,16 @@ ENDM
 	test_constant SPRITE_BRUNETTE_GIRL
 	test_constant TM_MIMIC
 	test_constant POKE_DOLL
+	test_constant DROWZEE
+	test_constant HYPNO
+	test_constant SNORLAX
+	test_constant EVENT_BEAT_ROUTE12_SNORLAX
+	test_constant EVENT_FIGHT_ROUTE12_SNORLAX
+	test_constant EVENT_BEAT_ROUTE16_SNORLAX
+	test_constant EVENT_FIGHT_ROUTE16_SNORLAX
 	test_constant UNDERGROUND_PATH_WEST_EAST
 	test_constant ROUTE_12
+	test_constant ROUTE_16
 	test_constant BIT_CUR_MAP_LOADED_1
 	test_constant EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI
 	test_constant EVENT_BEAT_SILPH_CO_GIOVANNI

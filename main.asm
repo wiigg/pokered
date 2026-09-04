@@ -292,6 +292,10 @@ SECTION "Scene Movement", ROMX
 INCLUDE "engine/overworld/scene_movement.asm"
 INCLUDE "engine/overworld/legendary_departure.asm"
 
+SECTION "Snorlax Dream", ROMX
+
+INCLUDE "engine/overworld/snorlax_dream.asm"
+
 
 SECTION "Starter Dex", ROMX
 

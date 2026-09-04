@@ -65,7 +65,9 @@ Each future gameplay feature or fix should update this file in the same commit.
   Amber or a lead Aerodactyl with a distant cry and cave tremor. See
   [Rock Tunnel B1F](scripts/RockTunnelB1F.asm).
 - **Snorlax's dream:** a lead Drowzee or Hypno can briefly glimpse a sleeping
-  Snorlax's strange dream before the usual encounter. See
+  Snorlax's strange dream before the usual encounter: a kitchen table stretches
+  into empty space while food vanishes and falls from above. The short scene
+  returns to the same route with Snorlax still asleep. See
   [Route 12](scripts/Route12.asm).
 - **Silph's unused Porygon monitor:** the original unused Porygon display and
   Pokédex presentation are restored on [Silph Co. 11F](scripts/SilphCo11F.asm).

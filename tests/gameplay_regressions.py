@@ -922,6 +922,73 @@ class GameplayTests(unittest.TestCase):
             self.call("ReadTrainer")
             self.assertEqual(opponents, [(self.const("DITTO"), first_level if first_hp else second_level)])
 
+    def test_snorlax_dream_preserves_both_routes_and_the_sleeping_encounters(self):
+        printed = self.record_dialogue()
+        self.stub("PlaySound", "GBFadeOutToWhite", "GBFadeInFromWhite", "Delay3",
+                  "DrawSnorlaxDreamBanquet", "AnimateSnorlaxDreamBanquet", "RunPaletteCommand",
+                  "ReloadMapData", "ReloadMapSpriteTilePatterns", "RunDefaultPaletteCommand",
+                  "PlayDefaultMusic")
+        scenes = []
+        self.gb.hook_register(*self.symbols["DrawSnorlaxDreamBanquet"],
+                              lambda _: scenes.append(True), None)
+        for route, lead, party_count in product((12, 16), ("DROWZEE", "HYPNO", "DITTO"), (0, 1)):
+            printed.clear()
+            scenes.clear()
+            self.put("wCurMap", self.const(f"ROUTE_{route}"))
+            self.put("wXCoord", 10)
+            self.put("wYCoord", 63)
+            self.put("wDestinationWarpID", 2)
+            self.put("wPartyCount", party_count)
+            self.put("wPartySpecies", self.const(lead))
+            self.put("wPartyMonNicks", [0x83, 0x91, 0x84, 0x80, 0x8C, 0x50] + [0x50] * 5)
+            self.put("wUpdateSpritesEnabled", 1)
+            self.put("hTileAnimations", 2)
+            self.put("wJoyIgnore", 0xF0)
+            party = self.get("wPartyDataStart", self.address("wPartyDataEnd") - self.address("wPartyDataStart"))
+            flags = self.get("wEventFlags", 320)
+            toggles = self.get("wToggleableObjectFlags", 32)
+            self.call(f"Route{route}SnorlaxText", offset=1)
+            dreaming = party_count == 1 and lead in ("DROWZEE", "HYPNO")
+            self.assertEqual(scenes, [True] if dreaming else [])
+            expected = ["SnorlaxDreamLinkText", "SnorlaxDreamText", "SnorlaxDreamEndedText"] if dreaming else [f"Route{route}SnorlaxText.SleepingText"]
+            self.assertEqual(printed, [self.address(name) for name in expected])
+            self.assertEqual(self.get("wCurMap"), self.const(f"ROUTE_{route}"))
+            self.assertEqual((self.get("wXCoord"), self.get("wYCoord"), self.get("wDestinationWarpID")), (10, 63, 2))
+            self.assertEqual(self.get("wUpdateSpritesEnabled"), 1)
+            self.assertEqual(self.get("hTileAnimations"), 2)
+            self.assertEqual(self.get("wJoyIgnore"), 0xF0)
+            self.assertEqual(self.get("wEventFlags", 320), flags)
+            self.assertEqual(self.get("wToggleableObjectFlags", 32), toggles)
+            self.assertEqual(self.get("wPartyDataStart", len(party)), party)
+
+    def test_snorlax_banquet_uses_stock_graphics_and_bounded_falling_food(self):
+        self.stub("CopyVideoData", "DelayFrames")
+        copies = []
+        self.gb.hook_register(*self.symbols["CopyVideoData"], lambda _: copies.append(
+            (self.gb.register_file.B, self.gb.register_file.D * 256 + self.gb.register_file.E,
+             self.gb.register_file.HL, self.gb.register_file.C)), None)
+        self.put("wTileMap", [0x7F] * 360)
+        self.gb.memory[self.address("wTileMap") + 360] = 0xA5
+        self.call("DrawSnorlaxDreamBanquet")
+        expected = (("RedsHouse1_GFX", 0, 0, 64), ("SnorlaxSprite", 0, 0x40, 4),
+                    ("MoveAnimationTiles0", 0x4E, 0x44, 1))
+        self.assertEqual(copies, [(self.symbols[name][0], self.address(name) + source * 16,
+                                  self.address("vTileset") + dest * 16, count)
+                                 for name, source, dest, count in expected])
+        table = self.get("wTileMap", 360)[140:200]
+        self.assertEqual(table, [0x27] * 20 + [0x2A] * 20 + [0x3A] * 20)
+        frames = []
+        self.gb.hook_register(*self.symbols["DelayFrames"],
+                              lambda _: frames.append(self.get("wTileMap", 360)), None)
+        self.call("AnimateSnorlaxDreamBanquet")
+        self.assertEqual(len(frames), 24)
+        for cycle in range(3):
+            for row, frame in enumerate(frames[cycle * 8 + 1:cycle * 8 + 8]):
+                food = [index for index, tile in enumerate(frame) if tile == 0x44]
+                self.assertEqual(food, [row * 20 + x for x in (3, 9, 15)])
+                self.assertEqual(frame[140:200], table)
+        self.assertEqual(self.gb.memory[self.address("wTileMap") + 360], 0xA5)
+
     def test_rhyhorn_reentry_and_player_overlap(self):
         self.stub("UpdateSprites")
         self.set_event("EVENT_FUCHSIA_RHYHORN_ESCAPED")

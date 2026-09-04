@@ -157,21 +157,14 @@ SnorlaxDreamGlimpse:
 	call ClearSprites
 	call ClearScreen
 
-	ld de, SnorlaxPicFront
-	lb bc, BANK(SnorlaxPicFront), 0
-	predef DisplayPicCenteredOrUpperRight
+	farcall DrawSnorlaxDreamBanquet
 	ld a, SNORLAX
 	ld [wWholeScreenPaletteMonSpecies], a
 	ld b, SET_PAL_POKEMON_WHOLE_SCREEN
 	ld c, 0
 	call RunPaletteCommand
 	call GBFadeInFromWhite
-	ld b, 1
-	predef ChangeBGPalColor0_4Frames
-	ld b, 2
-	predef ChangeBGPalColor0_4Frames
-	ld b, 3
-	predef ChangeBGPalColor0_4Frames
+	farcall AnimateSnorlaxDreamBanquet
 	ld hl, SnorlaxDreamText
 	call PrintText
 
