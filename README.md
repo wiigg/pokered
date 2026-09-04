@@ -104,8 +104,10 @@ Compiled ROMs remain local build outputs under the repository's ignore rules.
 ### Gameplay regression tests
 
 Focused tests execute compiled routines in a headless Game Boy emulator, with
-isolated in-memory saves. Install the optional test dependency in a virtual
-environment, then run:
+isolated in-memory saves. Coverage includes battle mechanics, party/box-full
+gifts, reward retries, scripted battle outcomes, map re-entry and literal
+dialogue width. See [the test guide](tests/README.md) for scope and limitations.
+Install the optional test dependency in a virtual environment, then run:
 
 ```bash
 python3 -m venv /tmp/pokered-tests

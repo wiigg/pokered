@@ -16,6 +16,8 @@ import unittest
 
 from pyboy import PyBoy
 
+from dialogue_width import dialogue_issues, line_width
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -101,8 +103,11 @@ class GameplayTests(unittest.TestCase):
             bank, address = self.symbols[name]
             self.gb.memory[bank, address] = 0xC9  # RET
 
-    def call(self, name, **registers):
+    def call(self, name, offset=0, **registers):
         bank, address = self.symbols[name]
+        if offset == 1:
+            self.assertEqual(self.gb.memory[bank, address], 0x08, "Expected a text_asm entry point")
+        address += offset
         self.gb.memory[0x2000] = bank or 1
         self.put("hLoadedROMBank", bank or 1)
         # DI; CALL routine; JP $FF84. The loop makes completion observable.
@@ -371,6 +376,155 @@ class GameplayTests(unittest.TestCase):
                 self.assertEqual(self.event_set("EVENT_BEAT_VERMILION_DOCK_MEW"), completed and owned)
                 self.assertEqual(self.event_set("EVENT_MOVED_VERMILION_DOCK_TRUCK"), truck_moved)
                 self.assertEqual(bool(self.gb.memory[dex_address] & (1 << (dex_bit % 8))), owned)
+
+    def test_scripted_wild_battle_outcomes(self):
+        self.stub("PrintText", "UpdateSprites", "ReplaceTileBlock")
+        encounters = (
+            ("VermilionDockMewPostBattleScript", "EVENT_BEAT_VERMILION_DOCK_MEW", "wVermilionDockCurScript"),
+            ("LavenderTownWhiteHandPostBattleScript", "EVENT_BEAT_LAVENDER_WHITE_HAND", "wLavenderTownCurScript"),
+            ("PokemonMansionB1FDittoPostBattleScript", "EVENT_BEAT_MANSION_DITTO", "wPokemonMansionB1FCurScript"),
+            ("SeafoamIslandsB4FGyaradosPostBattleScript", "EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS", "wSeafoamIslandsB4FCurScript"),
+            ("FuchsiaCityRhyhornPostBattleScript", "EVENT_BEAT_FUCHSIA_ESCAPED_RHYHORN", "wFuchsiaCityCurScript"),
+        )
+        outcomes = (
+            ("capture", 0, 1, 1, 0, True),
+            ("defeat", 0, 0, 0, 0, True),
+            ("run", 0, 2, 0, 1, False),
+            ("unresolved", 0, 2, 0, 0, False),
+            ("blackout", 255, 1, 0, 0, False),
+            ("blackout_with_stale_capture", 255, 1, 1, 0, False),
+            ("escape_with_stale_win", 0, 0, 0, 1, False),
+        )
+        for routine, event, script in encounters:
+            for outcome, battle, result, captured, escaped, completed in outcomes:
+                with self.subTest(encounter=routine, outcome=outcome):
+                    self.set_event(event, False)
+                    self.put("wIsInBattle", battle)
+                    self.put("wBattleResult", result)
+                    self.put("wBattleWasCaptured", captured)
+                    self.put("wBattleWasEscaped", escaped)
+                    self.put("wJoyIgnore", 255)
+                    self.put(script, 1)
+                    self.put("wCurMapScript", 1)
+                    self.call(routine)
+                    self.assertEqual(self.event_set(event), completed)
+                    self.assertEqual(self.get("wJoyIgnore"), 0)
+                    self.assertEqual(self.get(script), 0)
+                    self.assertEqual(self.get("wCurMapScript"), 0)
+                    if routine == "PokemonMansionB1FDittoPostBattleScript":
+                        self.assertEqual(self.get("wNewTileBlockID"), 0x0E if completed else 0x77)
+
+    def test_garden_gift_full_party_and_full_box(self):
+        self.stub("EnableAutoTextBoxDrawing", "PrintText", "PlayCry", "WaitForSoundToFinish",
+                  "AskName", "UpdateSprites", "TextScriptEnd", "WaitForTextScrollButtonPress")
+        for party, box in ((5, 0), (6, 0), (6, 19), (6, 20)):
+            with self.subTest(party=party, box=box):
+                self.set_event("EVENT_GOT_BILLS_GARDEN_PIKACHU", False)
+                self.put("wPartyCount", party)
+                self.put("wBoxCount", box)
+                self.put("wBoxSpecies", [self.const("EEVEE")] * box + [255])
+                self.put("wBoxMon1", [0xA5] * self.const("BOXMON_STRUCT_LENGTH"))
+                self.put("wPartyMon1", [0x5A] * self.const("PARTYMON_STRUCT_LENGTH"))
+                self.put("wPokedexOwned", [0] * 19)
+                self.put("wPlayerName", [0x80] * 7 + [0x50])
+                self.put("wCurrentMapScriptFlags", 1 << self.const("BIT_CUR_MAP_LOADED_1"))
+                self.call("BillsSecretGardenLoadMap")
+                self.call("BillsSecretGardenPikachuText", offset=1)
+                success = party < 6 or box < 20
+                self.assertEqual(self.event_set("EVENT_GOT_BILLS_GARDEN_PIKACHU"), success)
+                self.assertEqual(self.get("wPartyCount"), party + int(party < 6))
+                self.assertEqual(self.get("wBoxCount"), box + int(party == 6 and success))
+                self.assertEqual(self.get("wPartyMon1", self.const("PARTYMON_STRUCT_LENGTH")),
+                                 [0x5A] * self.const("PARTYMON_STRUCT_LENGTH"))
+                dex_bit = self.const("DEX_PIKACHU") - 1
+                self.assertEqual(bool(self.gb.memory[self.address("wPokedexOwned") + dex_bit // 8]
+                                      & (1 << (dex_bit % 8))), success)
+                if success:
+                    mon = f"wPartyMon{party + 1}" if party < 6 else "wBoxMon1"
+                    self.assertEqual(self.get(mon + "Moves", 4), [self.const(move) for move in
+                                     ("THUNDERBOLT", "SURF", "THUNDER_WAVE", "QUICK_ATTACK")])
+                    self.assertEqual(self.get(mon + "PP", 4), [15, 15, 20, 30])
+                if party == 6 and box == 19:
+                    self.assertEqual(self.get("wBoxMon2", self.const("BOXMON_STRUCT_LENGTH")),
+                                     [0xA5] * self.const("BOXMON_STRUCT_LENGTH"))
+                if not success:
+                    self.assertEqual(self.get("wBoxMon1", self.const("BOXMON_STRUCT_LENGTH")),
+                                     [0xA5] * self.const("BOXMON_STRUCT_LENGTH"))
+                self.put("wCurrentMapScriptFlags", 1 << self.const("BIT_CUR_MAP_LOADED_1"))
+                self.call("BillsSecretGardenLoadMap")
+                self.assertEqual(self.object_hidden("TOGGLE_BILLS_SECRET_GARDEN_PIKACHU"), success)
+                if not success:
+                    self.put("wBoxCount", 19)
+                    self.call("BillsSecretGardenPikachuText", offset=1)
+                    self.assertTrue(self.event_set("EVENT_GOT_BILLS_GARDEN_PIKACHU"))
+                    self.assertEqual(self.get("wBoxCount"), 20)
+
+    def test_mew_truck_retry_requires_a_new_league_win(self):
+        self.stub("PrintText", "PlayCry", "WaitForSoundToFinish", "TextScriptEnd")
+        self.set_event("EVENT_MOVED_VERMILION_DOCK_TRUCK")
+        self.put("wElite4Flags", 1 << self.const("BIT_BEAT_ELITE_4"))
+        self.put("wIsInBattle", 0)
+        self.put("wBattleResult", 0)
+        self.call("VermilionDockMewPostBattleScript")
+        self.put("wCurOpponent", 0)
+        self.call("VermilionDockTruckText", offset=1)
+        self.assertEqual(self.get("wCurOpponent"), 0)
+        self.call("HallOfFameReopenMewEncounter")
+        self.call("VermilionDockTruckText", offset=1)
+        self.assertEqual(self.get("wCurOpponent"), self.const("MEW"))
+        self.assertEqual(self.get("wCurEnemyLevel"), 30)
+        self.assertTrue(self.event_set("EVENT_MOVED_VERMILION_DOCK_TRUCK"))
+
+    def test_moonfall_full_bag_can_retry_without_duplicate_reward(self):
+        self.stub("PrintText", "TextScriptEnd", "GBFadeOutToWhite", "GBFadeInFromWhite",
+                  "MtMoon1FShowMoonfallClefairy", "MtMoon1FHideMoonfallClefairy",
+                  "MtMoon1FAnimateMoonfallDance", "PlayCry", "WaitForSoundToFinish")
+        self.set_event("EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD")
+        index = self.const("TOGGLE_MT_MOON_1F_ITEM_2")
+        self.gb.memory[self.address("wToggleableObjectFlags") + index // 8] |= 1 << (index % 8)
+        self.put("wNumBagItems", 20)
+        items = [item for item in range(1, 22) if item != self.const("MOON_STONE")][:20]
+        self.put("wBagItems", [value for item in items for value in (item, 1)] + [255])
+        before = self.get("wBagItems", 41)
+        self.call("MtMoon1FMoonfallSiteText", offset=1)
+        self.assertFalse(self.event_set("EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY"))
+        self.assertEqual(self.get("wBagItems", 41), before)
+        self.assertEqual(self.get("wJoyIgnore"), 0)
+        self.put("wNumBagItems", 0)
+        self.put("wBagItems", 255)
+        self.call("MtMoon1FMoonfallSiteText", offset=1)
+        self.assertTrue(self.event_set("EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY"))
+        self.assertEqual(self.get("wNumBagItems"), 1)
+        self.assertEqual(self.get("wBagItems", 3), [self.const("MOON_STONE"), 1, 255])
+        self.call("MtMoon1FMoonfallSiteText", offset=1)
+        self.assertEqual(self.get("wBagItems", 3), [self.const("MOON_STONE"), 1, 255])
+
+    def test_rhyhorn_reentry_and_player_overlap(self):
+        self.stub("UpdateSprites")
+        self.set_event("EVENT_FUCHSIA_RHYHORN_ESCAPED")
+        self.set_event("EVENT_SAW_FUCHSIA_RHYHORN_ESCAPE")
+        for completed in (False, True):
+            for x, y in ((17, 8), (18, 8), (18, 10)):
+                with self.subTest(completed=completed, position=(x, y)):
+                    self.set_event("EVENT_BEAT_FUCHSIA_ESCAPED_RHYHORN", completed)
+                    self.put("wXCoord", x)
+                    self.put("wYCoord", y)
+                    self.put("wCurrentMapScriptFlags", 1 << self.const("BIT_CUR_MAP_LOADED_1"))
+                    self.call("FuchsiaCityLoadRhyhornEscapeObjects")
+                    hidden = completed or x == 18
+                    self.assertEqual(self.object_hidden("TOGGLE_FUCHSIA_CITY_ESCAPED_RHYHORN"), hidden)
+                    self.assertEqual(self.object_hidden("TOGGLE_FUCHSIA_CITY_CHASING_WARDEN"), hidden)
+
+
+    def test_dialogue_width_token_accounting(self):
+        self.assertEqual(line_width("#MON"), 7)
+        self.assertEqual(line_width("<PLAYER> received"), 16)
+        self.assertEqual(line_width("It's ready!"), 10)
+        self.assertEqual(line_width("<PKMN>@"), 2)
+        self.assertEqual(line_width("<RIVAL> " + "X" * 11), 19)
+
+    def test_reward_encounter_and_rumour_dialogue_fits(self):
+        self.assertEqual(dialogue_issues(), [])
 
 
 if __name__ == "__main__":

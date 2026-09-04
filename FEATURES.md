@@ -246,3 +246,6 @@ Each future gameplay feature or fix should update this file in the same commit.
   corrected.
 - **Save-layout guard:** `make check-save-compat` verifies the protected SRAM and
   WRAM layout plus established IDs, covering 1,547 save-sensitive symbols.
+- **Gameplay regression checks:** `make check-gameplay` tests compiled battle
+  routines, full-storage gifts, one-time rewards, scripted encounter outcomes,
+  map re-entry and selected dialogue widths across all three builds.
