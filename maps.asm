@@ -90,7 +90,7 @@ BillsSecretGarden_Blocks:
 	db $29, $74, $74, $01, $01, $01, $0b, $0b, $01, $28
 	db $29, $01, $01, $01, $01, $01, $01, $01, $01, $28
 	db $29, $0b, $01, $01, $01, $01, $01, $01, $0b, $28
-	db $2c, $3f, $3f, $3b, $01, $3e, $3f, $3f, $3f, $2c
+	db $2c, $3f, $3f, $3f, $3f, $3f, $3b, $01, $3e, $2c
 
 INCLUDE "data/maps/headers/Route1.asm"
 INCLUDE "data/maps/objects/Route1.asm"

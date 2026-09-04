@@ -37,4 +37,5 @@ Route25_Object:
 	def_warps_to ROUTE_25
 
 	; destination-only return point in front of the secret entrance
+Route25_GardenReturn:
 	warp_to 51, 4, ROUTE_25_WIDTH

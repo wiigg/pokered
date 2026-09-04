@@ -22,6 +22,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   Kanto's future. Bill and an earlier Route 25 clue encourage a return visit.
   Mr. Psychic can restore this gift's Surf and Thunderbolt, including after
   evolution or when the Pikachu was received in an earlier build.
+  The eastern mountain passage aligns with the arrival and exit coordinates;
+  regression checks validate both ends against compiled map collision data.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;

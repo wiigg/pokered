@@ -62,6 +62,25 @@ class GameplayTests(unittest.TestCase):
     def const(self, name):
         return self.constants[name]
 
+    def rom_bytes(self, name, count, offset=0):
+        bank, address = self.symbols[name]
+        return [self.gb.memory[bank, address + offset + i] for i in range(count)]
+
+    def overworld_walkable(self, name):
+        tileset, height, width = self.rom_bytes(name + "_h", 3)
+        self.assertEqual(tileset, self.const("OVERWORLD"))
+        layout = self.rom_bytes(name + "_Blocks", width * height)
+        collision = self.rom_bytes("Overworld_Coll", 64)
+        collision = set(collision[:collision.index(255)])
+        walkable = set()
+        for y in range(height * 2):
+            for x in range(width * 2):
+                block = layout[y // 2 * width + x // 2]
+                tile_offset = block * 16 + (y % 2 * 2 + 1) * 4 + x % 2 * 2
+                if self.rom_bytes("Overworld_Block", 1, tile_offset)[0] in collision:
+                    walkable.add((x, y))
+        return walkable
+
     def put(self, name, values):
         if isinstance(values, int):
             values = [values]
@@ -128,6 +147,41 @@ class GameplayTests(unittest.TestCase):
         self.gb.tick(10, render=False, sound=False)
         self.assertEqual(cpu.PC, 0xFF84, f"{name} did not return")
         self.assertEqual(cpu.SP, 0xDFF0, f"{name} unbalanced the stack")
+
+    def test_garden_entrance_and_visible_exit_match_compiled_collision(self):
+        walkable = self.overworld_walkable("BillsSecretGarden")
+        _, _, y, x = self.rom_bytes("BillsSecretGarden_Entrance", 4)
+        self.assertIn((x, y), walkable, "Arrival must be on walkable ground")
+        self.assertIn((x, y - 1), walkable, "Arrival must open into the garden")
+        bottom = {position for position in walkable if position[1] == 17}
+        self.assertEqual(bottom, {(14, 17), (15, 17)})
+        warp_flags = ((1 << self.const("BIT_FORCE_DESTINATION_WARP_POSITION")) |
+                      (1 << self.const("BIT_WARP_FROM_CUR_SCRIPT")))
+        for x, y in walkable:
+            self.put("wXCoord", x)
+            self.put("wYCoord", y)
+            self.put("wStatusFlags3", 0)
+            self.put("hWarpDestinationMap", 255)
+            self.call("BillsSecretGardenCheckExit")
+            self.assertEqual(self.get("hWarpDestinationMap"),
+                             self.const("ROUTE_25") if (x, y) in bottom else 255)
+            self.assertEqual(self.get("wStatusFlags3"), warp_flags if (x, y) in bottom else 0)
+            if (x, y) in bottom:
+                self.assertEqual(self.get("wDestinationWarpID"), 1)
+        _, _, y, x = self.rom_bytes("Route25_GardenReturn", 4)
+        self.assertIn((x, y), self.overworld_walkable("Route25"))
+        self.assertEqual((x, y), (51, 4))
+
+    def test_garden_route25_gate_preserves_unlock_and_arrival(self):
+        self.stub("PrintText", "PlaySound", "TextScriptEnd")
+        for unlocked in (False, True):
+            self.set_event("EVENT_UNLOCKED_BILLS_SECRET_GARDEN", unlocked)
+            self.put("hWarpDestinationMap", 255)
+            self.put("wDestinationWarpID", 255)
+            self.call("Route25SecretGardenGateText", offset=1)
+            self.assertEqual(self.get("hWarpDestinationMap"),
+                             self.const("BILLS_SECRET_GARDEN") if unlocked else 255)
+            self.assertEqual(self.get("wDestinationWarpID"), 0 if unlocked else 255)
 
     def test_garden_gift_party_and_box(self):
         moves = [self.const(move) for move in

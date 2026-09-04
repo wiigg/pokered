@@ -86,6 +86,12 @@ ENDM
 	test_constant BIT_GAVE_SAFFRON_GUARDS_DRINK
 	test_constant WALK
 	test_constant STAY
+	test_constant OVERWORLD
+	test_constant BILLS_SECRET_GARDEN
+	test_constant ROUTE_25
+	test_constant EVENT_UNLOCKED_BILLS_SECRET_GARDEN
+	test_constant BIT_FORCE_DESTINATION_WARP_POSITION
+	test_constant BIT_WARP_FROM_CUR_SCRIPT
 
 SECTION "Test map object constants", ROMX
 INCLUDE "data/maps/objects/Route12.asm"
