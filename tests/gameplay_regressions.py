@@ -248,6 +248,39 @@ class GameplayTests(unittest.TestCase):
                 self.assertEqual(self.get("wBuffer", 4), expected)
 
 
+    def test_transform_checks_the_target_on_both_turns(self):
+        self.stub("PrintText", "EffectCallBattleCore", "PlayCurrentMoveAnimation",
+                  "AnimationTransformMon", "HideSubstituteShowMonAnim", "ReshowSubstituteAnim")
+        invulnerable = 1 << self.const("INVULNERABLE")
+        transformed = 1 << self.const("TRANSFORMED")
+        for turn, own_hidden, target_hidden in product((0, 1), repeat=3):
+            with self.subTest(turn=turn, own_hidden=own_hidden, target_hidden=target_hidden):
+                user = "wEnemyMon" if turn else "wBattleMon"
+                target = "wBattleMon" if turn else "wEnemyMon"
+                side = "Enemy" if turn else "Player"
+                other_side = "Player" if turn else "Enemy"
+                self.put("hWhoseTurn", turn)
+                self.put(f"w{side}BattleStatus1", invulnerable if own_hidden else 0)
+                self.put(f"w{other_side}BattleStatus1", invulnerable if target_hidden else 0)
+                self.put(f"w{side}BattleStatus3", 0)
+                self.put(f"w{other_side}BattleStatus3", 0)
+                self.put(user + "Species", self.const("DITTO"))
+                self.put(target + "Species", self.const("PIKACHU"))
+                self.put_hp(user + "HP", 37)
+                self.put_hp(user + "MaxHP", 80)
+                self.put(user + "Moves", [self.const("QUICK_ATTACK"), 0, 0, 0])
+                self.put(target + "Moves", [self.const("SURF"), self.const("THUNDERBOLT"), 0, 0])
+                self.call("TransformEffect_")
+                self.assertEqual(bool(self.get(f"w{side}BattleStatus3") & transformed), not target_hidden)
+                self.assertEqual(self.get(f"w{other_side}BattleStatus3"), 0)
+                self.assertEqual(self.get(user + "Species"), self.const("DITTO" if target_hidden else "PIKACHU"))
+                self.assertEqual(self.hp(user + "HP"), 37)
+                self.assertEqual(self.hp(user + "MaxHP"), 80)
+                if not target_hidden:
+                    self.assertEqual(self.get(user + "Moves", 4), self.get(target + "Moves", 4))
+                    self.assertEqual(self.get(user + "PP", 4), [5, 5, 0, 0])
+
+
 if __name__ == "__main__":
     GameplayTests.constants = read_constants()
     passed = True

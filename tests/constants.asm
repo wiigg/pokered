@@ -40,3 +40,6 @@ ENDM
 	test_constant PSYCHIC_M
 	test_constant ICE_BEAM
 	test_constant EMBER
+	test_constant INVULNERABLE
+	test_constant TRANSFORMED
+	test_constant DITTO

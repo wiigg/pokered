@@ -221,6 +221,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   bytes, including when exactly 255 or 511 HP is missing.
 - **Safe Substitute cost:** Substitute requires enough HP to leave its user
   with at least 1 HP after paying the cost.
+- **Transform targeting:** Transform checks its target's Fly/Dig invulnerability
+  correctly on both the player's and the opponent's turns.
 - **Zero-Defence damage:** damage calculation handles a zero Defence value and
   avoids the original battle freeze.
 - **Mirrored trapping moves:** link battles synchronise trapping effects copied
