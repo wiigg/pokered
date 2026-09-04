@@ -19,7 +19,8 @@ Route10ZapdosPostBattleScript:
 	cp $ff
 	jr z, .resetScripts
 	ld a, ZAPDOS
-	call PlayCry
+	lb de, ROUTE10_VISITING_ZAPDOS, TOGGLE_ROUTE_10_VISITING_ZAPDOS
+	farcall LegendaryVisitorDeparture
 	ld hl, Route10ZapdosDepartedText
 	call PrintText
 .resetScripts

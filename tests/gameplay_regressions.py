@@ -814,6 +814,43 @@ class GameplayTests(unittest.TestCase):
             self.assertEqual(bool(self.gb.register_file.F & 0x10), expected)
             self.assertEqual(bool(self.get("wSeafoamIslandsB4FCurScript")), expected)
 
+    def test_legendary_visitors_depart_and_leave_original_encounters_untouched(self):
+        self.stub("PrintText", "PlayCry", "WaitForSoundToFinish", "DelayFrames", "UpdateSprites",
+                  "WaitForSceneSpriteMovement")
+        cases = (("Route10ZapdosPostBattleScript", "wRoute10CurScript", 7, "ZAPDOS", "TOGGLE_ROUTE_10_VISITING_ZAPDOS"),
+                 ("Route20ArticunoPostBattleScript", "wRoute20CurScript", 11, "ARTICUNO", "TOGGLE_ROUTE_20_VISITING_ARTICUNO"),
+                 ("CinnabarMoltresPostBattleScript", "wCinnabarIslandCurScript", 3, "MOLTRES", "TOGGLE_CINNABAR_VISITING_MOLTRES"))
+        moves = []
+        self.gb.hook_register(*self.symbols["MoveSprite"],
+                              lambda _: moves.append(self.get("hSpriteIndex")), None)
+        for routine, script, sprite, species, toggle in cases:
+            for blackout in (False, True):
+                moves.clear()
+                self.put("wIsInBattle", 255 if blackout else 0)
+                self.put("wJoyIgnore", 255)
+                self.put("wCurMapScript", 3)
+                self.put(script, 3)
+                flags = self.get("wEventFlags", 320)
+                self.call(routine)
+                self.assertEqual(moves, [] if blackout else [sprite])
+                self.assertEqual(self.get("wEventFlags", 320), flags)
+                if not blackout:
+                    self.assertTrue(self.object_hidden(toggle))
+                    self.assertEqual(self.get("wNPCMovementDirections", 7),
+                                     [self.const("NPC_MOVEMENT_UP")] * 6 + [255])
+                self.assertEqual(self.get(script), 0)
+                self.assertEqual(self.get("wCurMapScript"), 0)
+                self.assertEqual(self.get("wJoyIgnore"), 0)
+
+    def test_legendary_departure_effects_restore_palette_and_camera(self):
+        self.stub("DelayFrames")
+        for species in ("ARTICUNO", "ZAPDOS", "MOLTRES"):
+            self.put("hSCX", 13)
+            self.gb.memory[0xFF47] = 0xE4
+            self.call("LegendaryVisitorDepartureEffect", A=self.const(species))
+            self.assertEqual(self.get("hSCX"), 13)
+            self.assertEqual(self.gb.memory[0xFF47], 0xE4)
+
     def test_rhyhorn_reentry_and_player_overlap(self):
         self.stub("UpdateSprites")
         self.set_event("EVENT_FUCHSIA_RHYHORN_ESCAPED")

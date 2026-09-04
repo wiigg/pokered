@@ -290,6 +290,7 @@ INCLUDE "engine/audio/no_bike_music.asm"
 SECTION "Scene Movement", ROMX
 
 INCLUDE "engine/overworld/scene_movement.asm"
+INCLUDE "engine/overworld/legendary_departure.asm"
 
 
 SECTION "Starter Dex", ROMX

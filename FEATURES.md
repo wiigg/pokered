@@ -171,6 +171,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   their original catchable encounters remain in place. See
   [Route 20](scripts/Route20.asm),
   [Route 10](scripts/Route10.asm), and [Cinnabar Island](scripts/CinnabarIsland.asm).
+  After the encounter, each bird visibly takes off: Articuno leaves an icy
+  shimmer, Zapdos an electrical flicker, and Moltres a brief heat ripple.
 - **Seafoam whirlpool Gyarados:** using the Super Rod on one precise deep-water
   tile hooks a catchable level-70 Gyarados with Hydro Pump, Blizzard, Thunder,
   and Hyper Beam. A visibly swirling current marks the spot; examining it

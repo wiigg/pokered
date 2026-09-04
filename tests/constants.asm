@@ -78,6 +78,13 @@ ENDM
 	test_constant EVENT_HEARD_MT_MOON_MOONFALL_RUMBLE
 	test_constant MT_MOON_1F
 	test_constant SEAFOAM_ISLANDS_B4F
+	test_constant ROUTE_10
+	test_constant ARTICUNO
+	test_constant ZAPDOS
+	test_constant MOLTRES
+	test_constant TOGGLE_ROUTE_20_VISITING_ARTICUNO
+	test_constant TOGGLE_ROUTE_10_VISITING_ZAPDOS
+	test_constant TOGGLE_CINNABAR_VISITING_MOLTRES
 	test_constant NPC_MOVEMENT_UP
 	test_constant NPC_MOVEMENT_DOWN
 	test_constant TOGGLE_MT_MOON_1F_ITEM_2

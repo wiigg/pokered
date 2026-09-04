@@ -68,7 +68,8 @@ Route20ArticunoPostBattleScript:
 	cp $ff
 	jr z, .resetScripts
 	ld a, ARTICUNO
-	call PlayCry
+	lb de, ROUTE20_VISITING_ARTICUNO, TOGGLE_ROUTE_20_VISITING_ARTICUNO
+	farcall LegendaryVisitorDeparture
 	ld hl, Route20ArticunoDepartedText
 	call PrintText
 .resetScripts

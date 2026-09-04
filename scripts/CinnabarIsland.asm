@@ -19,7 +19,8 @@ CinnabarMoltresPostBattleScript:
 	cp $ff
 	jr z, .resetScripts
 	ld a, MOLTRES
-	call PlayCry
+	lb de, CINNABARISLAND_VISITING_MOLTRES, TOGGLE_CINNABAR_VISITING_MOLTRES
+	farcall LegendaryVisitorDeparture
 	ld hl, CinnabarMoltresDepartedText
 	call PrintText
 .resetScripts
