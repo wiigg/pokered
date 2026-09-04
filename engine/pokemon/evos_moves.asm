@@ -379,7 +379,7 @@ LearnMoveFromLevelUp:
 	ld [wPokedexNum], a
 	ret
 
-; Builds a menu list of natural moves the loaded party mon can remember.
+; Builds a menu list of moves the loaded party mon can remember.
 ; This includes its current species' starting moves and level-up moves at or
 ; below its current level, excluding moves it already knows.
 DEF MOVE_REMINDER_LIST_CAPACITY EQU 14 ; wItemList minus count and terminator
@@ -403,6 +403,7 @@ BuildMoveReminderList::
 	pop af
 	ld [wPokedexNum], a
 
+	call .AddGardenGiftMoves
 	ld hl, wMonHMoves
 	ld b, NUM_MOVES
 .baseMoveLoop
@@ -455,6 +456,28 @@ BuildMoveReminderList::
 	add hl, bc
 	ld [hl], -1
 	ret
+
+.AddGardenGiftMoves
+	CheckEvent EVENT_GOT_BILLS_GARDEN_PIKACHU
+	ret z
+	ld a, [wLoadedMonSpecies]
+	cp PIKACHU
+	jr z, .checkGardenDVs
+	cp RAICHU
+	ret nz
+.checkGardenDVs
+; The gift's fixed DVs also identify Pikachu claimed before its moves were fixed.
+	ld hl, wLoadedMonDVs
+	ld a, [hli]
+	cp $ea
+	ret nz
+	ld a, [hl]
+	cp $aa
+	ret nz
+	ld a, SURF
+	call .AddMove
+	ld a, THUNDERBOLT
+	jp .AddMove
 
 .AddMove
 	and a

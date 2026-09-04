@@ -101,6 +101,18 @@ make red
 
 Compiled ROMs remain local build outputs under the repository's ignore rules.
 
+### Gameplay regression tests
+
+Focused tests execute compiled routines in a headless Game Boy emulator, with
+isolated in-memory saves. Install the optional test dependency in a virtual
+environment, then run:
+
+```bash
+python3 -m venv /tmp/pokered-tests
+/tmp/pokered-tests/bin/pip install -r tests/requirements.txt
+make check-gameplay PYTHON=/tmp/pokered-tests/bin/python
+```
+
 ## Repository guide
 
 - `scripts/` contains map events, NPC behaviour, battles, and scene logic.

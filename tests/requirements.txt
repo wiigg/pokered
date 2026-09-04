@@ -1,0 +1,2 @@
+# Executes the compiled Game Boy routines for gameplay regression tests.
+pyboy==2.7.0

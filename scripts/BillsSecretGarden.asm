@@ -186,7 +186,9 @@ BillsSecretGardenCustomizePikachu:
 	push hl
 	ld bc, MON_MOVES
 	add hl, bc
-	ld de, .moves
+	ld d, h
+	ld e, l
+	ld hl, .moves
 	ld bc, NUM_MOVES
 	call CopyData
 	pop hl
@@ -199,7 +201,9 @@ BillsSecretGardenCustomizePikachu:
 	pop hl
 	ld bc, MON_PP
 	add hl, bc
-	ld de, .movePP
+	ld d, h
+	ld e, l
+	ld hl, .movePP
 	ld bc, NUM_MOVES
 	jp CopyData
 

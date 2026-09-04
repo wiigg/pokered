@@ -1,0 +1,166 @@
+"""Run focused CPU-level checks on built ROMs, using isolated in-memory saves.
+
+Graphics, audio and text entry points may be stubbed with RET; gameplay code,
+ROM data, banking and RAM writes execute in PyBoy's Game Boy CPU emulator.
+"""
+
+import io
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+from pyboy import PyBoy
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def read_symbols(path):
+    symbols = {}
+    for line in path.read_text().splitlines():
+        fields = line.split()
+        if len(fields) == 2 and ":" in fields[0] and not line.startswith(";"):
+            bank, address = fields[0].split(":")
+            symbols[fields[1]] = (int(bank, 16), int(address, 16))
+    return symbols
+
+
+def read_constants():
+    with tempfile.TemporaryDirectory(prefix="pokered-test-constants-") as tmp:
+        obj = Path(tmp) / "constants.o"
+        result = subprocess.run([os.environ.get("RGBASM", "rgbasm"), "-o", str(obj),
+                                 "tests/constants.asm"], cwd=ROOT, check=True,
+                                capture_output=True, text=True)
+        return {name: int(value) for name, value in
+                (line.split("=") for line in result.stdout.splitlines())}
+
+
+class GameplayTests(unittest.TestCase):
+    rom = ROOT / "pokered.gbc"
+    constants = {}
+
+    def setUp(self):
+        self.symbols = read_symbols(self.rom.with_suffix(".sym"))
+        self.gb = PyBoy(io.BytesIO(self.rom.read_bytes()), ram_file=io.BytesIO(bytes(0x8000)),
+                        window="null", sound_emulated=False, log_level="ERROR")
+        self.gb.set_emulation_speed(0)
+        self.gb.memory[0xFF50] = 1  # Bypass the boot ROM; run only the named routine.
+        self.gb.memory[0xFFFF] = 0  # Disable hardware interrupts for isolated calls.
+        self.gb.memory[0xC000:0xE000] = [0] * 0x2000
+        self.addCleanup(self.gb.stop, save=False)
+
+    def address(self, name):
+        return self.symbols[name][1]
+
+    def const(self, name):
+        return self.constants[name]
+
+    def put(self, name, values):
+        if isinstance(values, int):
+            values = [values]
+        address = self.address(name)
+        self.gb.memory[address:address + len(values)] = values
+
+    def get(self, name, length=1):
+        address = self.address(name)
+        values = self.gb.memory[address:address + length]
+        return values[0] if length == 1 else values
+
+    def set_event(self, name, enabled=True):
+        event = self.const(name)
+        address = self.address("wEventFlags") + event // 8
+        mask = 1 << (event % 8)
+        value = self.gb.memory[address]
+        self.gb.memory[address] = value | mask if enabled else value & ~mask
+
+    def reminder_moves(self):
+        start = self.address("wItemList") + 1
+        return [self.gb.memory[start + i] for i in range(self.get("wItemList"))]
+
+    def stub(self, *names):
+        for name in names:
+            bank, address = self.symbols[name]
+            self.gb.memory[bank, address] = 0xC9  # RET
+
+    def call(self, name, **registers):
+        bank, address = self.symbols[name]
+        self.gb.memory[0x2000] = bank or 1
+        self.put("hLoadedROMBank", bank or 1)
+        # DI; CALL routine; JP $FF84. The loop makes completion observable.
+        self.gb.memory[0xFF80:0xFF87] = [0xF3, 0xCD, address & 255, address >> 8,
+                                       0xC3, 0x84, 0xFF]
+        cpu = self.gb.register_file
+        cpu.SP = 0xDFF0
+        for register, value in registers.items():
+            setattr(cpu, register, value)
+        cpu.PC = 0xFF80
+        self.gb.tick(10, render=False, sound=False)
+        self.assertEqual(cpu.PC, 0xFF84, f"{name} did not return")
+        self.assertEqual(cpu.SP, 0xDFF0, f"{name} unbalanced the stack")
+
+    def test_garden_gift_party_and_box(self):
+        moves = [self.const(move) for move in
+                 ("THUNDERBOLT", "SURF", "THUNDER_WAVE", "QUICK_ATTACK")]
+        for party_count, in_party in ((1, True), (6, True), (6, False)):
+            with self.subTest(party_count=party_count, in_party=in_party):
+                self.put("wPartyCount", party_count)
+                self.put("wAddedToParty", int(in_party))
+                mon = f"wPartyMon{party_count}" if in_party else "wBoxMon1"
+                size = self.const("PARTYMON_STRUCT_LENGTH" if in_party else "BOXMON_STRUCT_LENGTH")
+                start = self.address(mon)
+                self.gb.memory[start - 1:start + size + 1] = [0xA5] + [0] * size + [0xA5]
+                self.gb.memory[start] = self.const("PIKACHU")
+                self.call("BillsSecretGardenCustomizePikachu")
+                self.assertEqual(self.get(mon + "Moves", 4), moves)
+                self.assertEqual(self.get(mon + "PP", 4), [15, 15, 20, 30])
+                self.assertEqual(self.get(mon + "DVs", 2), [0xEA, 0xAA])
+                self.assertGreater(sum(self.get(mon + "HP", 2)), 0)
+                if in_party:
+                    self.assertEqual(self.get(mon + "HP", 2), self.get(mon + "MaxHP", 2))
+                self.assertEqual(self.gb.memory[start - 1], 0xA5)
+                self.assertEqual(self.gb.memory[start + size], 0xA5)
+
+    def test_garden_moves_can_be_remembered(self):
+        for species, dvs, received, eligible in (
+                ("PIKACHU", [0xEA, 0xAA], True, True),
+                ("RAICHU", [0xEA, 0xAA], True, True),
+                ("PIKACHU", [0xEA, 0xAA], False, False),
+                ("PIKACHU", [0xEA, 0xAB], True, False),
+                ("EEVEE", [0xEA, 0xAA], True, False)):
+            with self.subTest(species=species, dvs=dvs, received=received):
+                self.set_event("EVENT_GOT_BILLS_GARDEN_PIKACHU", received)
+                self.put("wLoadedMonSpecies", self.const(species))
+                self.put("wLoadedMonLevel", 25)
+                self.put("wLoadedMonDVs", dvs)
+                self.put("wLoadedMonMoves", [0] * 4)
+                self.call("BuildMoveReminderList")
+                count = self.get("wItemList")
+                moves = self.reminder_moves()
+                self.assertEqual(self.const("SURF") in moves, eligible)
+                self.assertEqual(self.const("THUNDERBOLT") in moves, eligible)
+                self.assertLessEqual(count, 14)
+                self.assertEqual(len(moves), len(set(moves)))
+                self.assertEqual(self.gb.memory[self.address("wItemList") + count + 1], 255)
+        self.set_event("EVENT_GOT_BILLS_GARDEN_PIKACHU")
+        self.put("wLoadedMonSpecies", self.const("PIKACHU"))
+        self.put("wLoadedMonDVs", [0xEA, 0xAA])
+        self.put("wLoadedMonMoves", [self.const("SURF"), self.const("THUNDERBOLT"), 0, 0])
+        self.call("BuildMoveReminderList")
+        moves = self.reminder_moves()
+        self.assertNotIn(self.const("SURF"), moves)
+        self.assertNotIn(self.const("THUNDERBOLT"), moves)
+
+
+if __name__ == "__main__":
+    GameplayTests.constants = read_constants()
+    passed = True
+    for path in sys.argv[1:] or ["pokered.gbc"]:
+        GameplayTests.rom = Path(path).resolve()
+        print(f"\nTesting {GameplayTests.rom.name}", flush=True)
+        result = unittest.TextTestRunner(verbosity=2).run(
+            unittest.defaultTestLoader.loadTestsFromTestCase(GameplayTests))
+        passed &= result.wasSuccessful()
+    sys.exit(0 if passed else 1)

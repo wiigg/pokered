@@ -45,6 +45,18 @@ jobs:
           make -j$(nproc) check-save-compat
           .github/checkdiff.sh
 
+      - name: Set up gameplay tests
+        if: ${{ github.repository_owner != 'pret' }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Test gameplay routines
+        if: ${{ github.repository_owner != 'pret' }}
+        run: |
+          python -m pip install -r tests/requirements.txt
+          make check-gameplay PYTHON=python
+
       - name: Checkout symbols
         if: ${{ github.repository_owner == 'pret' && github.event_name == 'push' }}
         uses: actions/checkout@v7

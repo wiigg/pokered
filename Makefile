@@ -36,6 +36,7 @@ RGBDS ?=
 RGBASM  ?= $(RGBDS)rgbasm
 RGBFIX  ?= $(RGBDS)rgbfix
 RGBGFX  ?= $(RGBDS)rgbgfx
+PYTHON  ?= python3
 RGBLINK ?= $(RGBDS)rgblink
 
 RGBASMFLAGS  ?= -Weverything -Wtruncation=1
@@ -58,6 +59,7 @@ RGBGFXFLAGS  ?= -Weverything
 	red_vc \
 	blue_vc \
 	check-save-compat \
+	check-gameplay \
 	clean \
 	tidy \
 	compare \
@@ -69,6 +71,9 @@ blue:       pokeblue.gbc
 blue_debug: pokeblue_debug.gbc
 red_vc:     pokered.patch
 blue_vc:    pokeblue.patch
+
+check-gameplay: $(roms)
+	RGBASM=$(RGBASM) $(PYTHON) tests/gameplay_regressions.py $(roms)
 
 clean: tidy
 	find gfx \

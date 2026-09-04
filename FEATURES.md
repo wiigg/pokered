@@ -18,6 +18,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   DVs. Its notebook hints at friendship evolution, day and night, alternate
   colours, and future PC links, while the pond offers one further glimpse of
   Kanto's future. Bill and an earlier Route 25 clue encourage a return visit.
+  Mr. Psychic can restore this gift's Surf and Thunderbolt, including after
+  evolution or when the Pikachu was received in an earlier build.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;
@@ -192,7 +194,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   boulders offers the matching HM action directly.
 - **Trainer attention:** trainers turn to face the player when they spot them.
 - **Move remembering and forgetting:** Mr. Psychic restores natural level-up
-  moves and removes unwanted moves, including HMs. See
+  moves and the garden gift's special moves, and removes unwanted moves,
+  including HMs. See
   [Mr. Psychic's house](scripts/MrPsychicsHouse.asm).
 - **Automatic PC-box rollover:** a full active box advances to the next box with
   space and saves that selection.
