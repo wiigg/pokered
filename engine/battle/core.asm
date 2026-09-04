@@ -5249,11 +5249,8 @@ AdjustDamageForMoveType:
 .done
 	ret
 
-; function to tell how effective the type of an enemy attack is on the player's current pokemon
-; this doesn't take into account the effects that dual types can have
-; (e.g. 4x weakness / resistance, weaknesses and resistances canceling)
-; the result is stored in [wTypeEffectiveness]
-; as far is can tell, this is only used once in some AI code to help decide which move to use
+; Combine both defending types for AI move scoring. EFFECTIVE (10) is neutral;
+; a double resistance rounds down to 2. Identical types are counted once.
 AIGetTypeEffectiveness:
 	ld a, [wEnemyMoveType]
 	ld d, a                    ; d = type of enemy move
@@ -5261,29 +5258,42 @@ AIGetTypeEffectiveness:
 	ld b, [hl]                 ; b = type 1 of player's pokemon
 	inc hl
 	ld c, [hl]                 ; c = type 2 of player's pokemon
-	; initialize to neutral effectiveness
-	ld a, $10 ; bug: should be EFFECTIVE (10)
-	ld [wTypeEffectiveness], a
+	ld e, EFFECTIVE
 	ld hl, TypeEffects
 .loop
 	ld a, [hli]
 	cp $ff
-	ret z
+	jr z, .done
 	cp d                      ; match the type of the move
 	jr nz, .nextTypePair1
 	ld a, [hli]
 	cp b                      ; match with type 1 of pokemon
-	jr z, .done
+	jr z, .applyMultiplier
 	cp c                      ; or match with type 2 of pokemon
-	jr z, .done
+	jr z, .applyMultiplier
 	jr .nextTypePair2
 .nextTypePair1
 	inc hl
 .nextTypePair2
 	inc hl
 	jr .loop
+.applyMultiplier
+	ld a, [hli]
+	and a
+	jr z, .immune
+	cp SUPER_EFFECTIVE
+	jr z, .weakness
+	cp NOT_VERY_EFFECTIVE
+	jr nz, .loop
+	srl e
+	jr .loop
+.weakness
+	sla e
+	jr .loop
+.immune
+	ld e, NO_EFFECT
 .done
-	ld a, [hl]
+	ld a, e
 	ld [wTypeEffectiveness], a ; store damage multiplier
 	ret
 

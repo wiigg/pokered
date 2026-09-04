@@ -5,6 +5,8 @@ ROM data, banking and RAM writes execute in PyBoy's Game Boy CPU emulator.
 """
 
 import io
+from fractions import Fraction
+from itertools import product
 import os
 from pathlib import Path
 import subprocess
@@ -208,6 +210,42 @@ class GameplayTests(unittest.TestCase):
                 self.call("SubstituteEffect_")
                 self.assertEqual(self.hp(mon + "HP"), maximum)
                 self.assertEqual(self.get(f"w{side}SubstituteHP"), 17)
+    def test_ai_combines_every_type_pair(self):
+        matchups = {}
+        types = set()
+        for line in (ROOT / "data/types/type_matchups.asm").read_text().splitlines():
+            if not line.strip().startswith("db "):
+                continue
+            fields = line.strip().removeprefix("db ").split(",")
+            if len(fields) != 3:
+                continue
+            attack, defence, factor = (self.const(field.strip()) for field in fields)
+            types.update((attack, defence))
+            matchups[attack, defence] = Fraction(factor, 10)
+        for attack, first, second in product(sorted(types), repeat=3):
+            with self.subTest(attack=attack, first=first, second=second):
+                expected = Fraction(10)
+                for defence in {first, second}:
+                    expected *= matchups.get((attack, defence), 1)
+                self.put("wEnemyMoveType", attack)
+                self.put("wBattleMonType", [first, second])
+                self.call("AIGetTypeEffectiveness")
+                self.assertEqual(self.get("wTypeEffectiveness"), int(expected))
+
+    def test_ai_scores_damage_without_status_type_bonuses(self):
+        cases = (
+            (("POISON", "WATER"), ("AGILITY", "PSYCHIC_M", "THUNDER_WAVE", "THUNDERBOLT"), [10, 9, 10, 9]),
+            (("GROUND", "ROCK"), ("AGILITY", "PSYCHIC_M", "THUNDER_WAVE", "THUNDERBOLT"), [10, 10, 10, 11]),
+            (("WATER", "FLYING"), ("ICE_BEAM", "THUNDERBOLT", "THUNDER_WAVE", "AGILITY"), [10, 9, 10, 10]),
+            (("WATER", "ICE"), ("EMBER", "THUNDERBOLT", "THUNDER_WAVE", "AGILITY"), [10, 9, 10, 10]),
+        )
+        for types, moves, expected in cases:
+            with self.subTest(types=types, moves=moves):
+                self.put("wBattleMonType", [self.const(kind) for kind in types])
+                self.put("wEnemyMonMoves", [self.const(move) for move in moves])
+                self.put("wBuffer", [10] * 4)
+                self.call("AIMoveChoiceModification3")
+                self.assertEqual(self.get("wBuffer", 4), expected)
 
 
 if __name__ == "__main__":

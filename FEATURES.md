@@ -229,6 +229,9 @@ Each future gameplay feature or fix should update this file in the same commit.
   reductions.
 - **Dual-type effectiveness messages:** battle text reflects the combined type
   result accurately.
+- **Trainer type scoring:** AI combines both defensive types, including
+  cancelling weaknesses and resistances, and applies type-based move preferences
+  to damaging moves. Status moves keep their own tactical checks.
 - **Skipped-level moves:** a Pokémon gaining several levels from one battle gets
   the chance to learn every move crossed along the way.
 - **Evolution stones:** stone evolutions require the matching stone action.

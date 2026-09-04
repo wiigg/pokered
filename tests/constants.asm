@@ -17,3 +17,26 @@ ENDM
 	test_constant SOFTBOILED
 	test_constant REST
 	test_constant HAS_SUBSTITUTE_UP
+	test_constant NORMAL
+	test_constant FIGHTING
+	test_constant FLYING
+	test_constant POISON
+	test_constant GROUND
+	test_constant ROCK
+	test_constant BUG
+	test_constant GHOST
+	test_constant FIRE
+	test_constant WATER
+	test_constant GRASS
+	test_constant ELECTRIC
+	test_constant PSYCHIC_TYPE
+	test_constant ICE
+	test_constant DRAGON
+	test_constant NO_EFFECT
+	test_constant NOT_VERY_EFFECTIVE
+	test_constant EFFECTIVE
+	test_constant SUPER_EFFECTIVE
+	test_constant AGILITY
+	test_constant PSYCHIC_M
+	test_constant ICE_BEAM
+	test_constant EMBER
