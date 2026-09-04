@@ -1,8 +1,44 @@
 SeafoamIslandsB4F_Script:
+	call SeafoamIslandsB4FAnimateWhirlpool
 	call EnableAutoTextBoxDrawing
 	ld a, [wSeafoamIslandsB4FCurScript]
 	ld hl, SeafoamIslandsB4F_ScriptPointers
 	jp CallFunctionInTable
+
+SeafoamIslandsB4FAnimateWhirlpool:
+	CheckEvent EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS
+	ret nz
+	ld a, [wFontLoaded]
+	bit BIT_FONT_LOADED, a
+	ret nz
+	ld a, [wSprite04StateData1ImageIndex]
+	cp $ff
+	ret z
+	; This still object's unused walking-frame counter is temporary scene state.
+	ld hl, wSprite04StateData1IntraAnimFrameCounter
+	inc [hl]
+	ld a, [hl]
+	and 7
+	ret nz
+	; Seafoam has two four-tile pictures: its boulders, then the whirlpool.
+	assert SEAFOAMISLANDSB4F_WHIRLPOOL == 4
+	ld a, [wSprite04StateData2ImageBaseOffset]
+	cp 12
+	ret nz
+	ld a, [wSprite04StateData1IntraAnimFrameCounter]
+	and $18
+	add a
+	add a
+	add a
+	ld e, a
+	ld d, 0
+	ld hl, WhirlpoolSprite
+	add hl, de
+	ld d, h
+	ld e, l
+	ld hl, vSprites tile $7c
+	lb bc, BANK(WhirlpoolSprite), 4
+	jp CopyVideoData
 
 SeafoamIslandsB4FResetScript:
 	xor a
@@ -159,6 +195,7 @@ SeafoamIslandsB4F_TextPointers:
 	dw_const BoulderText,                       TEXT_SEAFOAMISLANDSB4F_BOULDER1
 	dw_const BoulderText,                       TEXT_SEAFOAMISLANDSB4F_BOULDER2
 	dw_const SeafoamIslandsB4FArticunoText,     TEXT_SEAFOAMISLANDSB4F_ARTICUNO
+	dw_const SeafoamIslandsB4FWhirlpoolText,    TEXT_SEAFOAMISLANDSB4F_WHIRLPOOL
 	dw_const SeafoamIslandsB4FBouldersSignText, TEXT_SEAFOAMISLANDSB4F_BOULDERS_SIGN
 	dw_const SeafoamIslandsB4FDangerSignText,   TEXT_SEAFOAMISLANDSB4F_DANGER_SIGN
 
@@ -196,4 +233,8 @@ SeafoamIslandsB4FDangerSignText:
 
 SeafoamIslandsB4FWhirlpoolCalmedText:
 	text_far _SeafoamIslandsB4FWhirlpoolCalmedText
+	text_end
+
+SeafoamIslandsB4FWhirlpoolText:
+	text_far _SeafoamIslandsB4FWhirlpoolText
 	text_end

@@ -51,6 +51,10 @@ RocketUniformSprite::
 	db $c4, $3c, $44, $bc, $24, $dc, $fc, $fc, $08, $f8, $f8, $f8, $00, $00, $00, $00
 
 
+SECTION "Whirlpool Sprite", ROMX
+
+INCLUDE "gfx/sprites/whirlpool.asm"
+
 SECTION "NPC Sprites 2", ROMX
 
 RedBikeSprite::          INCBIN "gfx/sprites/red_bike.2bpp"

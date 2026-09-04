@@ -19,6 +19,18 @@ _SeafoamIslandsB4FWhirlpoolBiteText::
 	line "the line!"
 	done
 
+_SeafoamIslandsB4FWhirlpoolText::
+	text "Water twists into"
+	line "a dark eye..."
+
+	para "Something pulls"
+	line "far below."
+
+	para "A strong fishing"
+	line "rod might reach"
+	cont "it."
+	done
+
 _SeafoamIslandsB4FWhirlpoolCalmedText::
 	text "The whirlpool"
 	line "slows..."

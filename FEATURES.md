@@ -173,7 +173,9 @@ Each future gameplay feature or fix should update this file in the same commit.
   [Route 10](scripts/Route10.asm), and [Cinnabar Island](scripts/CinnabarIsland.asm).
 - **Seafoam whirlpool Gyarados:** using the Super Rod on one precise deep-water
   tile hooks a catchable level-70 Gyarados with Hydro Pump, Blizzard, Thunder,
-  and Hyper Beam. See
+  and Hyper Beam. A visibly swirling current marks the spot; examining it
+  hints at the rod. The vortex disappears after capture or defeat, leaving
+  ordinary water, and stays clear of players loaded onto its tile. See
   [Seafoam Islands B4F](scripts/SeafoamIslandsB4F.asm).
 - **Escaped Safari Rhyhorn:** a Rhyhorn charges through Fuchsia with the Warden
   in pursuit, leading to a standard catchable battle. See

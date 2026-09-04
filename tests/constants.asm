@@ -77,6 +77,7 @@ ENDM
 	test_constant EVENT_SAW_MT_MOON_MOONFALL_DANCE
 	test_constant EVENT_HEARD_MT_MOON_MOONFALL_RUMBLE
 	test_constant MT_MOON_1F
+	test_constant SEAFOAM_ISLANDS_B4F
 	test_constant NPC_MOVEMENT_UP
 	test_constant NPC_MOVEMENT_DOWN
 	test_constant TOGGLE_MT_MOON_1F_ITEM_2
@@ -108,6 +109,8 @@ ENDM
 	test_constant BIT_WARP_FROM_CUR_SCRIPT
 
 SECTION "Test map object constants", ROMX
+INCLUDE "data/maps/objects/SeafoamIslandsB4F.asm"
+	test_constant SEAFOAMISLANDSB4F_WHIRLPOOL
 INCLUDE "data/maps/objects/BillsSecretGarden.asm"
 	test_constant BILLSSECRETGARDEN_BUTTERFREE
 	test_constant BILLSSECRETGARDEN_PIKACHU

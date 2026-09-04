@@ -239,6 +239,14 @@ IsObjectHidden:
 	swap a
 	ld b, a
 	ld a, [wCurMap]
+	cp SEAFOAM_ISLANDS_B4F
+	jr nz, .checkGarden
+	ld a, b
+	cp SEAFOAMISLANDSB4F_WHIRLPOOL
+	jp nz, .loop
+	call IsSeafoamWhirlpoolHidden
+	jp .done
+.checkGarden
 	cp BILLS_SECRET_GARDEN
 	jr nz, .checkViridianGym
 	ld a, b
@@ -325,6 +333,23 @@ IsObjectHidden:
 .hidden
 .done
 	ldh [hIsToggleableObjectOff], a
+	ret
+
+IsSeafoamWhirlpoolHidden:
+	CheckEvent EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS
+	jr nz, .hidden
+	; Existing saves can be standing on the newly visible current.
+	ld a, [wYCoord]
+	cp 6
+	jr nz, .visible
+	ld a, [wXCoord]
+	cp 23
+	jr z, .hidden
+.visible
+	xor a
+	ret
+.hidden
+	ld a, 1
 	ret
 
 IsBillsGardenButterfreeHidden:

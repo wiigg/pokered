@@ -773,6 +773,47 @@ class GameplayTests(unittest.TestCase):
             self.assertEqual(self.get("hSpriteIndex"), 16)
             self.assertEqual(self.get("wJoyIgnore"), 0xF0)
 
+    def test_seafoam_whirlpool_visibility_and_animation(self):
+        self.put("wCurMap", self.const("SEAFOAM_ISLANDS_B4F"))
+        self.call("MarkTownVisitedAndLoadToggleableObjects")
+        for completed, overlap in product((False, True), repeat=2):
+            self.set_event("EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS", completed)
+            self.put("wXCoord", 23)
+            self.put("wYCoord", 6 if overlap else 7)
+            self.put("hCurrentSpriteOffset", self.const("SEAFOAMISLANDSB4F_WHIRLPOOL") * 16)
+            self.call("IsObjectHidden")
+            self.assertEqual(bool(self.get("hIsToggleableObjectOff")), completed or overlap)
+        self.stub("CopyVideoData")
+        copies = []
+        self.gb.hook_register(*self.symbols["CopyVideoData"],
+                              lambda _: copies.append((self.gb.register_file.D * 256 + self.gb.register_file.E,
+                                                       self.gb.register_file.HL,
+                                                       self.gb.register_file.B * 256 + self.gb.register_file.C)), None)
+        self.set_event("EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS", False)
+        self.put("wSprite04StateData2ImageBaseOffset", 12)
+        self.put("wSprite04StateData1ImageIndex", 0xB0)
+        for frame in (255, 7, 15, 23):
+            self.put("wSprite04StateData1IntraAnimFrameCounter", frame)
+            self.call("SeafoamIslandsB4FAnimateWhirlpool")
+        bank, address = self.symbols["WhirlpoolSprite"]
+        self.assertEqual(copies, [(address + i * 64, 0x87C0, bank * 256 + 4) for i in range(4)])
+        self.set_event("EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS")
+        self.call("SeafoamIslandsB4FAnimateWhirlpool")
+        self.assertEqual(len(copies), 4)
+
+    def test_seafoam_whirlpool_fishing_target_and_completion_gate(self):
+        self.put("wCurMap", self.const("SEAFOAM_ISLANDS_B4F"))
+        self.put("wSpritePlayerStateData1FacingDirection", 4)
+        for completed, position in product((False, True), ((23, 7), (22, 7), (23, 8))):
+            self.set_event("EVENT_BEAT_SEAFOAM_WHIRLPOOL_GYARADOS", completed)
+            self.put("wXCoord", position[0])
+            self.put("wYCoord", position[1])
+            self.put("wSeafoamIslandsB4FCurScript", 0)
+            self.call("CheckSeafoamWhirlpoolFishingSpot")
+            expected = position == (23, 7) and not completed
+            self.assertEqual(bool(self.gb.register_file.F & 0x10), expected)
+            self.assertEqual(bool(self.get("wSeafoamIslandsB4FCurScript")), expected)
+
     def test_rhyhorn_reentry_and_player_overlap(self):
         self.stub("UpdateSprites")
         self.set_event("EVENT_FUCHSIA_RHYHORN_ESCAPED")
