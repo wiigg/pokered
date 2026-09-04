@@ -109,6 +109,24 @@ Each future gameplay feature or fix should update this file in the same commit.
 - **Trade partners remember:** in-game trade NPCs recognise their former
   Pokémon when reunited, including evolved forms. See
   [the shared trade event](engine/events/in_game_trades.asm).
+- **The deserter's second life:** after beating the Underground Path deserter
+  and Giovanni at Silph, a hesitant fisherman and his familiar Raticate appear
+  on the pier north of Route 12's Super Rod house. They now mend nets for an
+  honest living; familiar speech connects this quiet scene to the earlier
+  battle. Both remain hidden if an older save places the player on either
+  new spot, allowing the player to step away. See [Route 12](scripts/Route12.asm).
+- **Saffron's messenger Pidgey:** after beating Giovanni at Silph, speak to
+  Pippi or the resting Pidgey in Saffron's letter-writing household to begin.
+  The south gatehouse guard points towards the dropped letter on the left
+  counter. Deliver it to Pippi, then carry her reply to Pidgey's worried owner
+  in the house just south of Vermilion's Mart. The courier flies home during
+  a fade, and the reunion earns one PP Up. A full bag leaves the reward
+  claimable on a later visit without repeating the reunion. Letters use
+  reserved event flags and take no bag space; the original save layout and
+  item IDs are preserved. See
+  [Saffron's household](scripts/SaffronPidgeyHouse.asm),
+  [Route 6 gate](scripts/Route6Gate.asm), and
+  [Vermilion's household](scripts/VermilionPidgeyHouse.asm).
 - **Erik and Sara find each other:** the two Fuchsia NPCs waiting at different
   gates become a small message-delivery story. See
   [Fuchsia City](scripts/FuchsiaCity.asm).
@@ -192,19 +210,6 @@ Each future gameplay feature or fix should update this file in the same commit.
   the player, warns that Giovanni has gone to Saffron, abandons his uniform, and
   leaves in a flash. His discarded uniform remains as an examinable bundle,
   including on later visits. See [Underground Path](scripts/UndergroundPathWestEast.asm).
-- **The deserter's second life:** after beating the tunnel Grunt and freeing
-  Silph, a hesitant fisherman and his familiar Raticate appear on the pier
-  north of Route 12's Super Rod house. They now mend nets for an honest living.
-  See [Route 12](scripts/Route12.asm).
-- **Saffron's messenger Pidgey:** after Silph's liberation, the letter-writing
-  household shelters an exhausted courier from Vermilion. Recover its letter
-  from the south gatehouse's left counter, deliver it to Pippi, and carry her
-  reply to the worried owner in Vermilion. Pidgey flies home during a fade;
-  the reunion earns one PP Up, with a full-bag retry. Letters use reserved
-  event flags rather than new item IDs. See
-  [Saffron's household](scripts/SaffronPidgeyHouse.asm),
-  [Route 6 gate](scripts/Route6Gate.asm), and
-  [Vermilion's household](scripts/VermilionPidgeyHouse.asm).
 
 ## Red+ conveniences and balance
 
@@ -266,4 +271,5 @@ Each future gameplay feature or fix should update this file in the same commit.
   WRAM layout plus established IDs, covering 1,547 save-sensitive symbols.
 - **Gameplay regression checks:** `make check-gameplay` tests compiled battle
   routines, full-storage gifts, one-time rewards, scripted encounter outcomes,
-  map re-entry and selected dialogue widths across all three builds.
+  multi-map story progress, map re-entry and selected dialogue widths across
+  all three builds.

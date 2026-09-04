@@ -33,6 +33,8 @@ item, or piece of knowledge.
 Characters remember what happened, notice particular lead Pokémon, recognise
 old partners, and respond to the player's progress. Small moments connect
 people, places, fossils, legends, and later discoveries with a light touch.
+Returning characters find new roles, while short delivery stories bring
+familiar households together.
 
 ### A fuller adventure
 
@@ -105,8 +107,9 @@ Compiled ROMs remain local build outputs under the repository's ignore rules.
 
 Focused tests execute compiled routines in a headless Game Boy emulator, with
 isolated in-memory saves. Coverage includes battle mechanics, party/box-full
-gifts, reward retries, scripted battle outcomes, map re-entry and literal
-dialogue width. See [the test guide](tests/README.md) for scope and limitations.
+gifts, reward retries, scripted battle outcomes, multi-map story progress,
+map re-entry and literal dialogue width. See [the test guide](tests/README.md)
+for scope and limitations.
 Install the optional test dependency in a virtual environment, then run:
 
 ```bash

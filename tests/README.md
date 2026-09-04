@@ -18,9 +18,11 @@ Coverage includes:
   during the departure flash.
 - The Route 12 fisherman and Raticate require both the deserter battle and
   Silph's liberation, and stay clear of a player loaded onto either new spot.
-- Pidgey's delivery story: progress gates, either opening conversation, letter
-  pickup and map re-entry, the courier's departure during a fade, reply delivery,
-  and a full-bag reward retry without repeating the reunion or duplicating gifts.
+- Pidgey's delivery story: original household dialogue and movement before
+  Silph, the resting courier afterwards, either opening conversation, the
+  guard's clue, letter pickup and map re-entry, departure during a fade, reply
+  delivery, and a full-bag reward retry without repeating the reunion or
+  duplicating gifts.
 - Progress-sensitive dialogue selection for the Pewter, Celadon and Vermilion
   rumour NPCs, including unavailable and completed mysteries.
 - Healing boundaries, Substitute cost, Transform targeting and every attacking
