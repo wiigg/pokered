@@ -103,6 +103,13 @@ class GameplayTests(unittest.TestCase):
             bank, address = self.symbols[name]
             self.gb.memory[bank, address] = 0xC9  # RET
 
+    def record_dialogue(self):
+        self.stub("PrintText", "TextScriptEnd")
+        printed = []
+        self.gb.hook_register(*self.symbols["PrintText"],
+                              lambda _: printed.append(self.gb.register_file.HL), None)
+        return printed
+
     def call(self, name, offset=0, **registers):
         bank, address = self.symbols[name]
         if offset == 1:
@@ -525,6 +532,56 @@ class GameplayTests(unittest.TestCase):
 
     def test_reward_encounter_and_rumour_dialogue_fits(self):
         self.assertEqual(dialogue_issues(), [])
+
+    def test_pewter_rumour_only_when_moonfall_is_available(self):
+        printed = self.record_dialogue()
+        npc = "PewterCityCooltrainerFText"
+        index = self.const("TOGGLE_MT_MOON_1F_ITEM_2")
+        for nerd_beaten, stone_taken, complete in product((False, True), repeat=3):
+            with self.subTest(nerd_beaten=nerd_beaten, stone_taken=stone_taken, complete=complete):
+                printed.clear()
+                self.set_event("EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD", nerd_beaten)
+                self.set_event("EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY", complete)
+                self.gb.memory[self.address("wToggleableObjectFlags") + index // 8] = (1 << (index % 8)) if stone_taken else 0
+                self.call(npc, offset=1)
+                expected = "MoonfallRumourText" if nerd_beaten and stone_taken and not complete else "OriginalText"
+                self.assertEqual(printed, [self.address(npc + "." + expected)])
+
+    def test_celadon_rumour_matches_the_deserter_window(self):
+        printed = self.record_dialogue()
+        npc = "CeladonCityGramps2Text"
+        for hideout, silph, deserter in product((False, True), repeat=3):
+            with self.subTest(hideout=hideout, silph=silph, deserter=deserter):
+                printed.clear()
+                self.set_event("EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI", hideout)
+                self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI", silph)
+                self.set_event("EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER", deserter)
+                self.call(npc, offset=1)
+                expected = "DeserterRumourText" if hideout and not silph and not deserter else "OriginalText"
+                self.assertEqual(printed, [self.address(npc + "." + expected)])
+
+    def test_vermilion_sailor_gives_one_current_lead(self):
+        printed = self.record_dialogue()
+        npc = "VermilionCitySailor2Text"
+        dex_bit = self.const("DEX_MEW") - 1
+        for departed, champion, caught, defeated, moved, sailor_beaten in product((False, True), repeat=6):
+            with self.subTest(departed=departed, champion=champion, caught=caught,
+                              defeated=defeated, moved=moved, sailor_beaten=sailor_beaten):
+                printed.clear()
+                self.set_event("EVENT_SS_ANNE_LEFT", departed)
+                self.put("wElite4Flags", (1 << self.const("BIT_BEAT_ELITE_4")) if champion else 0)
+                self.gb.memory[self.address("wPokedexOwned") + dex_bit // 8] = (1 << (dex_bit % 8)) if caught else 0
+                self.set_event("EVENT_BEAT_VERMILION_DOCK_MEW", defeated)
+                self.set_event("EVENT_MOVED_VERMILION_DOCK_TRUCK", moved)
+                self.set_event("EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR", sailor_beaten)
+                self.call(npc, offset=1)
+                if not departed or not champion:
+                    expected = "OriginalText"
+                elif not caught:
+                    expected = "MewRetryRumourText" if defeated else "MewReturnedRumourText" if moved else "TruckRumourText"
+                else:
+                    expected = "OriginalText" if sailor_beaten else "GhostSailorRumourText"
+                self.assertEqual(printed, [self.address(npc + "." + expected)])
 
 
 if __name__ == "__main__":

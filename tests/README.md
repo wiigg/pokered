@@ -16,6 +16,8 @@ Coverage includes:
   previously caught Mew, with the moved truck preserved.
 - Rhyhorn and Rocket-deserter re-entry, overlap protection, and the uniform swap
   during the departure flash.
+- Progress-sensitive dialogue selection for the Pewter, Celadon and Vermilion
+  rumour NPCs, including unavailable and completed mysteries.
 - Healing boundaries, Substitute cost, Transform targeting and every attacking
   type against every defensive type pair for AI scoring.
 - Quoted dialogue lines in the files listed in

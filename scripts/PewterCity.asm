@@ -199,7 +199,29 @@ PewterCity_TextPointers:
 	dw_const PewterCityYoungsterGoTakeOnBrockText, TEXT_PEWTERCITY_YOUNGSTER_GO_TAKE_ON_BROCK
 
 PewterCityCooltrainerFText:
+	text_asm
+	call .SelectText
+	call PrintText
+	jp TextScriptEnd
+
+.SelectText:
+	ld hl, .OriginalText
+	CheckEvent EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	ret nz
+	CheckEvent EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
+	ret z
+	ld a, [wToggleableObjectFlags + TOGGLE_MT_MOON_1F_ITEM_2 / 8]
+	bit TOGGLE_MT_MOON_1F_ITEM_2 % 8, a
+	ret z
+	ld hl, .MoonfallRumourText
+	ret
+
+.OriginalText:
 	text_far _PewterCityCooltrainerFText
+	text_end
+
+.MoonfallRumourText:
+	text_far _PewterCityMoonfallRumourText
 	text_end
 
 PewterCityCooltrainerMText:

@@ -69,6 +69,11 @@ Each future gameplay feature or fix should update this file in the same commit.
 
 ## Character moments and a reactive Kanto
 
+- **Progress-sensitive rumours:** Pewter's Clefairy enthusiast hints at an
+  available Moonfall ceremony; Celadon's unlucky gambler spots the Rocket
+  deserter; a Vermilion sailor points towards the truck, Mew's League-triggered
+  return, or the unresolved ghost sailor. Each gives one current lead and
+  resumes their original dialogue when their leads are resolved.
 - **Oak's restless final Pokémon:** the unused ball in Oak's lab trembles after
   the opening rival battle and settles after Oak's postgame challenge. See
   [Oak's Lab](scripts/OaksLab.asm).

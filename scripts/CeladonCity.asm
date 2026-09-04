@@ -38,7 +38,28 @@ CeladonCityGirlText:
 	text_end
 
 CeladonCityGramps2Text:
+	text_asm
+	call .SelectText
+	call PrintText
+	jp TextScriptEnd
+
+.SelectText:
+	ld hl, .OriginalText
+	CheckEvent EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI
+	ret z
+	CheckEvent EVENT_BEAT_SILPH_CO_GIOVANNI
+	ret nz
+	CheckEvent EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER
+	ret nz
+	ld hl, .DeserterRumourText
+	ret
+
+.OriginalText:
 	text_far _CeladonCityGramps2Text
+	text_end
+
+.DeserterRumourText:
+	text_far _CeladonCityDeserterRumourText
 	text_end
 
 CeladonCityGramps3Text:

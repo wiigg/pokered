@@ -102,6 +102,43 @@ _VermilionCitySignText::
 	cont "Exquisite Sunsets"
 	done
 
+_VermilionCityTruckRumourText::
+	text "There's an old"
+	line "truck on the dock."
+
+	para "Something taps"
+	line "beneath it when"
+	cont "strong TRAINERs"
+	cont "pass by..."
+	done
+
+_VermilionCityMewRetryRumourText::
+	text "That little one"
+	line "likes a CHAMPION."
+
+	para "Win the LEAGUE"
+	line "again. Then visit"
+	cont "the old dock."
+	done
+
+_VermilionCityMewReturnedRumourText::
+	text "That tapping's"
+	line "started again,"
+	cont "near the dock's"
+	cont "old tyre tracks."
+	done
+
+_VermilionCityGhostSailorRumourText::
+	text "I saw a sailor"
+	line "alone on the dock."
+
+	para "The ship left"
+	line "long ago..."
+
+	para "Who is he"
+	line "waiting for?"
+	done
+
 _VermilionCityNoticeSignText::
 	text "NOTICE!"
 

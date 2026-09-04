@@ -20,6 +20,17 @@ _PewterCityCooltrainerMText::
 	cont "into it!"
 	done
 
+_PewterCityMoonfallRumourText::
+	text "Someone heard"
+	line "tiny footsteps"
+	cont "on MT.MOON's"
+	cont "entrance floor."
+
+	para "In the northwest,"
+	line "right where that"
+	cont "MOON STONE lay..."
+	done
+
 _PewterCitySuperNerd1DidYouCheckOutMuseumText::
 	text "Did you check out"
 	line "the MUSEUM?"

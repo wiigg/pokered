@@ -251,7 +251,53 @@ VermilionCityMachopText:
 	text_end
 
 VermilionCitySailor2Text:
+	text_asm
+	call .SelectText
+	call PrintText
+	jp TextScriptEnd
+
+.SelectText:
+	ld hl, .OriginalText
+	CheckEvent EVENT_SS_ANNE_LEFT
+	ret z
+	ld a, [wElite4Flags]
+	bit BIT_BEAT_ELITE_4, a
+	ret z
+	ld a, [wPokedexOwned + (DEX_MEW - 1) / 8]
+	bit (DEX_MEW - 1) % 8, a
+	jr nz, .checkSailor
+	CheckEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	ld hl, .MewRetryRumourText
+	ret nz
+	CheckEvent EVENT_MOVED_VERMILION_DOCK_TRUCK
+	ld hl, .MewReturnedRumourText
+	ret nz
+	ld hl, .TruckRumourText
+	ret
+.checkSailor
+	CheckEvent EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR
+	ret nz
+	ld hl, .GhostSailorRumourText
+	ret
+
+.OriginalText:
 	text_far _VermilionCitySailor2Text
+	text_end
+
+.TruckRumourText:
+	text_far _VermilionCityTruckRumourText
+	text_end
+
+.MewRetryRumourText:
+	text_far _VermilionCityMewRetryRumourText
+	text_end
+
+.MewReturnedRumourText:
+	text_far _VermilionCityMewReturnedRumourText
+	text_end
+
+.GhostSailorRumourText:
+	text_far _VermilionCityGhostSailorRumourText
 	text_end
 
 VermilionCitySignText:

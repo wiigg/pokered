@@ -70,3 +70,5 @@ ENDM
 	test_constant POTION
 	test_constant DEX_PIKACHU
 	test_constant BIT_BEAT_ELITE_4
+	test_constant EVENT_SS_ANNE_LEFT
+	test_constant EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR

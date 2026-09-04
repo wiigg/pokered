@@ -39,6 +39,18 @@ _CeladonCityGramps3Text::
 	line "dropping by!"
 	prompt
 
+_CeladonCityDeserterRumourText::
+	text "I lost my coins."
+
+	para "That ROCKET looked"
+	line "like he'd lost"
+	cont "something worse."
+
+	para "He ran into the"
+	line "east-west"
+	cont "UNDERGROUND PATH."
+	done
+
 _CeladonCityGramps3ReceivedTM41Text::
 	text "<PLAYER> received"
 	line "@"
