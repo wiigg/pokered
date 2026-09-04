@@ -9,6 +9,8 @@
 	const_export ROUTE12_FISHER5
 	const_export ROUTE12_TM_PAY_DAY
 	const_export ROUTE12_IRON
+	const_export ROUTE12_REFORMED_FISHER
+	const_export ROUTE12_RATICATE
 
 Route12_Object:
 	db $43 ; border block
@@ -34,5 +36,7 @@ Route12_Object:
 	object_event  6, 87, SPRITE_FISHER, STAY, DOWN, TEXT_ROUTE12_FISHER5, OPP_FISHER, 11
 	object_event 14, 35, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE12_TM_PAY_DAY, TM_PAY_DAY
 	object_event  5, 89, SPRITE_POKE_BALL, STAY, NONE, TEXT_ROUTE12_IRON, IRON
+	object_event 13, 72, SPRITE_FISHER, STAY, UP, TEXT_ROUTE12_REFORMED_FISHER
+	object_event 12, 72, SPRITE_MONSTER, STAY, DOWN, TEXT_ROUTE12_RATICATE
 
 	def_warps_to ROUTE_12

@@ -16,6 +16,8 @@ Coverage includes:
   previously caught Mew, with the moved truck preserved.
 - Rhyhorn and Rocket-deserter re-entry, overlap protection, and the uniform swap
   during the departure flash.
+- The Route 12 fisherman and Raticate require both the deserter battle and
+  Silph's liberation, and stay clear of a player loaded onto either new spot.
 - Progress-sensitive dialogue selection for the Pewter, Celadon and Vermilion
   rumour NPCs, including unavailable and completed mysteries.
 - Healing boundaries, Substitute cost, Transform targeting and every attacking

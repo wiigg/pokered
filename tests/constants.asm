@@ -44,6 +44,7 @@ ENDM
 	test_constant TRANSFORMED
 	test_constant DITTO
 	test_constant UNDERGROUND_PATH_WEST_EAST
+	test_constant ROUTE_12
 	test_constant BIT_CUR_MAP_LOADED_1
 	test_constant EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI
 	test_constant EVENT_BEAT_SILPH_CO_GIOVANNI
@@ -72,3 +73,8 @@ ENDM
 	test_constant BIT_BEAT_ELITE_4
 	test_constant EVENT_SS_ANNE_LEFT
 	test_constant EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR
+
+SECTION "Test Route 12 object constants", ROMX
+INCLUDE "data/maps/objects/Route12.asm"
+	test_constant ROUTE12_REFORMED_FISHER
+	test_constant ROUTE12_RATICATE

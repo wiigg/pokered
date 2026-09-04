@@ -54,6 +54,35 @@ _Route12SnorlaxCalmedDownText::
 	cont "to the mountains!"
 	done
 
+_Route12ReformedFisherText::
+	text "Y-you're the kid..."
+	line "Oh. It's you."
+
+	para "RATICATE and I"
+	line "mend fishing nets."
+
+	para "He's better at"
+	line "making holes than"
+	cont "fixing them."
+
+	para "My first honest"
+	line "pay. Funny how"
+	cont "heavy it feels."
+
+	para "No need to keep"
+	line "running, eh?"
+	done
+
+_Route12RaticateCryText::
+	text "RATICATE: Kikii!@"
+	text_end
+
+_Route12RaticateText::
+	text "RATICATE holds a"
+	line "bit of fishing"
+	cont "line in its teeth."
+	done
+
 _Route12Fisher1BattleText::
 	text "Yeah! I got a"
 	line "bite, here!"

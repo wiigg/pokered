@@ -192,6 +192,10 @@ Each future gameplay feature or fix should update this file in the same commit.
   the player, warns that Giovanni has gone to Saffron, abandons his uniform, and
   leaves in a flash. His discarded uniform remains as an examinable bundle,
   including on later visits. See [Underground Path](scripts/UndergroundPathWestEast.asm).
+- **The deserter's second life:** after beating the tunnel Grunt and freeing
+  Silph, a hesitant fisherman and his familiar Raticate appear on the pier
+  north of Route 12's Super Rod house. They now mend nets for an honest living.
+  See [Route 12](scripts/Route12.asm).
 
 ## Red+ conveniences and balance
 

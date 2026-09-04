@@ -73,10 +73,30 @@ Route12_TextPointers:
 	dw_const Route12Fisher5Text,           TEXT_ROUTE12_FISHER5
 	dw_const PickUpItemText,               TEXT_ROUTE12_TM_PAY_DAY
 	dw_const PickUpItemText,               TEXT_ROUTE12_IRON
+	dw_const Route12ReformedFisherText,    TEXT_ROUTE12_REFORMED_FISHER
+	dw_const Route12RaticateText,          TEXT_ROUTE12_RATICATE
 	dw_const Route12SignText,              TEXT_ROUTE12_SIGN
 	dw_const Route12SportFishingSignText,  TEXT_ROUTE12_SPORT_FISHING_SIGN
 	dw_const Route12SnorlaxWokeUpText,     TEXT_ROUTE12_SNORLAX_WOKE_UP
 	dw_const Route12SnorlaxCalmedDownText, TEXT_ROUTE12_SNORLAX_CALMED_DOWN
+
+Route12ReformedFisherText:
+	text_far _Route12ReformedFisherText
+	text_end
+
+Route12RaticateText:
+	text_far _Route12RaticateCryText
+	text_asm
+	ld a, RATICATE
+	call PlayCry
+	call WaitForSoundToFinish
+	ld hl, .Text
+	call PrintText
+	jp TextScriptEnd
+
+.Text:
+	text_far _Route12RaticateText
+	text_end
 
 Route12TrainerHeaders:
 	def_trainers 2

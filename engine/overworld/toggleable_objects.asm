@@ -248,11 +248,22 @@ IsObjectHidden:
 	jr .done
 .checkFuchsiaCity
 	cp FUCHSIA_CITY
-	jr nz, .loop
+	jr nz, .checkRoute12
 	ld a, b
 	cp FUCHSIACITY_SARA
 	jr nz, .loop
 	call IsFuchsiaCitySaraHidden
+	jr .done
+.checkRoute12
+	cp ROUTE_12
+	jr nz, .loop
+	ld a, b
+	cp ROUTE12_REFORMED_FISHER
+	jr z, .secondLife
+	cp ROUTE12_RATICATE
+	jr nz, .loop
+.secondLife
+	call IsRoute12SecondLifeHidden
 	jr .done
 .loop
 	ld hl, wToggleableObjectList
@@ -300,6 +311,28 @@ IsViridianGymBlueHidden:
 	ret
 .hidden
 	ld a, 1
+	ret
+
+IsRoute12SecondLifeHidden:
+	CheckEvent EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER
+	jr z, .hidden
+	CheckEvent EVENT_BEAT_SILPH_CO_GIOVANNI
+	jr z, .hidden
+	; Leave room to step away if an older save places the player on either NPC.
+	ld a, [wYCoord]
+	cp 72
+	jr nz, .visible
+	ld a, [wXCoord]
+	cp 12
+	jr z, .hidden
+	cp 13
+	jr z, .hidden
+.visible
+	xor a
+	ret
+.hidden
+	ld a, 1
+	and a
 	ret
 
 IsFuchsiaCitySaraHidden:

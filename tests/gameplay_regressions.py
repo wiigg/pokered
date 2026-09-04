@@ -523,6 +523,25 @@ class GameplayTests(unittest.TestCase):
                     self.assertEqual(self.object_hidden("TOGGLE_FUCHSIA_CITY_CHASING_WARDEN"), hidden)
 
 
+    def test_deserter_second_life_visibility_and_overlap(self):
+        self.put("wCurMap", self.const("ROUTE_12"))
+        self.call("MarkTownVisitedAndLoadToggleableObjects")
+        original_toggles = self.get("wToggleableObjectList", 7)
+        for deserter, silph in product((False, True), repeat=2):
+            self.set_event("EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER", deserter)
+            self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI", silph)
+            for x, y in ((12, 72), (13, 72), (12, 73), (13, 71)):
+                for npc in ("ROUTE12_REFORMED_FISHER", "ROUTE12_RATICATE"):
+                    with self.subTest(deserter=deserter, silph=silph, position=(x, y), npc=npc):
+                        self.put("wXCoord", x)
+                        self.put("wYCoord", y)
+                        self.put("hCurrentSpriteOffset", self.const(npc) * 16)
+                        self.call("IsObjectHidden")
+                        self.assertEqual(bool(self.get("hIsToggleableObjectOff")),
+                                         not (deserter and silph) or y == 72)
+        self.assertEqual(self.get("wToggleableObjectList", 7), original_toggles)
+        self.assertEqual(self.get("wCurOpponent"), 0)
+
     def test_dialogue_width_token_accounting(self):
         self.assertEqual(line_width("#MON"), 7)
         self.assertEqual(line_width("<PLAYER> received"), 16)
