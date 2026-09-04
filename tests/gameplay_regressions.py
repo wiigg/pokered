@@ -82,6 +82,10 @@ class GameplayTests(unittest.TestCase):
         start = self.address("wItemList") + 1
         return [self.gb.memory[start + i] for i in range(self.get("wItemList"))]
 
+    def event_set(self, name):
+        event = self.const(name)
+        return bool(self.gb.memory[self.address("wEventFlags") + event // 8] & (1 << (event % 8)))
+
     def object_hidden(self, name):
         index = self.const(name)
         return bool(self.gb.memory[self.address("wToggleableObjectFlags") + index // 8] & (1 << (index % 8)))
@@ -345,6 +349,28 @@ class GameplayTests(unittest.TestCase):
                     self.assertEqual(flashes, [("out", False, True), ("in", True, False)])
                     for field in ("StateData2MapY", "StateData2MapX", "StateData1YPixels", "StateData1XPixels"):
                         self.assertEqual(self.get("wSprite02" + field), self.get("wSprite01" + field))
+
+
+    def test_league_reopens_only_uncaught_mew_before_saving(self):
+        self.stub("Delay3", "HallOfFamePC", "SaveGameData", "DelayFrames",
+                  "WaitForTextScrollButtonPress", "Init")
+        states_at_save = []
+        self.gb.hook_register(*self.symbols["SaveGameData"],
+                              lambda _: states_at_save.append(self.event_set("EVENT_BEAT_VERMILION_DOCK_MEW")), None)
+        dex_bit = self.const("DEX_MEW") - 1
+        dex_address = self.address("wPokedexOwned") + dex_bit // 8
+        for completed, owned, truck_moved in product((False, True), repeat=3):
+            with self.subTest(completed=completed, owned=owned, truck_moved=truck_moved):
+                states_at_save.clear()
+                self.set_event("EVENT_BEAT_VERMILION_DOCK_MEW", completed)
+                self.set_event("EVENT_MOVED_VERMILION_DOCK_TRUCK", truck_moved)
+                self.gb.memory[dex_address] = (1 << (dex_bit % 8)) if owned else 0
+                self.put("wNumHoFTeams", 50)
+                self.call("HallOfFameResetEventsAndSaveScript")
+                self.assertEqual(states_at_save, [completed and owned])
+                self.assertEqual(self.event_set("EVENT_BEAT_VERMILION_DOCK_MEW"), completed and owned)
+                self.assertEqual(self.event_set("EVENT_MOVED_VERMILION_DOCK_TRUCK"), truck_moved)
+                self.assertEqual(bool(self.gb.memory[dex_address] & (1 << (dex_bit % 8))), owned)
 
 
 if __name__ == "__main__":

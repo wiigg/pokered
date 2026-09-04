@@ -43,6 +43,7 @@ HallOfFameResetEventsAndSaveScript:
 	ld [wHallOfFameCurScript], a
 	; Elite 4 events
 	ResetEventRange INDIGO_PLATEAU_EVENTS_START, INDIGO_PLATEAU_EVENTS_END, 1
+	call HallOfFameReopenMewEncounter
 	xor a
 	ld [wHallOfFameCurScript], a
 	ld a, PALLET_TOWN
@@ -56,6 +57,17 @@ HallOfFameResetEventsAndSaveScript:
 	jr nz, .delayLoop
 	call WaitForTextScrollButtonPress
 	jp Init
+
+HallOfFameReopenMewEncounter:
+	; The old encounter flag covers both capture and defeat. The owned record
+	; distinguishes them on existing saves and remains set after trading/release.
+	CheckEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	ret z
+	ld a, [wPokedexOwned + (DEX_MEW - 1) / 8]
+	bit (DEX_MEW - 1) % 8, a
+	ret nz
+	ResetEvent EVENT_BEAT_VERMILION_DOCK_MEW
+	ret
 
 HallOfFameDefaultScript:
 	ld a, PAD_BUTTONS | PAD_CTRL_PAD

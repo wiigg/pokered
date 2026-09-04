@@ -10,6 +10,8 @@ Each future gameplay feature or fix should update this file in the same commit.
 
 - **Mew under the truck:** the postgame [Vermilion Dock truck](scripts/VermilionDock.asm)
   can finally be moved with Strength, revealing a catchable level-30 Mew.
+  If Mew is defeated, another League victory brings it back. Running or losing
+  allows an immediate retry; a recorded capture keeps the encounter complete.
 - **White Hand:** Lavender Town's old rumour leads to a hidden Haunter encounter
   in [Lavender Town](scripts/LavenderTown.asm).
 - **Bill's Secret Garden:** Bill eventually opens a postgame garden carved into
