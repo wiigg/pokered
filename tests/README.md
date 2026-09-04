@@ -22,6 +22,8 @@ Coverage includes:
   precise fishing target before and after the encounter is completed.
 - Legendary visitor departures, blackout bypass, control and palette/camera
   cleanup, with the original legendary encounter flags unchanged.
+- Copycat's repeat challenges, current-level matching, first-victory retention,
+  sprite/control restoration and one-time TM reward, including a full bag.
 - Capture, defeat, escape, unresolved battle and blackout outcomes for Mew,
   White Hand, the Mansion Ditto, Seafoam Gyarados and escaped Fuchsia Rhyhorn.
 - Mew's League reset before saving, including older completed encounters and

@@ -851,6 +851,77 @@ class GameplayTests(unittest.TestCase):
             self.assertEqual(self.get("hSCX"), 13)
             self.assertEqual(self.gb.memory[0xFF47], 0xE4)
 
+    def test_copycat_rematches_preserve_victory_and_restore_sprite(self):
+        self.record_dialogue()
+        self.stub("YesNoChoice", "PlaySound", "WaitForSoundToFinish", "PlayTrainerMusic",
+                  "ReloadMapSpriteTilePatterns")
+        self.set_event("EVENT_GOT_TM31")
+        self.put("wMapSpriteExtraData", [self.const("OPP_COPYCAT"), 1])
+        for previous_win, accept, blackout in product((False, True), repeat=3):
+            self.set_event("EVENT_BEAT_COPYCAT", previous_win)
+            self.put("wCurrentMenuItem", 0 if accept else 1)
+            self.put("wCopycatsHouse2FCurScript", 0)
+            self.put("wCurMapScript", 0)
+            self.put("wSprite01StateData1PictureID", self.const("SPRITE_BRUNETTE_GIRL"))
+            self.call("CopycatsHouse2FCopycatText", offset=1)
+            self.assertEqual(self.event_set("EVENT_BEAT_COPYCAT"), previous_win)
+            self.assertTrue(self.event_set("EVENT_GOT_TM31"))
+            self.assertEqual(self.get("wCopycatsHouse2FCurScript"), 2 if accept else 0)
+            self.assertEqual(self.get("wSprite01StateData1PictureID"),
+                             self.const("SPRITE_RED" if accept else "SPRITE_BRUNETTE_GIRL"))
+            if accept:
+                self.assertEqual(self.get("wCurOpponent"), self.const("OPP_COPYCAT"))
+                self.assertEqual(self.get("wTrainerNo"), 1)
+                self.put("wIsInBattle", 255 if blackout else 0)
+                self.call("CopycatsHouse2FEndBattleScript")
+                self.assertEqual(self.event_set("EVENT_BEAT_COPYCAT"), previous_win or not blackout)
+                self.assertEqual(self.get("wCopycatsHouse2FCurScript"), 0)
+                self.assertEqual(self.get("wCurMapScript"), 0)
+                self.assertEqual(self.get("wJoyIgnore"), 0)
+                self.assertEqual(self.get("wSprite01StateData1PictureID"),
+                                 self.const("SPRITE_BRUNETTE_GIRL"))
+
+    def test_copycat_tm_full_bag_retry_and_rematch_do_not_duplicate_reward(self):
+        self.record_dialogue()
+        self.stub("YesNoChoice")
+        self.gb.hook_register(*self.symbols["YesNoChoice"],
+                              lambda _: self.put("wCurrentMenuItem", 1), None)
+        self.put("wCurrentMenuItem", 1)
+        self.put("wNumBagItems", 20)
+        self.put("wBagItems", [self.const("POKE_DOLL"), 1] +
+                 [self.const("POTION"), 99] * 19 + [255])
+        self.call("CopycatsHouse2FCopycatText", offset=1)
+        self.assertFalse(self.event_set("EVENT_GOT_TM31"))
+        self.assertEqual(self.get("wBagItems", 2), [self.const("POKE_DOLL"), 1])
+        self.put("wNumBagItems", 1)
+        self.put("wBagItems", [self.const("POKE_DOLL"), 1, 255])
+        self.call("CopycatsHouse2FCopycatText", offset=1)
+        self.assertTrue(self.event_set("EVENT_GOT_TM31"))
+        self.assertEqual(self.get("wNumBagItems"), 1)
+        self.assertEqual(self.get("wBagItems", 3), [self.const("TM_MIMIC"), 1, 255])
+        for won in (False, True):
+            self.set_event("EVENT_BEAT_COPYCAT", won)
+            self.call("CopycatsHouse2FCopycatText", offset=1)
+            self.assertEqual(self.get("wBagItems", 3), [self.const("TM_MIMIC"), 1, 255])
+
+    def test_copycat_matches_the_current_first_conscious_pokemon(self):
+        self.stub("AddPartyMon", "ReadTrainer.FinishUp")
+        opponents = []
+        self.gb.hook_register(*self.symbols["AddPartyMon"],
+                              lambda _: opponents.append((self.get("wCurPartySpecies"),
+                                                           self.get("wCurEnemyLevel"))), None)
+        self.put("wCurOpponent", self.const("OPP_COPYCAT"))
+        self.put("wTrainerNo", 1)
+        self.put("wPartyCount", 2)
+        for first_hp, first_level, second_level in ((30, 18, 65), (30, 42, 65), (0, 42, 65)):
+            opponents.clear()
+            self.put_hp("wPartyMon1HP", first_hp)
+            self.put_hp("wPartyMon2HP", 30)
+            self.put("wPartyMon1Level", first_level)
+            self.put("wPartyMon2Level", second_level)
+            self.call("ReadTrainer")
+            self.assertEqual(opponents, [(self.const("DITTO"), first_level if first_hp else second_level)])
+
     def test_rhyhorn_reentry_and_player_overlap(self):
         self.stub("UpdateSprites")
         self.set_event("EVENT_FUCHSIA_RHYHORN_ESCAPED")

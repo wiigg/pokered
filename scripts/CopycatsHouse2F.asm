@@ -78,10 +78,7 @@ CopycatsHouse2FCopycatText:
 	call PlaySound
 	call WaitForSoundToFinish
 	call CopycatsHouse2FTransformCopycatSprite
-	ld a, COPYCATSHOUSE2F_COPYCAT
-	ld [wSpriteIndex], a
-	ld hl, CopycatsHouse2FTrainerHeader
-	call TalkToTrainer
+	call CopycatsHouse2FStartMirrorBattle
 	ld a, [wCurMapScript]
 	ld [wCopycatsHouse2FCurScript], a
 	jr .done
@@ -90,8 +87,9 @@ CopycatsHouse2FCopycatText:
 	call PrintText
 	jr .done
 .afterBattle
-	ld hl, CopycatsHouse2FTrainerHeader
-	call TalkToTrainer
+	ld hl, CopycatsHouse2FCopycatAfterBattleText
+	call PrintText
+	jp .offerMirrorBattle
 .done
 	jp TextScriptEnd
 
@@ -131,6 +129,26 @@ CopycatsHouse2FCopycatText:
 .MirrorTransformText:
 	text_far _CopycatsHouse2FMirrorTransformText
 	text_end
+
+CopycatsHouse2FStartMirrorBattle:
+	; Keep the first victory recorded even if a later rematch is lost.
+	ld hl, CopycatsHouse2FTrainerHeader
+	call StoreTrainerHeaderPointer
+	xor a ; TRAINER_EVENT_FLAG_BIT
+	call ReadTrainerHeaderInfo
+	ld hl, CopycatsHouse2FCopycatBattleText
+	call PrintText
+	ld hl, CopycatsHouse2FCopycatEndBattleText
+	ld de, CopycatsHouse2FCopycatEndBattleText
+	call SaveEndBattleTextPointers
+	ld a, COPYCATSHOUSE2F_COPYCAT
+	ld [wSpriteIndex], a
+	call EngageMapTrainer
+	ld hl, wStatusFlags7
+	set BIT_USE_CUR_MAP_SCRIPT, [hl]
+	ld a, SCRIPT_COPYCATSHOUSE2F_START_BATTLE
+	ld [wCurMapScript], a
+	jp StartTrainerBattle
 
 CopycatsHouse2FTransformCopycatSprite:
 	ld a, SPRITE_RED

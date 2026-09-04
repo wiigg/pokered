@@ -216,7 +216,9 @@ Each future gameplay feature or fix should update this file in the same commit.
   Gyarados, then pays a ¥500 dividend. See
   [Mt. Moon Pokémon Centre](scripts/MtMoonPokecenter.asm).
 - **Copycat's mirror battle:** after receiving her Poké Doll, Copycat imitates
-  the player's appearance and battles with a level-matched Ditto. See
+  the player's appearance and offers repeat battles with a Ditto matched to
+  the first conscious party Pokémon's current level. Her TM reward remains
+  one-time, and declining or losing a rematch preserves the first victory. See
   [Copycat's house](scripts/CopycatsHouse2F.asm).
 - **Celadon rooftop trainer:** the girl who gives drink TMs reveals a much
   stronger Dewgong, Graveler, and Porygon team after receiving all three drinks.

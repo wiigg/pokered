@@ -51,6 +51,14 @@ ENDM
 	test_constant INVULNERABLE
 	test_constant TRANSFORMED
 	test_constant DITTO
+	test_constant COPYCATS_HOUSE_2F
+	test_constant EVENT_BEAT_COPYCAT
+	test_constant EVENT_GOT_TM31
+	test_constant OPP_COPYCAT
+	test_constant SPRITE_RED
+	test_constant SPRITE_BRUNETTE_GIRL
+	test_constant TM_MIMIC
+	test_constant POKE_DOLL
 	test_constant UNDERGROUND_PATH_WEST_EAST
 	test_constant ROUTE_12
 	test_constant BIT_CUR_MAP_LOADED_1

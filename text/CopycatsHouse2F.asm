@@ -63,7 +63,7 @@ _CopycatsHouse2FCopycatTM31NoRoomText::
 	text_end
 
 _CopycatsHouse2FMirrorChallengeText::
-	text "COPYCAT: Wait!"
+	text "COPYCAT: Hey!"
 	line "Let's play a"
 	cont "mirror game!"
 
