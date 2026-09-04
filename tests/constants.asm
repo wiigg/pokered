@@ -13,3 +13,7 @@ ENDM
 	test_constant PARTYMON_STRUCT_LENGTH
 	test_constant BOXMON_STRUCT_LENGTH
 	test_constant EVENT_GOT_BILLS_GARDEN_PIKACHU
+	test_constant RECOVER
+	test_constant SOFTBOILED
+	test_constant REST
+	test_constant HAS_SUBSTITUTE_UP

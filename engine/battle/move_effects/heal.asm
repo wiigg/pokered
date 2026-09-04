@@ -11,12 +11,13 @@ HealEffect_:
 .healEffect
 	ld b, a
 	ld a, [de]
-	cp [hl] ; most significant bytes comparison is ignored
-	        ; causes the move to miss if max HP is 255 or 511 points higher than the current HP
+	xor [hl]
+	ld c, a
 	inc de
 	inc hl
 	ld a, [de]
-	sbc [hl]
+	xor [hl]
+	or c
 	jp z, .failed ; no effect if user's HP is already at its maximum
 	ld a, b
 	cp REST

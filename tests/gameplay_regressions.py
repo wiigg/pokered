@@ -80,6 +80,12 @@ class GameplayTests(unittest.TestCase):
         start = self.address("wItemList") + 1
         return [self.gb.memory[start + i] for i in range(self.get("wItemList"))]
 
+    def put_hp(self, name, value):
+        self.put(name, list(value.to_bytes(2, "big")))
+
+    def hp(self, name):
+        return int.from_bytes(self.get(name, 2), "big")
+
     def stub(self, *names):
         for name in names:
             bank, address = self.symbols[name]
@@ -152,6 +158,30 @@ class GameplayTests(unittest.TestCase):
         moves = self.reminder_moves()
         self.assertNotIn(self.const("SURF"), moves)
         self.assertNotIn(self.const("THUNDERBOLT"), moves)
+
+    def test_healing_hp_boundaries(self):
+        self.stub("DelayFrames", "PrintText", "EffectCallBattleCore", "UpdateHPBar2")
+        for turn in (0, 1):
+            mon = "wEnemyMon" if turn else "wBattleMon"
+            other = "wBattleMon" if turn else "wEnemyMon"
+            for move in ("RECOVER", "SOFTBOILED", "REST"):
+                for current, maximum in ((45, 300), (89, 600), (1, 256), (1, 512),
+                                         (44, 300), (46, 300), (299, 300), (300, 300),
+                                         (255, 255), (256, 256), (100, 301)):
+                    with self.subTest(turn=turn, move=move, hp=(current, maximum)):
+                        self.put("hWhoseTurn", turn)
+                        self.put("wEnemyMoveNum" if turn else "wPlayerMoveNum", self.const(move))
+                        self.put_hp(mon + "HP", current)
+                        self.put_hp(mon + "MaxHP", maximum)
+                        self.put_hp(other + "HP", 77)
+                        self.put(mon + "Status", 8)
+                        self.call("HealEffect_")
+                        healed = maximum if move == "REST" else min(maximum, current + maximum // 2)
+                        self.assertEqual(self.hp(mon + "HP"), healed)
+                        self.assertEqual(self.hp(other + "HP"), 77)
+                        expected_status = 2 if move == "REST" and current < maximum else 8
+                        self.assertEqual(self.get(mon + "Status"), expected_status)
+
 
 
 if __name__ == "__main__":
