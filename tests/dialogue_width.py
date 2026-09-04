@@ -14,6 +14,7 @@ DIALOGUE_FILES = (
     "BillsSecretGarden", "VermilionDock", "UndergroundPathRoute8", "LavenderTown",
     "MtMoon1F", "PokemonMansionB1F", "SeafoamIslandsB4F", "FuchsiaCity",
     "PewterCity", "CeladonCity", "VermilionCity", "Route12",
+    "SaffronPidgeyHouse", "VermilionPidgeyHouse",
 )
 TOKENS = sorted(re.findall(r'^\s*charmap "([^"]+)",',
                           (ROOT / "constants/charmap.asm").read_text(), re.M), key=len, reverse=True)

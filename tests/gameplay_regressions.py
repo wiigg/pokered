@@ -542,6 +542,119 @@ class GameplayTests(unittest.TestCase):
         self.assertEqual(self.get("wToggleableObjectList", 7), original_toggles)
         self.assertEqual(self.get("wCurOpponent"), 0)
 
+    def test_pidgey_delivery_starts_from_either_saffron_npc_after_silph(self):
+        printed = self.record_dialogue()
+        self.stub("PlayCry", "WaitForSoundToFinish")
+        girl = "SaffronPidgeyHouseBrunetteGirlText"
+        bird = "SaffronPidgeyHousePidgeyText"
+        owner = "VermilionPidgeyHouseYoungsterText"
+        for npc in (girl, bird, owner):
+            self.call(npc, offset=1)
+            self.assertEqual(printed[-1], self.address(npc + ".OriginalText"))
+            self.assertFalse(self.event_set("EVENT_STARTED_PIDGEY_DELIVERY"))
+        self.call("Route6GateLostLetterText", offset=1)
+        self.assertFalse(self.event_set("EVENT_FOUND_PIDGEY_LETTER"))
+        self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI")
+        self.call(owner, offset=1)
+        self.assertEqual(printed[-1], self.address(owner + ".WorriedText"))
+        for npc, dialogue in ((girl, ".ExhaustedText"), (bird, ".TiredText")):
+            self.set_event("EVENT_STARTED_PIDGEY_DELIVERY", False)
+            self.call(npc, offset=1)
+            self.assertTrue(self.event_set("EVENT_STARTED_PIDGEY_DELIVERY"))
+            self.assertEqual(printed[-1], self.address(npc + dialogue))
+            self.call(girl, offset=1)
+            self.assertEqual(printed[-1], self.address(girl + ".GateHintText"))
+        self.assertEqual(self.get("wCurOpponent"), 0)
+
+    def test_pidgey_rests_only_during_the_new_story(self):
+        self.stub("EnableAutoTextBoxDrawing")
+        for silph in (False, True):
+            self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI", silph)
+            self.put("wSprite02StateData2MovementByte1", self.const("WALK"))
+            self.call("SaffronPidgeyHouse_Script")
+            self.assertEqual(self.get("wSprite02StateData2MovementByte1"),
+                             self.const("STAY" if silph else "WALK"))
+
+    def test_pidgey_delivery_objects_follow_progress_on_reentry(self):
+        for silph, started, found, delivered in product((False, True), repeat=4):
+            for event, value in (("EVENT_BEAT_SILPH_CO_GIOVANNI", silph),
+                                 ("EVENT_STARTED_PIDGEY_DELIVERY", started),
+                                 ("EVENT_FOUND_PIDGEY_LETTER", found),
+                                 ("EVENT_DELIVERED_PIDGEY_LETTER", delivered)):
+                self.set_event(event, value)
+            for map_name, npc, hidden in (
+                    ("SAFFRON_PIDGEY_HOUSE", "SAFFRONPIDGEYHOUSE_PIDGEY", delivered),
+                    ("VERMILION_PIDGEY_HOUSE", "VERMILIONPIDGEYHOUSE_PIDGEY", silph and not delivered),
+                    ("ROUTE_6_GATE", "ROUTE6GATE_LOST_LETTER", not started or found)):
+                with self.subTest(map=map_name, silph=silph, started=started, found=found, delivered=delivered):
+                    self.put("wCurMap", self.const(map_name))
+                    self.call("MarkTownVisitedAndLoadToggleableObjects")
+                    self.put("hCurrentSpriteOffset", self.const(npc) * 16)
+                    self.call("IsObjectHidden")
+                    self.assertEqual(bool(self.get("hIsToggleableObjectOff")), hidden)
+                    # Each household's owner and the gate guard keep their original visibility.
+                    self.put("hCurrentSpriteOffset", 16)
+                    self.call("IsObjectHidden")
+                    self.assertEqual(self.get("hIsToggleableObjectOff"), 0)
+
+    def test_pidgey_gate_guard_points_to_the_uncollected_letter(self):
+        printed = self.record_dialogue()
+        self.put("wStatusFlags1", 1 << self.const("BIT_GAVE_SAFFRON_GUARDS_DRINK"))
+        for started, found in product((False, True), repeat=2):
+            self.set_event("EVENT_STARTED_PIDGEY_DELIVERY", started)
+            self.set_event("EVENT_FOUND_PIDGEY_LETTER", found)
+            self.call("Route6GateGuardText", offset=1)
+            expected = ("Route6GateGuardText.LetterHintText" if started and not found
+                        else "SaffronGateGuardThanksForTheDrinkText")
+            self.assertEqual(printed[-1], self.address(expected))
+            self.assertEqual(self.get("wRoute6GateCurScript"), 0)
+
+    def test_pidgey_delivery_full_bag_departure_and_reunion(self):
+        printed = self.record_dialogue()
+        self.stub("UpdateSprites", "PlayCry", "WaitForSoundToFinish",
+                  "GBFadeOutToWhite", "GBFadeInFromWhite")
+        flashes = []
+        for name, phase in (("GBFadeOutToWhite", "out"), ("GBFadeInFromWhite", "in")):
+            self.gb.hook_register(*self.symbols[name],
+                                  lambda phase: flashes.append((phase, self.event_set("EVENT_DELIVERED_PIDGEY_LETTER"))), phase)
+        girl = "SaffronPidgeyHouseBrunetteGirlText"
+        owner = "VermilionPidgeyHouseYoungsterText"
+        self.put("wNumBagItems", 20)
+        self.put("wBagItems", [value for item in range(1, 21) for value in (item, 1)] + [255])
+        full_bag = self.get("wBagItems", 41)
+        self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI")
+        self.call(girl, offset=1)
+        self.call("Route6GateLostLetterText", offset=1)
+        self.assertTrue(self.event_set("EVENT_FOUND_PIDGEY_LETTER"))
+        printed.clear()
+        self.call("Route6GateLostLetterText", offset=1)
+        self.assertEqual(printed, [])
+        self.call(girl, offset=1)
+        self.assertEqual(flashes, [("out", False), ("in", True)])
+        self.assertEqual(self.get("wBagItems", 41), full_bag)
+        self.call(girl, offset=1)
+        self.assertEqual(len(flashes), 2)
+        self.assertEqual(printed[-1], self.address(girl + ".ReplyReminderText"))
+        self.call(owner, offset=1)
+        self.assertTrue(self.event_set("EVENT_REUNITED_COURIER_PIDGEY"))
+        self.assertFalse(self.event_set("EVENT_GOT_PIDGEY_DELIVERY_PP_UP"))
+        self.assertEqual(printed[-1], self.address(owner + ".BagFullText"))
+        self.assertEqual(self.get("wBagItems", 41), full_bag)
+        self.put("wNumBagItems", 0)
+        self.put("wBagItems", 255)
+        printed.clear()
+        self.call(owner, offset=1)
+        self.assertNotIn(self.address(owner + ".ReunionText"), printed)
+        self.assertTrue(self.event_set("EVENT_GOT_PIDGEY_DELIVERY_PP_UP"))
+        self.assertEqual(self.get("wBagItems", 3), [self.const("PP_UP"), 1, 255])
+        self.call(owner, offset=1)
+        self.assertEqual(self.get("wBagItems", 3), [self.const("PP_UP"), 1, 255])
+        self.assertEqual(printed[-1], self.address(owner + ".AfterText"))
+        self.call(girl, offset=1)
+        self.assertEqual(printed[-1], self.address(girl + ".ReunitedText"))
+        self.assertEqual(self.get("wJoyIgnore"), 0)
+        self.assertEqual(self.get("wCurOpponent"), 0)
+
     def test_dialogue_width_token_accounting(self):
         self.assertEqual(line_width("#MON"), 7)
         self.assertEqual(line_width("<PLAYER> received"), 16)

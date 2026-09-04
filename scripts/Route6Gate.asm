@@ -68,6 +68,41 @@ Route6GateMovePlayerDownScript:
 
 Route6Gate_TextPointers:
 	def_text_pointers
-	dw_const SaffronGateGuardText,             TEXT_ROUTE6GATE_GUARD
+	dw_const Route6GateGuardText,              TEXT_ROUTE6GATE_GUARD
+	dw_const Route6GateLostLetterText,        TEXT_ROUTE6GATE_LOST_LETTER
 	dw_const SaffronGateGuardGeeImThirstyText, TEXT_ROUTE6GATE_GUARD_GEE_IM_THIRSTY
 	dw_const SaffronGateGuardGiveDrinkText,    TEXT_ROUTE6GATE_GUARD_GIVE_DRINK
+
+Route6GateGuardText:
+	text_asm
+	CheckEvent EVENT_STARTED_PIDGEY_DELIVERY
+	jr z, .original
+	CheckEvent EVENT_FOUND_PIDGEY_LETTER
+	jr nz, .original
+	ld hl, .LetterHintText
+	call PrintText
+	jp TextScriptEnd
+.original
+	jp SaffronGateGuardText.script
+
+.LetterHintText:
+	text_far _Route6GateGuardLetterHintText
+	text_end
+
+Route6GateLostLetterText:
+	text_asm
+	CheckEvent EVENT_STARTED_PIDGEY_DELIVERY
+	jr z, .done
+	CheckEvent EVENT_FOUND_PIDGEY_LETTER
+	jr nz, .done
+	ld hl, .FoundText
+	call PrintText
+	SetEvent EVENT_FOUND_PIDGEY_LETTER
+	call UpdateSprites
+.done
+	jp TextScriptEnd
+
+.FoundText:
+	text_far _Route6GateLostLetterText
+	sound_get_key_item
+	text_end

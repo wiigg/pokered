@@ -256,7 +256,7 @@ IsObjectHidden:
 	jr .done
 .checkRoute12
 	cp ROUTE_12
-	jr nz, .loop
+	jr nz, .checkCourierMaps
 	ld a, b
 	cp ROUTE12_REFORMED_FISHER
 	jr z, .secondLife
@@ -264,6 +264,36 @@ IsObjectHidden:
 	jr nz, .loop
 .secondLife
 	call IsRoute12SecondLifeHidden
+	jr .done
+.checkCourierMaps
+	cp SAFFRON_PIDGEY_HOUSE
+	jr z, .saffronCourier
+	cp VERMILION_PIDGEY_HOUSE
+	jr z, .vermilionCourier
+	cp ROUTE_6_GATE
+	jr nz, .loop
+	ld a, b
+	cp ROUTE6GATE_LOST_LETTER
+	jr nz, .loop
+	call IsRoute6LostLetterHidden
+	jr .done
+.saffronCourier
+	ld a, b
+	cp SAFFRONPIDGEYHOUSE_PIDGEY
+	jr nz, .loop
+	CheckEvent EVENT_DELIVERED_PIDGEY_LETTER
+	jr z, .notHidden
+	ld a, 1
+	jr .done
+.vermilionCourier
+	ld a, b
+	cp VERMILIONPIDGEYHOUSE_PIDGEY
+	jr nz, .loop
+	CheckEvent EVENT_BEAT_SILPH_CO_GIOVANNI
+	jr z, .notHidden
+	CheckEvent EVENT_DELIVERED_PIDGEY_LETTER
+	jr nz, .notHidden
+	ld a, 1
 	jr .done
 .loop
 	ld hl, wToggleableObjectList
@@ -311,6 +341,18 @@ IsViridianGymBlueHidden:
 	ret
 .hidden
 	ld a, 1
+	ret
+
+IsRoute6LostLetterHidden:
+	CheckEvent EVENT_STARTED_PIDGEY_DELIVERY
+	jr z, .hidden
+	CheckEvent EVENT_FOUND_PIDGEY_LETTER
+	jr nz, .hidden
+	xor a
+	ret
+.hidden
+	ld a, 1
+	and a
 	ret
 
 IsRoute12SecondLifeHidden:

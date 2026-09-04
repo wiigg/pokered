@@ -69,6 +69,7 @@ Route5Gate_TextPointers:
 
 SaffronGateGuardText:
 	text_asm
+.script
 	ld a, [wStatusFlags1]
 	bit BIT_GAVE_SAFFRON_GUARDS_DRINK, a
 	jr nz, .thanks_for_drink

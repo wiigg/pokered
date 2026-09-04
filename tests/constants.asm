@@ -73,8 +73,28 @@ ENDM
 	test_constant BIT_BEAT_ELITE_4
 	test_constant EVENT_SS_ANNE_LEFT
 	test_constant EVENT_BEAT_VERMILION_DOCK_GHOST_SAILOR
+	test_constant EVENT_STARTED_PIDGEY_DELIVERY
+	test_constant EVENT_FOUND_PIDGEY_LETTER
+	test_constant EVENT_DELIVERED_PIDGEY_LETTER
+	test_constant EVENT_REUNITED_COURIER_PIDGEY
+	test_constant EVENT_GOT_PIDGEY_DELIVERY_PP_UP
+	test_constant SAFFRON_PIDGEY_HOUSE
+	test_constant VERMILION_PIDGEY_HOUSE
+	test_constant ROUTE_6_GATE
+	test_constant PIDGEY
+	test_constant PP_UP
+	test_constant BIT_GAVE_SAFFRON_GUARDS_DRINK
+	test_constant WALK
+	test_constant STAY
 
-SECTION "Test Route 12 object constants", ROMX
+SECTION "Test map object constants", ROMX
 INCLUDE "data/maps/objects/Route12.asm"
 	test_constant ROUTE12_REFORMED_FISHER
 	test_constant ROUTE12_RATICATE
+
+INCLUDE "data/maps/objects/Route6Gate.asm"
+	test_constant ROUTE6GATE_LOST_LETTER
+INCLUDE "data/maps/objects/SaffronPidgeyHouse.asm"
+	test_constant SAFFRONPIDGEYHOUSE_PIDGEY
+INCLUDE "data/maps/objects/VermilionPidgeyHouse.asm"
+	test_constant VERMILIONPIDGEYHOUSE_PIDGEY

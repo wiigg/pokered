@@ -1,5 +1,6 @@
 	object_const_def
 	const_export ROUTE6GATE_GUARD
+	const_export ROUTE6GATE_LOST_LETTER
 
 Route6Gate_Object:
 	db $a ; border block
@@ -14,5 +15,6 @@ Route6Gate_Object:
 
 	def_object_events
 	object_event  6,  2, SPRITE_GUARD, STAY, LEFT, TEXT_ROUTE6GATE_GUARD
+	object_event  2,  3, SPRITE_PAPER, STAY, NONE, TEXT_ROUTE6GATE_LOST_LETTER
 
 	def_warps_to ROUTE_6_GATE

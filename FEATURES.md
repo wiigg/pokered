@@ -196,6 +196,15 @@ Each future gameplay feature or fix should update this file in the same commit.
   Silph, a hesitant fisherman and his familiar Raticate appear on the pier
   north of Route 12's Super Rod house. They now mend nets for an honest living.
   See [Route 12](scripts/Route12.asm).
+- **Saffron's messenger Pidgey:** after Silph's liberation, the letter-writing
+  household shelters an exhausted courier from Vermilion. Recover its letter
+  from the south gatehouse's left counter, deliver it to Pippi, and carry her
+  reply to the worried owner in Vermilion. Pidgey flies home during a fade;
+  the reunion earns one PP Up, with a full-bag retry. Letters use reserved
+  event flags rather than new item IDs. See
+  [Saffron's household](scripts/SaffronPidgeyHouse.asm),
+  [Route 6 gate](scripts/Route6Gate.asm), and
+  [Vermilion's household](scripts/VermilionPidgeyHouse.asm).
 
 ## Red+ conveniences and balance
 
