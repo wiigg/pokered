@@ -26,6 +26,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   regression checks validate both ends against compiled map collision data.
   Staggered grass and flower patches border an encounter-free walk to the
   notebook and pond, within a single continuous mountain rim.
+  The pond has an uneven rocky shoreline with flower-lined shallows, using
+  the original tiles. Its reflection can still be examined from the bank.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;

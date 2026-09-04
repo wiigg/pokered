@@ -87,6 +87,7 @@ ENDM
 	test_constant WALK
 	test_constant STAY
 	test_constant OVERWORLD
+	test_constant PLATEAU
 	test_constant BILLS_SECRET_GARDEN
 	test_constant ROUTE_25
 	test_constant EVENT_UNLOCKED_BILLS_SECRET_GARDEN

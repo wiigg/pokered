@@ -84,8 +84,8 @@ BillsSecretGarden_Blocks:
 	; One continuous mountain ring, opening onto Bill's hidden passage.
 	db $2b, $57, $57, $57, $57, $57, $57, $57, $57, $2a
 	db $29, $01, $0b, $0b, $01, $01, $1d, $1f, $1e, $28
-	db $29, $0b, $0b, $74, $01, $01, $77, $77, $77, $28
-	db $29, $0b, $01, $74, $01, $74, $01, $01, $01, $28
+	db $29, $0b, $0b, $74, $01, $01, GARDEN_POND_SHALLOWS, GARDEN_POND_SOUTH_BANK, GARDEN_POND_SOUTHEAST_BANK, $28
+	db $29, $0b, $01, $74, $01, $74, $01, $01, $74, $28
 	db $29, $74, $74, $01, $01, $01, $0b, $01, $0b, $28
 	db $29, $74, $01, $01, $74, $0b, $0b, $01, $01, $28
 	db $29, $01, $0b, $01, $74, $01, $01, $01, $74, $28

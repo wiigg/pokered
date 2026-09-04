@@ -9,7 +9,7 @@ Coverage includes:
 
 - Garden arrival, its visible exit and the Route 25 return point against
   compiled collision data, plus the existing entrance-unlock requirement and
-  an encounter-free walking route to the garden's landmarks.
+  an encounter-free walking route to the garden's landmarks and pond events.
 - Garden Pikachu's party and box gifts, full storage, moves/PP, preservation of
   existing boxed Pokémon, move recovery and visibility on map re-entry.
 - Moonfall's full-bag failure, successful retry and one-time reward.

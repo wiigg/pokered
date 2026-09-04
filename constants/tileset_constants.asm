@@ -28,3 +28,8 @@ DEF MAP_TILESET_SIZE EQU $60 ; tiles
 	const FACILITY     ; 22
 	const PLATEAU      ; 23
 DEF NUM_TILESETS EQU const_value
+
+; Append-only OVERWORLD blocks assembled from the original tiles.
+DEF GARDEN_POND_SHALLOWS EQU $80
+DEF GARDEN_POND_SOUTH_BANK EQU $81
+DEF GARDEN_POND_SOUTHEAST_BANK EQU $82

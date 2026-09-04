@@ -200,6 +200,23 @@ class GameplayTests(unittest.TestCase):
                              self.const("BILLS_SECRET_GARDEN") if unlocked else 255)
             self.assertEqual(self.get("wDestinationWarpID"), 0 if unlocked else 255)
 
+    def test_garden_pond_bank_keeps_all_reflection_spots_accessible(self):
+        walkable = self.overworld_walkable("BillsSecretGarden", avoid_grass=True)
+        # The three existing background-event positions remain dry, reachable banks.
+        data = self.rom_bytes("BillsSecretGarden_Object", 12)
+        self.assertEqual(data[1:3], [0, 3])  # No ordinary warps; three pond events.
+        for i in range(3):
+            y, x, _ = data[3 + i * 3:6 + i * 3]
+            self.assertIn((x, y), walkable)
+            self.assertIn((x, y + 1), walkable)
+
+    def test_expanded_overworld_and_relocated_plateau_tileset_pointers(self):
+        for name, tileset in (("Overworld", "OVERWORLD"), ("Plateau", "PLATEAU")):
+            bank, block_lo, block_hi, gfx_lo, gfx_hi = self.rom_bytes(
+                "Tilesets", 5, self.const(tileset) * 12)
+            self.assertEqual((bank, block_lo | block_hi << 8), self.symbols[name + "_Block"])
+            self.assertEqual((bank, gfx_lo | gfx_hi << 8), self.symbols[name + "_GFX"])
+
     def test_garden_gift_party_and_box(self):
         moves = [self.const(move) for move in
                  ("THUNDERBOLT", "SURF", "THUNDER_WAVE", "QUICK_ATTACK")]
