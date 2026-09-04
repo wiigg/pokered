@@ -221,6 +221,8 @@ MtMoon1FMoonfallSiteText:
 	ld a, [wToggleableObjectFlags + (TOGGLE_MT_MOON_1F_ITEM_2 / 8)]
 	bit TOGGLE_MT_MOON_1F_ITEM_2 % 8, a
 	jr z, .quiet
+	CheckEvent EVENT_SAW_MT_MOON_MOONFALL_DANCE
+	jr nz, .collectFragment
 
 	ld a, PAD_CTRL_PAD
 	ld [wJoyIgnore], a
@@ -235,9 +237,12 @@ MtMoon1FMoonfallSiteText:
 	call MtMoon1FAnimateMoonfallDance
 	ld hl, MtMoon1FMoonfallDanceText
 	call PrintText
+	call MtMoon1FRetreatMoonfallClefairy
 	call GBFadeOutToWhite
 	call MtMoon1FHideMoonfallClefairy
 	call GBFadeInFromWhite
+	SetEvent EVENT_SAW_MT_MOON_MOONFALL_DANCE
+.collectFragment
 	ld hl, MtMoon1FMoonfallGiftText
 	call PrintText
 	lb bc, MOON_STONE, 1
@@ -268,10 +273,10 @@ MtMoon1FMoonfallSiteText:
 
 MtMoon1FShowMoonfallClefairy:
 	ld a, MTMOON1F_CLEFAIRY1
-	lb bc, 2, 4
+	lb bc, 2, 5
 	call MtMoon1FSetCeremonySpritePosition
 	ld a, MTMOON1F_CLEFAIRY2
-	lb bc, 3, 3
+	lb bc, 3, 4
 	call MtMoon1FSetCeremonySpritePosition
 	jp UpdateSprites
 
@@ -311,35 +316,70 @@ MtMoon1FSetCeremonySpritePosition:
 	jp SetSpritePosition1
 
 MtMoon1FAnimateMoonfallDance:
-	ld a, MTMOON1F_CLEFAIRY1
+	ldh a, [hSpriteIndex]
+	push af
+	ld hl, .Steps
+.step
+	ld a, [hli]
+	and a
+	jr z, .pauseTogether
 	ldh [hSpriteIndex], a
-	ld a, SPRITE_FACING_DOWN
-	ldh [hSpriteFacingDirection], a
-	call MtMoon1FTurnCeremonySprite
-	ld a, MTMOON1F_CLEFAIRY2
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	ld d, a
+	push hl
+	call MoveSprite
+	farcall WaitForSceneSpriteMovement
+	pop hl
+	jr .step
+.pauseTogether
+	pop af
 	ldh [hSpriteIndex], a
-	ld a, SPRITE_FACING_RIGHT
-	ldh [hSpriteFacingDirection], a
-	call MtMoon1FTurnCeremonySprite
-	ld a, MTMOON1F_CLEFAIRY1
-	ldh [hSpriteIndex], a
-	ld a, SPRITE_FACING_LEFT
-	ldh [hSpriteFacingDirection], a
-	call MtMoon1FTurnCeremonySprite
-	ld a, MTMOON1F_CLEFAIRY2
-	ldh [hSpriteIndex], a
-	ld a, SPRITE_FACING_UP
-	ldh [hSpriteFacingDirection], a
-	call MtMoon1FTurnCeremonySprite
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ld c, 30
+	call DelayFrames
 	ld a, CLEFAIRY
 	call PlayCry
 	jp WaitForSoundToFinish
 
-MtMoon1FTurnCeremonySprite:
-	call SetSpriteFacingDirection
-	call UpdateSprites
-	ld c, 6
-	jp DelayFrames
+.Steps:
+	; A small clockwise circle in the light, clear of every approach to the site.
+	dbw MTMOON1F_CLEFAIRY1, .Down
+	dbw MTMOON1F_CLEFAIRY2, .Up
+	dbw MTMOON1F_CLEFAIRY1, .Left
+	dbw MTMOON1F_CLEFAIRY2, .Right
+	dbw MTMOON1F_CLEFAIRY1, .Up
+	dbw MTMOON1F_CLEFAIRY2, .Down
+	dbw MTMOON1F_CLEFAIRY1, .Right
+	dbw MTMOON1F_CLEFAIRY2, .Left
+	db 0
+.Down:  db NPC_MOVEMENT_DOWN, -1
+.Up:    db NPC_MOVEMENT_UP, -1
+.Left:  db NPC_MOVEMENT_LEFT, -1
+.Right: db NPC_MOVEMENT_RIGHT, -1
+
+MtMoon1FRetreatMoonfallClefairy:
+	ldh a, [hSpriteIndex]
+	push af
+	ld a, MTMOON1F_CLEFAIRY1
+	call .retreat
+	ld a, MTMOON1F_CLEFAIRY2
+	call .retreat
+	pop af
+	ldh [hSpriteIndex], a
+	ld a, PAD_CTRL_PAD
+	ld [wJoyIgnore], a
+	ret
+.retreat
+	ldh [hSpriteIndex], a
+	ld de, .IntoCave
+	call MoveSprite
+	farjp WaitForSceneSpriteMovement
+.IntoCave:
+	db NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT
+	db NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT, -1
 
 MtMoon1FMoonfallBeginsText:
 	text_far _MtMoon1FMoonfallBeginsText

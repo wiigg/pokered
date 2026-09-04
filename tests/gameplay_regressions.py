@@ -693,7 +693,11 @@ class GameplayTests(unittest.TestCase):
     def test_moonfall_full_bag_can_retry_without_duplicate_reward(self):
         self.stub("PrintText", "TextScriptEnd", "GBFadeOutToWhite", "GBFadeInFromWhite",
                   "MtMoon1FShowMoonfallClefairy", "MtMoon1FHideMoonfallClefairy",
-                  "MtMoon1FAnimateMoonfallDance", "PlayCry", "WaitForSoundToFinish")
+                  "MtMoon1FAnimateMoonfallDance", "MtMoon1FRetreatMoonfallClefairy",
+                  "PlayCry", "WaitForSoundToFinish")
+        dances = []
+        self.gb.hook_register(*self.symbols["MtMoon1FAnimateMoonfallDance"],
+                              lambda _: dances.append(True), None)
         self.set_event("EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD")
         index = self.const("TOGGLE_MT_MOON_1F_ITEM_2")
         self.gb.memory[self.address("wToggleableObjectFlags") + index // 8] |= 1 << (index % 8)
@@ -703,6 +707,7 @@ class GameplayTests(unittest.TestCase):
         before = self.get("wBagItems", 41)
         self.call("MtMoon1FMoonfallSiteText", offset=1)
         self.assertFalse(self.event_set("EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY"))
+        self.assertTrue(self.event_set("EVENT_SAW_MT_MOON_MOONFALL_DANCE"))
         self.assertEqual(self.get("wBagItems", 41), before)
         self.assertEqual(self.get("wJoyIgnore"), 0)
         self.put("wNumBagItems", 0)
@@ -711,8 +716,62 @@ class GameplayTests(unittest.TestCase):
         self.assertTrue(self.event_set("EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY"))
         self.assertEqual(self.get("wNumBagItems"), 1)
         self.assertEqual(self.get("wBagItems", 3), [self.const("MOON_STONE"), 1, 255])
+        self.assertEqual(dances, [True])
+        # Saves from before the separate dance flag already own their reward.
+        self.set_event("EVENT_SAW_MT_MOON_MOONFALL_DANCE", False)
         self.call("MtMoon1FMoonfallSiteText", offset=1)
         self.assertEqual(self.get("wBagItems", 3), [self.const("MOON_STONE"), 1, 255])
+        self.assertEqual(dances, [True])
+
+    def test_scene_movement_restores_text_and_clears_scripted_steps(self):
+        self.stub("UpdateSprites", "DelayFrame")
+        frames = []
+        outcome = "timeout"
+        def update(_):
+            frames.append(True)
+            if outcome == "finished":
+                self.put("wStatusFlags5", 0)
+        self.gb.hook_register(*self.symbols["UpdateSprites"], update, None)
+        for outcome in ("finished", "offscreen", "timeout"):
+            frames.clear()
+            self.put("wFontLoaded", 0xA5)
+            self.put("hSpriteIndex", 14)
+            self.put("wStatusFlags5", 1 << self.const("BIT_SCRIPTED_NPC_MOVEMENT"))
+            self.put("wSprite14StateData1ImageIndex", 255 if outcome == "offscreen" else 0)
+            self.put("wSprite14StateData2MovementByte1", 0)
+            self.put("wSprite14StateData2WalkAnimationCounter", 8)
+            self.call("WaitForSceneSpriteMovement")
+            self.assertEqual(len(frames), 192 if outcome == "timeout" else 1)
+            self.assertEqual(self.get("wFontLoaded"), 0xA5)
+            self.assertEqual(self.get("hSpriteIndex"), 14)
+            self.assertEqual(self.get("wStatusFlags5"), 0)
+            self.assertEqual(self.get("wSprite14StateData2MovementByte1"), self.const("STAY"))
+            for name in ("wNPCNumScriptedSteps", "wSimulatedJoypadStatesIndex",
+                         "wUnusedOverrideSimulatedJoypadStatesIndex", "wSprite14StateData2WalkAnimationCounter"):
+                self.assertEqual(self.get(name), 0)
+
+    def test_moonfall_dancers_circle_without_crossing_player_approaches(self):
+        positions = {14: (5, 2), 15: (4, 3)}
+        data = self.rom_bytes("MtMoon1FAnimateMoonfallDance.Steps", 25)
+        bank = self.symbols["MtMoon1FAnimateMoonfallDance"][0]
+        vectors = {self.const("NPC_MOVEMENT_UP"): (0, -1), self.const("NPC_MOVEMENT_DOWN"): (0, 1),
+                   self.const("NPC_MOVEMENT_LEFT"): (-1, 0), self.const("NPC_MOVEMENT_RIGHT"): (1, 0)}
+        for i in range(0, 24, 3):
+            sprite, lo, hi = data[i:i + 3]
+            dx, dy = vectors[self.gb.memory[bank, lo | hi << 8]]
+            x, y = positions[sprite]
+            positions[sprite] = (x + dx, y + dy)
+            self.assertNotEqual(positions[14], positions[15])
+            self.assertNotIn(positions[sprite], {(1, 2), (3, 2), (2, 1), (2, 3)})
+        self.assertEqual(positions, {14: (5, 2), 15: (4, 3)})
+
+    def test_moonfall_movement_leaves_dialogue_buttons_available(self):
+        self.stub("WaitForSceneSpriteMovement", "DelayFrames", "PlayCry", "WaitForSoundToFinish")
+        for name in ("MtMoon1FAnimateMoonfallDance", "MtMoon1FRetreatMoonfallClefairy"):
+            self.put("hSpriteIndex", 16)
+            self.call(name)
+            self.assertEqual(self.get("hSpriteIndex"), 16)
+            self.assertEqual(self.get("wJoyIgnore"), 0xF0)
 
     def test_rhyhorn_reentry_and_player_overlap(self):
         self.stub("UpdateSprites")

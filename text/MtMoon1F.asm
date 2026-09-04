@@ -119,12 +119,12 @@ _MtMoon1FMoonfallBeginsText::
 	cont "impact hollow!"
 
 	para "Two CLEFAIRY"
-	line "gather round the"
-	cont "moonlit hollow."
+	line "gather in the"
+	cont "pale light."
 	done
 
 _MtMoon1FMoonfallDanceText::
-	text "They turn and sway"
+	text "They circle softly"
 	line "in a strange,"
 	cont "silent ceremony."
 	done
@@ -145,9 +145,8 @@ _MtMoon1FMoonfallBagFullText::
 	text "But the BAG is"
 	line "full!"
 
-	para "The fragment sinks"
-	line "back into the"
-	cont "silver light..."
+	para "The fragment waits"
+	line "in the hollow."
 	done
 
 _MtMoon1FMoonfallCompleteText::

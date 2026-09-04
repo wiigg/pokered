@@ -38,6 +38,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   Pewter Museum's meteorite later remembers the ceremony and responds further
   to a lead Clefairy-family Pokémon. See [Mt. Moon 1F](scripts/MtMoon1F.asm)
   and [Museum 2F](scripts/Museum2F.asm).
+  The Clefairy circle in the light, pause together and retreat into the cave.
+  A full bag leaves the Moon Stone available without replaying the ceremony.
 - **Something beneath the S.S. Anne:** an enormous shadow passes beneath the
   ship when its bow is revisited after helping the Captain. See
   [S.S. Anne Bow](scripts/SSAnneBow.asm).

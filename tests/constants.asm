@@ -74,6 +74,11 @@ ENDM
 	test_constant TOGGLE_BILLS_SECRET_GARDEN_PIKACHU
 	test_constant EVENT_BEAT_MT_MOON_EXIT_SUPER_NERD
 	test_constant EVENT_COMPLETED_MT_MOON_MOONFALL_CEREMONY
+	test_constant EVENT_SAW_MT_MOON_MOONFALL_DANCE
+	test_constant EVENT_HEARD_MT_MOON_MOONFALL_RUMBLE
+	test_constant MT_MOON_1F
+	test_constant NPC_MOVEMENT_UP
+	test_constant NPC_MOVEMENT_DOWN
 	test_constant TOGGLE_MT_MOON_1F_ITEM_2
 	test_constant MOON_STONE
 	test_constant POTION

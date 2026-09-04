@@ -580,6 +580,7 @@
 	const EVENT_BEAT_MT_MOON_3_TRAINER_3
 	const EVENT_GOT_DOME_FOSSIL
 	const EVENT_GOT_HELIX_FOSSIL
+	const EVENT_SAW_MT_MOON_MOONFALL_DANCE ; reserved bit; reward may still be waiting
 
 ; S.S. Anne events
 	const_next $5C0

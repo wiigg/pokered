@@ -16,7 +16,8 @@ Coverage includes:
   input/position cleanup after either completed movement or a timeout.
 - The garden's wandering Butterfree appears only after Pikachu joins, stays
   clear of an overlapping player, and offers a cry without a battle or reward.
-- Moonfall's full-bag failure, successful retry and one-time reward.
+- Moonfall's full-bag failure, successful retry without repeating the dance,
+  and one-time reward.
 - Capture, defeat, escape, unresolved battle and blackout outcomes for Mew,
   White Hand, the Mansion Ditto, Seafoam Gyarados and escaped Fuchsia Rhyhorn.
 - Mew's League reset before saving, including older completed encounters and
