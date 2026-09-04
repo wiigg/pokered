@@ -13,18 +13,23 @@ UndergroundPathWestEastUpdateRocketDeserter:
 	bit BIT_CUR_MAP_LOADED_1, [hl]
 	res BIT_CUR_MAP_LOADED_1, [hl]
 	ret z
+	ld a, TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	; Keep both objects clear of a player loaded on their original tile.
+	ld a, [wXCoord]
+	cp 34
+	jr nz, .checkProgress
+	ld a, [wYCoord]
+	cp 1
+	jr z, .hide
+.checkProgress
+	CheckEvent EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER
+	jr nz, .uniformLeft
 	CheckEvent EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI
 	jr z, .hide
 	CheckEvent EVENT_BEAT_SILPH_CO_GIOVANNI
 	jr nz, .hide
-	CheckEvent EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER
-	jr nz, .hide
-	ld a, [wXCoord]
-	cp 34
-	jr nz, .show
-	ld a, [wYCoord]
-	cp 1
-	jr z, .hide
 .show
 	ld a, TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER
 	ld [wToggleableObjectIndex], a
@@ -33,6 +38,14 @@ UndergroundPathWestEastUpdateRocketDeserter:
 	ld a, TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER
 	ld [wToggleableObjectIndex], a
 	predef_jump HideObject
+.uniformLeft
+	call .hide
+	jp UndergroundPathWestEastShowUniform
+
+UndergroundPathWestEastShowUniform:
+	ld a, TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM
+	ld [wToggleableObjectIndex], a
+	predef_jump ShowObject
 
 UndergroundPathWestEast_ScriptPointers:
 	def_script_pointers
@@ -105,16 +118,28 @@ UndergroundPathWestEastRocketDeserterPostBattleScript:
 	ld a, SFX_RUN
 	call PlaySound
 	call GBFadeOutToWhite
-	ld a, TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER
-	ld [wToggleableObjectIndex], a
-	predef HideObject
-	call UpdateSprites
+	call UndergroundPathWestEastLeaveUniform
 	call Delay3
 	call GBFadeInFromWhite
 	call WaitForSoundToFinish
 	ld hl, UndergroundPathWestEastRocketDeserterVanishedText
 	call PrintText
-	; fall through
+	jr UndergroundPathWestEastResetScript
+
+UndergroundPathWestEastLeaveUniform:
+	; The trainer may have walked towards the player before the battle.
+	ld a, [wSprite01StateData2MapY]
+	ld [wSprite02StateData2MapY], a
+	ld a, [wSprite01StateData2MapX]
+	ld [wSprite02StateData2MapX], a
+	ld a, [wSprite01StateData1YPixels]
+	ld [wSprite02StateData1YPixels], a
+	ld a, [wSprite01StateData1XPixels]
+	ld [wSprite02StateData1XPixels], a
+	ld a, TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER
+	ld [wToggleableObjectIndex], a
+	predef HideObject
+	jp UndergroundPathWestEastShowUniform
 
 UndergroundPathWestEastResetScript:
 	xor a
@@ -126,6 +151,7 @@ UndergroundPathWestEastResetScript:
 UndergroundPathWestEast_TextPointers:
 	def_text_pointers
 	dw_const UndergroundPathWestEastRocketDeserterText, TEXT_UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER
+	dw_const UndergroundPathWestEastUniformText, TEXT_UNDERGROUNDPATHWESTEAST_DISCARDED_UNIFORM
 	dw_const UndergroundPathWestEastRocketDeserterWarningText, TEXT_UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER_WARNING
 	dw_const UndergroundPathWestEastPhantomTrainText, TEXT_UNDERGROUNDPATHWESTEAST_PHANTOM_TRAIN
 
@@ -137,6 +163,10 @@ UndergroundPathWestEastRocketDeserterText:
 
 UndergroundPathWestEastRocketDeserterWarningText:
 	text_far _UndergroundPathWestEastRocketDeserterWarningText
+	text_end
+
+UndergroundPathWestEastUniformText:
+	text_far _UndergroundPathWestEastUniformText
 	text_end
 
 UndergroundPathWestEastRocketDeserterVanishedText:

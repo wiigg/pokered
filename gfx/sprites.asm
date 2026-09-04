@@ -43,6 +43,14 @@ GardenChairSprite::
 	db $fc, $04, $fc, $f4, $1c, $f4, $7c, $94, $fc, $1c, $00, $00, $00, $00, $00, $00
 
 
+; A folded dark tunic with a pale R, in the same four-tile format as other props.
+RocketUniformSprite::
+	db $00, $00, $07, $07, $0d, $0e, $13, $1e, $21, $3f, $20, $3f, $21, $3e, $21, $3e
+	db $00, $00, $e0, $e0, $b0, $70, $98, $78, $84, $fc, $04, $fc, $c4, $3c, $44, $bc
+	db $21, $3e, $21, $3e, $21, $3e, $3f, $3f, $10, $1f, $1f, $1f, $00, $00, $00, $00
+	db $c4, $3c, $44, $bc, $24, $dc, $fc, $fc, $08, $f8, $f8, $f8, $00, $00, $00, $00
+
+
 SECTION "NPC Sprites 2", ROMX
 
 RedBikeSprite::          INCBIN "gfx/sprites/red_bike.2bpp"

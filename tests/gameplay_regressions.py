@@ -82,6 +82,10 @@ class GameplayTests(unittest.TestCase):
         start = self.address("wItemList") + 1
         return [self.gb.memory[start + i] for i in range(self.get("wItemList"))]
 
+    def object_hidden(self, name):
+        index = self.const(name)
+        return bool(self.gb.memory[self.address("wToggleableObjectFlags") + index // 8] & (1 << (index % 8)))
+
     def put_hp(self, name, value):
         self.put(name, list(value.to_bytes(2, "big")))
 
@@ -184,8 +188,6 @@ class GameplayTests(unittest.TestCase):
                         expected_status = 2 if move == "REST" and current < maximum else 8
                         self.assertEqual(self.get(mon + "Status"), expected_status)
 
-
-
     def test_substitute_requires_surviving_hp(self):
         self.stub("DelayFrames", "PrintText", "PlayCurrentMoveAnimation",
                   "AnimationSubstitute", "DrawHUDsAndHPBars")
@@ -210,6 +212,7 @@ class GameplayTests(unittest.TestCase):
                 self.call("SubstituteEffect_")
                 self.assertEqual(self.hp(mon + "HP"), maximum)
                 self.assertEqual(self.get(f"w{side}SubstituteHP"), 17)
+
     def test_ai_combines_every_type_pair(self):
         matchups = {}
         types = set()
@@ -247,7 +250,6 @@ class GameplayTests(unittest.TestCase):
                 self.call("AIMoveChoiceModification3")
                 self.assertEqual(self.get("wBuffer", 4), expected)
 
-
     def test_transform_checks_the_target_on_both_turns(self):
         self.stub("PrintText", "EffectCallBattleCore", "PlayCurrentMoveAnimation",
                   "AnimationTransformMon", "HideSubstituteShowMonAnim", "ReshowSubstituteAnim")
@@ -279,6 +281,70 @@ class GameplayTests(unittest.TestCase):
                 if not target_hidden:
                     self.assertEqual(self.get(user + "Moves", 4), self.get(target + "Moves", 4))
                     self.assertEqual(self.get(user + "PP", 4), [5, 5, 0, 0])
+
+    def test_deserter_uniform_visibility_and_save_overlap(self):
+        self.stub("UpdateSprites")
+        self.put("wCurMap", self.const("UNDERGROUND_PATH_WEST_EAST"))
+        self.call("InitializeToggleableObjectsFlags")
+        self.assertTrue(self.object_hidden("TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM"))
+        self.call("MarkTownVisitedAndLoadToggleableObjects")
+        self.assertEqual(self.get("wToggleableObjectList", 5),
+                         [1, self.const("TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER"),
+                          2, self.const("TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM"), 255])
+        for hideout, silph, defeated in product((False, True), repeat=3):
+            for x, y in ((33, 1), (34, 1), (34, 2)):
+                with self.subTest(hideout=hideout, silph=silph, defeated=defeated, position=(x, y)):
+                    self.set_event("EVENT_BEAT_ROCKET_HIDEOUT_GIOVANNI", hideout)
+                    self.set_event("EVENT_BEAT_SILPH_CO_GIOVANNI", silph)
+                    self.set_event("EVENT_BEAT_UNDERGROUND_PATH_ROCKET_DESERTER", defeated)
+                    self.put("wXCoord", x)
+                    self.put("wYCoord", y)
+                    self.put("wCurrentMapScriptFlags", 1 << self.const("BIT_CUR_MAP_LOADED_1"))
+                    self.call("UndergroundPathWestEastUpdateRocketDeserter")
+                    overlap = (x, y) == (34, 1)
+                    self.assertEqual(self.object_hidden("TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER"),
+                                     overlap or defeated or silph or not hideout)
+                    self.assertEqual(self.object_hidden("TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM"),
+                                     overlap or not defeated)
+
+    def test_deserter_leaves_uniform_during_flash_only_after_victory(self):
+        self.stub("UpdateSprites", "EndTrainerBattle", "DisplayTextID", "PlaySound",
+                  "GBFadeOutToWhite", "GBFadeInFromWhite", "Delay3", "WaitForSoundToFinish", "PrintText")
+        flashes = []
+
+        def record_flash(phase):
+            flashes.append((phase, self.object_hidden("TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER"),
+                            self.object_hidden("TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM")))
+
+        for name, phase in (("GBFadeOutToWhite", "out"), ("GBFadeInFromWhite", "in")):
+            bank, address = self.symbols[name]
+            self.gb.hook_register(bank, address, record_flash, phase)
+        for lost in (True, False):
+            with self.subTest(lost=lost):
+                flashes.clear()
+                self.call("InitializeToggleableObjectsFlags")
+                self.put("wToggleableObjectIndex", self.const("TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER"))
+                self.call("ShowObject")
+                self.put("wIsInBattle", 255 if lost else 0)
+                self.put("wJoyIgnore", 255)
+                self.put("wUndergroundPathWestEastCurScript", 2)
+                self.put("wCurMapScript", 2)
+                for field, value in (("StateData2MapY", 7), ("StateData2MapX", 38),
+                                     ("StateData1YPixels", 60), ("StateData1XPixels", 64)):
+                    self.put("wSprite01" + field, value)
+                    self.put("wSprite02" + field, 0)
+                self.call("UndergroundPathWestEastRocketDeserterPostBattleScript")
+                self.assertEqual(self.get("wJoyIgnore"), 0)
+                self.assertEqual(self.get("wUndergroundPathWestEastCurScript"), 0)
+                self.assertEqual(self.get("wCurMapScript"), 0)
+                if lost:
+                    self.assertEqual(flashes, [])
+                    self.assertFalse(self.object_hidden("TOGGLE_UNDERGROUND_PATH_ROCKET_DESERTER"))
+                    self.assertTrue(self.object_hidden("TOGGLE_UNDERGROUND_PATH_DISCARDED_UNIFORM"))
+                else:
+                    self.assertEqual(flashes, [("out", False, True), ("in", True, False)])
+                    for field in ("StateData2MapY", "StateData2MapX", "StateData1YPixels", "StateData1XPixels"):
+                        self.assertEqual(self.get("wSprite02" + field), self.get("wSprite01" + field))
 
 
 if __name__ == "__main__":

@@ -81,4 +81,5 @@ SpriteSheetPointerTable:
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_GAMBLER_ASLEEP
 	overworld_sprite GardenTableSprite, 4       ; SPRITE_GARDEN_TABLE
 	overworld_sprite GardenChairSprite, 4       ; SPRITE_GARDEN_CHAIR
+	overworld_sprite RocketUniformSprite, 4     ; SPRITE_ROCKET_UNIFORM
 	assert_table_length NUM_SPRITES

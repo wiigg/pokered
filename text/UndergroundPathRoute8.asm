@@ -64,6 +64,17 @@ _UndergroundPathWestEastRocketDeserterAfterBattleText::
 	line "empty."
 	done
 
+_UndergroundPathWestEastUniformText::
+	text "A discarded"
+	line "ROCKET uniform."
+
+	para "The pockets are"
+	line "empty."
+
+	para "The R is coming"
+	line "unstitched..."
+	done
+
 _UndergroundPathWestEastPhantomTrainText::
 	text "A roaring wind"
 	line "sweeps through the"

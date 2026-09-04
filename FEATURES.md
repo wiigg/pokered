@@ -183,7 +183,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   [Celadon Mart Roof](scripts/CeladonMartRoof.asm).
 - **Rocket deserter:** between the Hideout and Silph, a frightened Grunt battles
   the player, warns that Giovanni has gone to Saffron, abandons his uniform, and
-  leaves in a flash. See [Underground Path](scripts/UndergroundPathWestEast.asm).
+  leaves in a flash. His discarded uniform remains as an examinable bundle,
+  including on later visits. See [Underground Path](scripts/UndergroundPathWestEast.asm).
 
 ## Red+ conveniences and balance
 

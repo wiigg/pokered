@@ -445,6 +445,7 @@ SupplementalToggleableObjectStates:
 
 	toggleable_objects_for UNDERGROUND_PATH_WEST_EAST
 	toggle_object_state UNDERGROUNDPATHWESTEAST_ROCKET_DESERTER, OFF
+	toggle_object_state UNDERGROUNDPATHWESTEAST_DISCARDED_UNIFORM, OFF
 
 	assert_table_length NUM_TOGGLEABLE_OBJECTS
 
