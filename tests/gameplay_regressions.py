@@ -239,6 +239,88 @@ class GameplayTests(unittest.TestCase):
                 self.assertEqual(self.gb.memory[start - 1], 0xA5)
                 self.assertEqual(self.gb.memory[start + size], 0xA5)
 
+    def test_garden_skim_waits_for_a_visible_idle_approach(self):
+        self.stub("PlayCry", "UpdateSprites", "DelayFrame")
+        started = []
+        self.gb.hook_register(*self.symbols["MoveSprite"],
+                              lambda _: started.append(True), None)
+        guards = [("wWalkCounter", 1), ("wJoyIgnore", 255),
+                  ("wWalkBikeSurfState", 2),
+                  ("wFontLoaded", 1 << self.const("BIT_FONT_LOADED")),
+                  ("wStatusFlags5", 1 << self.const("BIT_SCRIPTED_NPC_MOVEMENT")),
+                  ("wStatusFlags5", 1 << self.const("BIT_SCRIPTED_MOVEMENT_STATE")),
+                  ("wUpdateSpritesEnabled", 0)]
+        for field, value in guards:
+            with self.subTest(field=field, value=value):
+                self.put("wXCoord", 12)
+                self.put("wYCoord", 6)
+                self.put("wUpdateSpritesEnabled", 1)
+                self.put(field, value)
+                self.call("BillsSecretGardenTryPikachuSkim")
+                self.put(field, 0)
+        self.put("wUpdateSpritesEnabled", 1)
+        for x, y in ((9, 3), (16, 3), (12, 1), (12, 7), (15, 16)):
+            self.put("wXCoord", x)
+            self.put("wYCoord", y)
+            self.call("BillsSecretGardenTryPikachuSkim")
+        self.put("wXCoord", 12)
+        self.put("wYCoord", 6)
+        for event in ("EVENT_GOT_BILLS_GARDEN_PIKACHU",
+                      "EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM"):
+            self.set_event(event)
+            self.call("BillsSecretGardenTryPikachuSkim")
+            self.set_event(event, False)
+        self.assertEqual(started, [])
+
+    def test_garden_skim_finishes_or_times_out_without_locking_controls(self):
+        self.stub("PlayCry", "UpdateSprites", "DelayFrame")
+        updates = []
+        movement_flag = 1 << self.const("BIT_SCRIPTED_NPC_MOVEMENT")
+        finish = False
+
+        def update(_):
+            updates.append(True)
+            if finish:
+                self.put("wStatusFlags5", self.get("wStatusFlags5") & ~movement_flag)
+
+        self.gb.hook_register(*self.symbols["UpdateSprites"], update, None)
+        for finish in (False, True):
+            with self.subTest(finish=finish):
+                updates.clear()
+                self.set_event("EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM", False)
+                self.put("wXCoord", 12)
+                self.put("wYCoord", 6)
+                self.put("wUpdateSpritesEnabled", 1)
+                self.put("hSpriteIndex", 3)
+                self.put("wMapSpriteData", self.const("RIGHT"))
+                self.put("wSprite01StateData2MapY", 7)
+                self.put("wSprite01StateData2MapX", 15)
+                self.call("BillsSecretGardenTryPikachuSkim")
+                self.assertEqual(len(updates), 2 if finish else 193)
+                self.assertEqual(self.event_set("EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM"), finish)
+                self.assertFalse(self.event_set("EVENT_GOT_BILLS_GARDEN_PIKACHU"))
+                for field in ("wJoyIgnore", "wNPCNumScriptedSteps", "wSimulatedJoypadStatesIndex",
+                              "wUnusedOverrideSimulatedJoypadStatesIndex",
+                              "wSprite01StateData2WalkAnimationCounter"):
+                    self.assertEqual(self.get(field), 0)
+                self.assertEqual(self.get("wStatusFlags5") & movement_flag, 0)
+                self.assertEqual(self.get("wSprite01StateData2MapY", 2), [7, 15])
+                self.assertEqual(self.get("wSprite01StateData2MovementByte1"), self.const("STAY"))
+                self.assertEqual(self.get("wMapSpriteData"), self.const("RIGHT"))
+                self.assertEqual(self.get("hSpriteIndex"), 3)
+
+    def test_garden_skim_crosses_water_and_returns_to_its_bank(self):
+        movement = self.rom_bytes("BillsSecretGardenPikachuSkimMovement", 9)
+        self.assertEqual(movement, [self.const("NPC_MOVEMENT_RIGHT")] * 4 +
+                         [self.const("NPC_MOVEMENT_LEFT")] * 4 + [255])
+        layout = self.rom_bytes("BillsSecretGarden_Blocks", 90)
+        for x in range(12, 16):
+            y = 3
+            block = layout[y // 2 * 10 + x // 2]
+            offset = block * 16 + (y % 2 * 2 + 1) * 4 + x % 2 * 2
+            self.assertEqual(self.rom_bytes("Overworld_Block", 1, offset),
+                             [0x32] if x == 12 else [0x14])  # Bank edge, then open water.
+
     def test_garden_moves_can_be_remembered(self):
         for species, dvs, received, eligible in (
                 ("PIKACHU", [0xEA, 0xAA], True, True),

@@ -12,6 +12,8 @@ Coverage includes:
   an encounter-free walking route to the garden's landmarks and pond events.
 - Garden Pikachu's party and box gifts, full storage, moves/PP, preservation of
   existing boxed Pokémon, move recovery and visibility on map re-entry.
+- Pikachu's pond-crossing route, first-approach gates, one-time scene flag and
+  input/position cleanup after either completed movement or a timeout.
 - Moonfall's full-bag failure, successful retry and one-time reward.
 - Capture, defeat, escape, unresolved battle and blackout outcomes for Mew,
   White Hand, the Mansion Ditto, Seafoam Gyarados and escaped Fuchsia Rhyhorn.

@@ -13,6 +13,13 @@ ENDM
 	test_constant PARTYMON_STRUCT_LENGTH
 	test_constant BOXMON_STRUCT_LENGTH
 	test_constant EVENT_GOT_BILLS_GARDEN_PIKACHU
+	test_constant EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM
+	test_constant BIT_FONT_LOADED
+	test_constant BIT_SCRIPTED_NPC_MOVEMENT
+	test_constant BIT_SCRIPTED_MOVEMENT_STATE
+	test_constant NPC_MOVEMENT_RIGHT
+	test_constant NPC_MOVEMENT_LEFT
+	test_constant RIGHT
 	test_constant RECOVER
 	test_constant SOFTBOILED
 	test_constant REST

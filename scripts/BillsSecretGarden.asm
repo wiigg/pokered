@@ -1,7 +1,103 @@
 BillsSecretGarden_Script:
 	call BillsSecretGardenLoadMap
+	call BillsSecretGardenTryPikachuSkim
 	call BillsSecretGardenCheckExit
 	jp EnableAutoTextBoxDrawing
+
+BillsSecretGardenTryPikachuSkim:
+	CheckEvent EVENT_GOT_BILLS_GARDEN_PIKACHU
+	ret nz
+	CheckEvent EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM
+	ret nz
+	; Keep the whole crossing on screen and wait until the player stops walking.
+	ld a, [wXCoord]
+	sub 10
+	cp 6
+	ret nc
+	ld a, [wYCoord]
+	sub 2
+	cp 5
+	ret nc
+	ld a, [wWalkCounter]
+	and a
+	ret nz
+	ld a, [wJoyIgnore]
+	and a
+	ret nz
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	ret z
+	ld a, [wFontLoaded]
+	bit BIT_FONT_LOADED, a
+	ret nz
+	ld a, [wStatusFlags5]
+	and (1 << BIT_SCRIPTED_NPC_MOVEMENT) | (1 << BIT_SCRIPTED_MOVEMENT_STATE)
+	ret nz
+	ld a, [wUpdateSpritesEnabled]
+	cp 1
+	ret nz
+	; The gift's object ID is stable even when decorative objects are appended.
+	assert BILLSSECRETGARDEN_PIKACHU == 1
+	ldh a, [hSpriteIndex]
+	push af
+	ld a, [wMapSpriteData]
+	push af
+	ld a, PIKACHU
+	call PlayCry
+	ld a, 1
+	ld [wSprite01StateData1MovementStatus], a
+	ld a, BILLSSECRETGARDEN_PIKACHU
+	ldh [hSpriteIndex], a
+	ld de, BillsSecretGardenPikachuSkimMovement
+	call MoveSprite
+	ld c, 192
+.wait
+	push bc
+	call UpdateSprites
+	call DelayFrame
+	pop bc
+	ld a, [wStatusFlags5]
+	bit BIT_SCRIPTED_NPC_MOVEMENT, a
+	jr z, .finished
+	dec c
+	jr nz, .wait
+	jr .restore ; An interrupted/off-screen sprite must never trap player input.
+.finished
+	SetEvent EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM
+.restore
+	ld hl, wStatusFlags5
+	res BIT_SCRIPTED_NPC_MOVEMENT, [hl]
+	xor a
+	ld [wJoyIgnore], a
+	ld [wNPCNumScriptedSteps], a
+	ld [wSimulatedJoypadStatesIndex], a
+	ld [wUnusedOverrideSimulatedJoypadStatesIndex], a
+	ld [wSprite01StateData1YStepVector], a
+	ld [wSprite01StateData1XStepVector], a
+	ld [wSprite01StateData1IntraAnimFrameCounter], a
+	ld [wSprite01StateData1AnimFrameCounter], a
+	ld [wSprite01StateData2WalkAnimationCounter], a
+	ld a, 3 + 4
+	ld [wSprite01StateData2MapY], a
+	ld a, 11 + 4
+	ld [wSprite01StateData2MapX], a
+	ld a, STAY
+	ld [wSprite01StateData2MovementByte1], a
+	ld a, 1
+	ld [wSprite01StateData1MovementStatus], a
+	ld a, SPRITE_FACING_RIGHT
+	ld [wSprite01StateData1FacingDirection], a
+	pop af
+	ld [wMapSpriteData], a
+	call UpdateSprites
+	pop af
+	ldh [hSpriteIndex], a
+	ret
+
+BillsSecretGardenPikachuSkimMovement:
+	db NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT, NPC_MOVEMENT_RIGHT
+	db NPC_MOVEMENT_LEFT, NPC_MOVEMENT_LEFT, NPC_MOVEMENT_LEFT, NPC_MOVEMENT_LEFT
+	db -1
 
 BillsSecretGardenCheckExit:
 	ld a, [wYCoord]
@@ -44,7 +140,11 @@ BillsSecretGarden_TextPointers:
 
 BillsSecretGardenPikachuText:
 	text_asm
+	CheckEvent EVENT_SAW_BILLS_GARDEN_PIKACHU_SKIM
+	ld hl, .WatchingPondText
+	jr z, .greet
 	ld hl, .SkimmedAcrossPondText
+.greet
 	call PrintText
 	ld a, PIKACHU
 	call PlayCry
@@ -70,6 +170,11 @@ BillsSecretGardenPikachuText:
 .SkimmedAcrossPondText
 	text_far _BillsSecretGardenPikachuSkimmedAcrossPondText
 	text_end
+
+.WatchingPondText
+	text "PIKACHU watches"
+	line "the ripples..."
+	done
 
 .WantsToJoinText
 	text_far _BillsSecretGardenPikachuWantsToJoinText

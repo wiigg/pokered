@@ -28,6 +28,8 @@ Each future gameplay feature or fix should update this file in the same commit.
   notebook and pond, within a single continuous mountain rim.
   The pond has an uneven rocky shoreline with flower-lined shallows, using
   the original tiles. Its reflection can still be examined from the bank.
+  On the first approach, Pikachu visibly skims across the pond and returns to
+  its bank before joining the party. The brief scene plays once per save.
   See [the garden script](scripts/BillsSecretGarden.asm).
 - **Clefairy Moonfall Ceremony:** a hidden ceremony takes place at Mt. Moon's
   original Moon Stone landing site. An earlier clue points towards the event;
